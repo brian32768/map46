@@ -1,0 +1,33 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.28010.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9092AA53-FB77-4645-B42D-1CCCA6BD08BD}") = "xyz", "xyz\xyz.njsproj", "{A2AC6402-F3B4-41DB-918F-5E5B32DD8BA9}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{69ABC633-2C04-4726-B581-E33D53A3AA65}"
+	ProjectSection(SolutionItems) = preProject
+		map46.png = map46.png
+		map46.svg = map46.svg
+		map46_notext.png = map46_notext.png
+		map46_notext.svg = map46_notext.svg
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{A2AC6402-F3B4-41DB-918F-5E5B32DD8BA9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A2AC6402-F3B4-41DB-918F-5E5B32DD8BA9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A2AC6402-F3B4-41DB-918F-5E5B32DD8BA9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A2AC6402-F3B4-41DB-918F-5E5B32DD8BA9}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {84BCD7BB-AFE8-4201-A842-409AF54A4F62}
+	EndGlobalSection
+EndGlobal

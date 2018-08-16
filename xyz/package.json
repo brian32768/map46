@@ -1,0 +1,31 @@
+{
+  "name": "ol5",
+  "version": "1.0.0",
+  "description": "OpenLayers 5 XYZ test app",
+  "author": "Brian Wilson",
+  "scripts": {
+    "test": "parcel serve --log-level 2 --open chrome index.html",
+    "build": "parcel build index.html --no-minify",
+    "start": "node server.js"
+  },
+  "keywords": [
+    "openlayers",
+    "openlayers 5",
+    "xyz"
+  ],
+  "bugs": {
+    "url": "https://github.com/brian32768/parceltest/issues"
+  },
+  "homepage": "https://github.com/brian32768/parceltest#readme",
+  "dependencies": {
+    "jquery": "^3.3.1",
+    "ol": "^5.1.3"
+  },
+  "devDependencies": {
+    "bootstrap": "^4.1.3",
+    "glyphicons-halflings": "^1.9.1",
+    "gulp": "^4.0.0",
+    "less": "^3.8.1",
+    "popper.js": "^1.14.4"
+  }
+}

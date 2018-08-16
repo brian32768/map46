@@ -1,0 +1,33 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,IE=11" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="shortcut icon" href="../favicon.ico" type="image/x-icon">
+    <link rel="icon" href="../favicon.ico" type="image/x-icon">
+
+    <title>XYZ ESRI Bootstrap</title>
+
+    <link rel="stylesheet/less" href="./xyz.less" />
+    <script src="./node_modules/less/dist/less.js"></script>
+    <link rel="stylesheet" href="./node_modules/bootstrap/dist/css/bootstrap.css" />
+</head>
+<body>
+
+    <div class="jumbotron">
+        <img src="../map46.png" width="64" height="64" />
+        <h1>OpenLayers XYZ + ESRI + Bootstrap</h1>
+        <p>
+            This uses an ArcGIS Online service with the OpenLayers XYZ module.
+        </p>
+    </div>
+
+    <div id="map" class="map"></div>
+
+    <!-- fix for IE and Android 4.x -->
+    <script src="https://cdn.polyfill.io/v2/polyfill.min.js?features=requestAnimationFrame,Element.prototype.classList"></script>
+    <script src="xyz.js"></script>
+    <script src="./node_modules/bootstrap/dist/js/bootstrap.js"></script>
+</body>
+</html>

@@ -1,3 +1,9 @@
+# Visual Studio
+.vs/
+
+# Emacs backup files
+*~
+
 # Logs
 logs
 *.log
