@@ -2,24 +2,32 @@
 
 # Install some packages
 
-npm install ol
-npm install --save-dev bootstrap
-npm install --save-dev less
+In theory install only the global ones.
 
-# This is so we can run gulp on the command line below.
+npm install --global ol
 npm install --global gulp-cli
-npm install --save-dev gulp@^next
 
-# Fonts that the bootstrap book had me install
-npm install --save-dev glyphicons-halflings
+Parcel should be able to install the others on demand. It uses entries
+in package-lock.json.
+
+I listed everything that I did here anyway, just in case.
+
+ npm install --save-dev bootstrap
+ npm install --save-dev sass
+ npm install --save-dev node-sass
+ npm install --save-dev gulp@^next
+ npm install --save-dev glyphicons-halflings
 
 Bootstrap wants this but for some reason does not install it.
-npm install --save-dev popper.js@^1.14.4
 
+ npm install --save-dev popper.js@^1.14.4
 
 # test it (from a cmd not a bash)
 
-npm test
+ npm test
 
-http://localhost:1234/
+Running npm test loads parcel (see package.json 'scripts' section.)
+and the set up there launches a brower but this is the URL
+
+ http://localhost:1234/
 
