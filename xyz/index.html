@@ -9,24 +9,54 @@
 
     <title>XYZ ESRI Bootstrap</title>
 
-    <link rel="stylesheet/less" href="./xyz.less" />
     <script src="./node_modules/less/dist/less.js"></script>
+    <link rel="stylesheet/less" href="./xyz.less" />
     <link rel="stylesheet" href="./node_modules/bootstrap/dist/css/bootstrap.css" />
 </head>
 <body>
+    <div class="container">
 
-    <div class="jumbotron">
-        <img src="../map46.png" width="64" height="64" />
-        <h1>OpenLayers XYZ + ESRI + Bootstrap</h1>
-        <p>
-            This uses an ArcGIS Online service with the OpenLayers XYZ module.
-        </p>
+        <!-- row 1 -->
+        <div class="jumbotron">
+            <div class="row" id="top">
+                <header class="col-md-12">
+                    <h1>
+                        <img src="../map46.svg" width="64" height="64" />
+                        OpenLayers XYZ + ESRI + Bootstrap
+                    </h1>
+                </header>
+                <p>
+                    This uses an ArcGIS Online service with the OpenLayers XYZ module.
+                </p>
+                <a class="btn btn-primary btn-lg" href="#" role="button">xyz</a>
+                <button>plain button</button>
+            </div>
+        </div>
+
+        <!-- row 2 -->
+        <div class="row" id="nav">
+            <div class="col-md-12">
+                <div class="panel">
+                    Clatsop County GIS
+                    Help
+                    FAQ
+                </div>
+            </div>
+        </div>
+
+        <!-- row 3 -->
+        <div class="row" id="main">
+            <div class="col-md-1" id="leftsidebar">left</div>
+            <div class="col-md-10" id="map"></div>
+            <div class="col-md-1" id="rightsidebar">right</div>
+        </div>
+
+        <!-- row 4 -->
+        <div class="row" id="bottom">
+            <footer class="col-md-12">about map46</footer>
+        </div>
     </div>
 
-    <div id="map" class="map"></div>
-
-    <!-- fix for IE and Android 4.x -->
-    <script src="https://cdn.polyfill.io/v2/polyfill.min.js?features=requestAnimationFrame,Element.prototype.classList"></script>
     <script src="xyz.js"></script>
     <script src="./node_modules/bootstrap/dist/js/bootstrap.js"></script>
 </body>
