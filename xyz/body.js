@@ -1,6 +1,5 @@
 ﻿// body.js
 
-import 'ol/ol.css';
 import { Map, View } from "ol";
 import TileLayer from "ol/layer/Tile";
 import XYZ from "ol/source/XYZ";
@@ -26,4 +25,6 @@ var map = new Map({
 });
 
 console.log('xyz.js loaded');
+
+
 
