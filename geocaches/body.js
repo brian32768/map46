@@ -6,7 +6,7 @@ import {Tile as TileLayer, Vector as VectorLayer} from 'ol/layer.js';
 import {defaults as defaultInteractions, DragAndDrop} from 'ol/interaction.js';
 import XYZ from "ol/source/XYZ";
 import {GPX, GeoJSON, IGC, KML, TopoJSON} from 'ol/format.js';
-//import {BingMaps, Vector as VectorSource} from 'ol/source.js';
+import {Vector as VectorSource} from 'ol/source.js';
 import {Circle as CircleStyle, Fill, Stroke, Style} from 'ol/style.js';
 
 
@@ -67,7 +67,7 @@ var defaultStyle = {
     })
 };
 
-/*
+
 var styleFunction = function(feature, resolution) {
     var featureStyleFunction = feature.getStyleFunction();
     if (featureStyleFunction) {
@@ -76,12 +76,23 @@ var styleFunction = function(feature, resolution) {
 	return defaultStyle[feature.getGeometry().getType()];
     }
 };
-*/
+
 
 var esri = "https://services.arcgisonline.com/ArcGIS/rest/services/";
 var service = 'World_Street_Map';
+
+var dragAndDropInteraction = new DragAndDrop({
+    formatConstructors: [
+	GPX,
+	GeoJSON,
+	IGC,
+	KML,
+	TopoJSON
+    ]
+});
+
 var map = new Map({
-//    interactions: defaultInteractions().extend([dragAndDropInteraction]),
+    interactions: defaultInteractions().extend([dragAndDropInteraction]),
     layers: [
 	new TileLayer({
             source: new XYZ({
@@ -98,16 +109,6 @@ var map = new Map({
 });
 
 
-var dragAndDropInteraction = new DragAndDrop({
-    formatConstructors: [
-	GPX,
-	GeoJSON,
-	IGC,
-	KML,
-	TopoJSON
-    ]
-});
-
 dragAndDropInteraction.on('addfeatures', function(event) {
     var vectorSource = new VectorSource({
 	features: event.features
@@ -117,6 +118,7 @@ dragAndDropInteraction.on('addfeatures', function(event) {
 	style: styleFunction
     }));
     map.getView().fit(vectorSource.getExtent());
+    console.log('dragAndDrop addfeatures');
 });
 
 
@@ -147,6 +149,7 @@ map.on('pointermove', function(evt) {
 
 map.on('click', function(evt) {
     displayFeatureInfo(evt.pixel);
+    console.log('click');
 });
 
 
