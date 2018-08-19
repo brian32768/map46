@@ -1,0 +1,30 @@
+﻿body {
+    background-color: darkgray;
+}
+
+#top {
+    background-color: lightgray;
+}
+
+#bottom {
+    background-color: lightgray;
+}
+
+#main {
+    background-color: lightgray;
+}
+
+#menu {
+    background-color: lightgray;
+}
+
+#nav {
+    color: white;
+    background-color: gray;
+}
+
+button {
+    color: white;
+    background-color: black;
+}
+
