@@ -1,17 +1,25 @@
-# map46 xyz
+# map46/geocaches
+
+This app allows you to use browser geolocation; when it's on, it will center the map on your location.
+
+It also allows you to drop a file onto the map, and it will show the contents.
+Currently the file can be in GPX, GeoJSON, IGC, KML or TopoJSON format.
 
 # Install some packages
 
-In theory install only the global ones.
+In theory install only the global ones, assuming you have not already.
 
-npm install --global ol
-npm install --global gulp-cli
+ npm install --global gulp-cli
 
-Parcel should be able to install the others on demand. It uses entries
-in package-lock.json.
+Parcel should be able to install the others using
+
+ npm install
+ 
+because of entries in package-lock.json.
 
 I listed everything that I did here anyway, just in case.
 
+ npm install --save-dev ol
  npm install --save-dev bootstrap
  npm install --save-dev sass
  npm install --save-dev node-sass

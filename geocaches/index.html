@@ -63,29 +63,36 @@
 
         <!-- row 4 -->
         <div class="row" id="bottom">
-            <div class="col-md-4">
+            <div class="col-md-2">
+	      <label for="track">
+		track position
+		<input id="track" type="checkbox"/>
+	      </label>
+	    </div>
+
+            <div class="col-md-5">
+	      pos accuracy : <code id="accuracy"></code>&nbsp;
+	      alt : <code id="altitude"></code>&nbsp;
+	      alt accuracy : <code id="altitudeAccuracy"></code>&nbsp;
+	      head : <code id="heading"></code>&nbsp;
+	      speed : <code id="speed"></code>
+	    </div>
+	    
+            <div class="col-md-2">
               <a href="gis">County GIS</a> | 
               <a href="help">Help</a> | 
               <a href="faq">FAQ</a> 
 	    </div>
 
-            <div class="col-md-2">
+            <div class="col-md-3">
 	      <a href="#demo" class="btn btn-info" data-toggle="collapse">Work for us</a>
 	      <div id="demo" class="collapse">
 		<h2>Just kidding!</h2> 
 	      </div>
-            </div>
-            <div class="col-md-1">
               <a href="about"><img src="../map46.svg" width="48" height="48" /></a>
             </div>
         </div>
     </div>
-
-    <p>
-      tram    <img src="./node_modules/@mapbox/maki/icons/aerialway-15.svg"/>
-    aquarium-11    <img src="./node_modules/@mapbox/maki/icons/aquarium-11.svg" />
-    beer-15    <img src="./node_modules/@mapbox/maki/icons/beer-15.svg" />
-    </p>
 
     <script src="./body.js"></script>
 </body>

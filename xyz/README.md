@@ -1,4 +1,4 @@
-# map46 xyz
+# map46/xyz
 
 # Install some packages
 
