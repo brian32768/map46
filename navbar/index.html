@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <title>navbar test</title>
+    <link rel="stylesheet" href="node_modules/bootstrap/dist/css/bootstrap.min.css" />
+    <link href='https://fonts.googleapis.com/css?family=Poiret+One' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Lato&subset=latin,latin-ext' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" href="./navbar.css" />
+  </head>
+  <body>
+    <nav class="navbar navbar-expand-lg navbar-example">
+      <a class="navbar-brand" href="#">Your Name Here</a>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navigation">
+        <ul class="navbar-nav mr-auto">
+          <li class="nav-item"><a class="nav-link" href="#welcome"> Welcome</a></li>
+          <li class="nav-item"><a class="nav-link" href="#products"> Products</a></li>
+          <li class="nav-item"><a class="nav-link" href="#services"> Services</a></li>
+          <li class="nav-item"><a class="nav-link" href="#about"> About</a></li>
+          <li class="nav-item"><a class="nav-link" href="#contact"> Contact Us</a></li>
+        </ul>
+        <ul class="navbar-nav pull-right">
+          <li class="nav-item dropdown ">
+            <a href="#" class="nav-link dropdown-toggle" data-toggle= "dropdown" role="button"
+               aria-haspopup="true" aria-expanded="false"> Profile <span class="caret"></span>
+            </a>
+            <div class="dropdown-menu dropdown-menu-right">
+              <a class="dropdown-item" href="#" data-toggle="modal" data-target="#profile-modal">
+                Profile
+              </a>
+              <a class="dropdown-item" href="#" data-toggle="modal" data-target= "#settings-modal">
+                Settings
+              </a>
+              <div class="dropdown-divider"></div>
+              <a class="dropdown-item" href="#"> Logout</a>
+            </div>
+          </li>
+        </ul>
+      </div>
+    </nav>
+
+    <div class="container-fluid example-section bg-example-welcome" id="welcome">
+      <div class="container">
+	<div class="jumbotron">
+	  <h1>Big welcome banner goes here</h1>
+	</div>
+      </div>
+    </div>
+
+    <footer class="bg-example-dark">Footer placeholder</footer>
+    <script src="node_modules/jquery/dist/jquery.min.js"></script>
+    <script src="node_modules/popper.js/dist/umd/popper.min.js"></script>
+    <script src="node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
+  </body>
+</html>

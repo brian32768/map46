@@ -1,0 +1,31 @@
+{
+  "name": "navbar",
+  "version": "1.0.0",
+  "description": "Map 46 Navbar Test App",
+  "author": "Brian Wilson",
+  "scripts": {
+    "test": "parcel serve --log-level 2 --open chrome index.html",
+    "build": "parcel build index.html --no-minify",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/brian32768/map46.git"
+  },
+  "keywords": [
+    "bootstrap",
+    "bootstrap 4"
+  ],
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/brian32768/map46/issues"
+  },
+  "homepage": "https://github.com/brian32768/map46#readme",
+  "dependencies": {
+    "jquery": "^3.3.1"
+  },
+  "devDependencies": {
+    "bootstrap": "^4.1.3",
+    "popper.js": "^1.14.4"
+  }
+}
