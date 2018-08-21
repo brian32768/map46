@@ -1,99 +1,145 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml">
-<head>
-    <meta charset="utf-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge,IE=11" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <link rel="shortcut icon" href="../favicon.ico" type="image/x-icon">
-    <link rel="icon" href="../favicon.ico" type="image/x-icon">
-
-    <title>map46 geocache map</title>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <title>map 46 geocaches</title>
 
     <script src="./head.js"></script>
+    <link rel="stylesheet" href="./geocaches.css" />
 
-    <link rel="stylesheet" href="./node_modules/ol/ol.css"/>
-    <link rel="stylesheet" href="./geocaches.css"/>
-
-
-</head>
-<body>
-
-    <div class="container">
-
-        <!-- row 1 -->
-        <div class="row" id="top">
-            <div class="col-md-12">
-              <h1>
-		<img src="./node_modules/@mapbox/maki/icons/aquarium-15.svg" width="48"/>
-		Geocache map
-	      </h1>
-               <p>Drag and drop a GPX file onto the map.</p>
+  </head>
+  <body>
+    <nav class="navbar navbar-expand-lg navbar-geocaches">
+      <a class="navbar-brand" href="#">County GIS</a>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navigation">
+        <ul class="navbar-nav mr-auto">
+          <li class="nav-item"><a class="nav-link" href="#faq"> FAQ</a></li>
+          <li class="nav-item"><a class="nav-link" href="#help"> Help</a></li>
+          <li class="nav-item"><a class="nav-link" href="#" data-toggle="modal" data-target="#workforus-modal"> Work for us</a>/li>
+          <li class="nav-item"><a class="nav-link" href="#" data-toggle="modal" data-target="#contactus-modal"> Contact Us</a></li>
+        </ul>
+        <ul class="navbar-nav pull-right">
+          <li class="nav-item dropdown ">
+            <a href="#" class="nav-link dropdown-toggle" data-toggle= "dropdown" role="button"
+               aria-haspopup="true" aria-expanded="false"> Profile <span class="caret"></span>
+            </a>
+            <div class="dropdown-menu dropdown-menu-right">
+              <a class="dropdown-item" href="#" data-toggle="modal" data-target="#profile-modal">
+                Profile
+              </a>
+              <a class="dropdown-item" href="#" data-toggle="modal" data-target= "#settings-modal">
+                Settings
+              </a>
+              <div class="dropdown-divider"></div>
+              <a class="dropdown-item" href="#"> Logout</a>
             </div>
-        </div>
+          </li>
+        </ul>
+      </div>
+    </nav>
 
-        <!-- row 2 -->
-        <div class="row" id="menu">
-	  <div class="col-md-12">
-            <div class="dropdown">
+    <!------------------------------------------------------------------------------------->
 
-              <button class="btn btn-primary" data-toggle="collapse" data-target="leftsidebar">left</button>
-                <button class="btn btn-primary" data-toggle="collapse" data-target="rightsidebar">right</button>
-                <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">
-                    Fun tools
-                    <span class="caret"></span>
-                </button>
-                <ul class="dropdown-menu">
-                    <li><a href="#">Hammer</a></li>
-                    <li><a href="#">Tongs</a></li>
-                    <li><a href="#">Spanner</a></li>
-                </ul>
-            </div>
+    <div class="modal fade" id="workforus-modal">
+      <div class="modal-dialog">
+	<div class="modal-content">
+	  <div class="modal-header">
+            <h4 class="modal-title" id="profile-modal-label">Work For Us</h4>
+	    <button type="button" class="close" data-dismiss="modal"><span>&times;</span></button>
 	  </div>
-        </div>
 
-        <!-- row 3 -->
-        <div class="row" id="main">
-            <div class="col-md-12" id="maprow">
-                <div id="leftsidebar" class="collapse">left sidebar here</div>
-                <div class="map" id="map"></div>
-                <div id="info">&nbsp;</div>
-                <div id="rightsidebar" class="collapse in">right over here</div>
-            </div>
-        </div>
+	  <div class="modal-body">
+	    Sorry, but there is currently no company called "Map 46".
+	  </div>
 
-        <!-- row 4 -->
-        <div class="row" id="bottom">
-            <div class="col-md-2">
-	      <label for="track">
-		track position
-		<input id="track" type="checkbox"/>
-	      </label>
-	    </div>
-
-            <div class="col-md-5">
-	      pos accuracy : <code id="accuracy"></code>&nbsp;
-	      alt : <code id="altitude"></code>&nbsp;
-	      alt accuracy : <code id="altitudeAccuracy"></code>&nbsp;
-	      head : <code id="heading"></code>&nbsp;
-	      speed : <code id="speed"></code>
-	    </div>
-	    
-            <div class="col-md-2">
-              <a href="gis">County GIS</a> | 
-              <a href="help">Help</a> | 
-              <a href="faq">FAQ</a> 
-	    </div>
-
-            <div class="col-md-3">
-	      <a href="#demo" class="btn btn-info" data-toggle="collapse">Work for us</a>
-	      <div id="demo" class="collapse">
-		<h2>Just kidding!</h2> 
-	      </div>
-              <a href="about"><img src="../map46.svg" width="48" height="48" /></a>
-            </div>
-        </div>
+	</div>
+      </div>
     </div>
 
+    <div class="modal fade" id="contactus-modal">
+      <div class="modal-dialog">
+	<div class="modal-content">
+	  <div class="modal-header">
+            <h4 class="modal-title" id="profile-modal-label">Contact us</h4>
+	    <button type="button" class="close" data-dismiss="modal"><span>&times;</span></button>
+	  </div>
+
+	  <div class="modal-body">
+	    Call extension 1134.
+	    Email <a href="mailto:gis-info@co.clatsop.or.us">gis-info@co.clatsop.or.us</a>
+	  </div>
+
+	</div>
+      </div>
+    </div>
+
+    
+    <div class="modal fade" id="profile-modal">
+      <div class="modal-dialog">
+	<div class="modal-content">
+	  <div class="modal-header">
+            <h4 class="modal-title" id="profile-modal-label">Profile</h4>
+	    <button type="button" class="close" data-dismiss="modal"><span>&times;</span></button>
+	  </div>
+
+	  <div class="modal-body">
+	    Profile
+	  </div>
+
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+          </div>
+	</div>
+      </div>
+    </div>
+
+    <div class="modal fade" id="settings-modal">
+      <div class="modal-dialog">
+	<div class="modal-content">
+	  <div class="modal-header">
+            <h4 class="modal-title" id="settings-modal-label">Settings</h4>
+	    <button type="button" class="close" data-dismiss="modal"><span>&times;</span></button>
+	  </div>
+
+	  <div class="modal-body">
+	    Settings
+	  </div>
+
+          <div class="modal-footer">
+            <button type="button" class="btn btn-success">Save changes</button>
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+          </div>
+	</div>
+      </div>
+    </div>
+
+    <!------------------------------------------------------------------------------------->
+
+    <div class="container-fluid geocaches-section bg-geocaches-welcome" id="welcome">
+      <div class="container">
+	<div class="jumbotron">
+	  <h1>
+	    <img src="./geocache-logo.png" width="48">
+	    Geocache Map
+	    <img src="../map46.svg" width="48">
+	  </h1>
+	</div>
+      </div>
+    </div>
+
+    <div class="container-fluid geocaches-section bg-geocaches-welcome" id="products">
+      <div class="container">
+	put a map here
+      </div>
+    </div>
+
+
+    <footer class="bg-geocaches-dark">Footer placeholder</footer>
     <script src="./body.js"></script>
-</body>
+  </body>
 </html>

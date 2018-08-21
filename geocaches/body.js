@@ -1,15 +1,18 @@
 ﻿// body.js
 
-import { Map, View } from "ol";
+import { Map, View } from 'ol';
 import {Tile as TileLayer, Vector as VectorLayer} from 'ol/layer.js';
 import {defaults as defaultInteractions, DragAndDrop} from 'ol/interaction.js';
-import {GPX, GeoJSON, IGC, KML, TopoJSON} from 'ol/format.js';
+import {GPX, KML} from 'ol/format.js';
 import {OSM, Vector as VectorSource} from 'ol/source.js';
 import {Circle as CircleStyle, Fill, Stroke, Style} from 'ol/style.js';
 
 import Feature from 'ol/Feature.js';
 import Geolocation from 'ol/Geolocation.js';
 import Point from 'ol/geom/Point.js';
+
+import 'bootstrap/dist/js/bootstrap.min.js';
+// bootstrap will pull in jquery and popper
 
 var defaultStyle = {
     'Point': new Style({
@@ -85,10 +88,7 @@ var service = 'World_Street_Map';
 var dragAndDropInteraction = new DragAndDrop({
     formatConstructors: [
 	GPX,
-	GeoJSON,
-	IGC,
-	KML,
-	TopoJSON
+	KML
     ]
 });
 
@@ -216,6 +216,5 @@ map.on('click', function(evt) {
     displayFeatureInfo(evt.pixel);
     console.log('click');
 });
-
 
 console.log('body.js loaded');

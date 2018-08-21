@@ -2,8 +2,18 @@
     background-color: darkgray;
 }
 
+h1 {
+    color: brown;
+    text-align: center;
+}
+
 #top {
     background-color: lightgray;
+}
+
+#gpsinfo {
+    color: white;
+    background-color: darkgray;
 }
 
 #bottom {
@@ -28,3 +38,96 @@ button {
     background-color: black;
 }
 
+.bg-geocaches-light {
+	background-color: white;
+	color: #504747;
+}
+
+.bg-geocaches-welcome {
+	background-size: cover;
+	color: #504747;
+}
+
+.jumbotron-welcome {
+	background-size: cover;
+	color: white;
+}
+
+.bg-geocaches-dark .nav-tabs a {
+	color: white;
+}
+
+.navbar-geocaches {
+	background-color: #504747;
+	border-color: black;
+	border-radius: 0;
+	margin-bottom: 0px;
+}
+
+.navbar-geocaches .navbar-brand {
+	color: white;
+	font-weight: bold;
+}
+
+.navbar-geocaches .nav-item > .nav-link {
+	color: white;
+}
+
+.navbar-geocaches .nav-item > .nav-link:hover {
+	background-color: #504747;
+	color: gray;
+}
+
+.navbar-geocaches .nav-pills > li.active > a {
+	background-color: #504747;
+	color: gray;
+}
+
+.navbar-geocaches .dropdown-menu {
+	background-color: #504747;
+	border-color: black;
+}
+
+.navbar-geocaches .dropdown-menu > a  {
+	color: white;
+	background-color: #504747;
+}
+
+.navbar-geocaches .dropdown-menu > a:hover  {
+	color: gray;
+	background-color: #504747;
+}
+
+.navbar-geocaches .dropdown-menu > a:focus  {
+	color: gray;
+	background-color: #504747;
+}
+
+.navbar-geocaches .dropdown-menu > .active > a:focus {
+	color: gray;
+	background-color: #504747;
+}
+
+.navbar-geocaches > .navbar-toggler {
+	color: white;
+}
+
+.nav-pills > .active > a, .nav-pills > .active > a:hover {
+    background-color: grey;
+}
+
+.nav-pills .nav-link.active, .nav-pills .nav-link.active:focus, .nav-pills .nav-link.active:hover,
+.nav-pills .nav-item.open .nav-link,
+.nav-pills .nav-item.open .nav-link:focus,
+.nav-pills .nav-item.open .nav-link:hover {
+  background-color: grey;
+}
+
+.navbar-geocaches>.navbar-toggler {
+  color: white;
+  border: 1px solid rgba(255, 255, 255, 0.5);
+}
+
+.navbar-geocaches .navbar-toggler-icon {
+  background-image: url("data:image/svg+xml;charset=utf8,<svg viewBox='0 0 30 30' xmlns='http://www.w3.org/2000/svg'><path stroke='rgba(255, 255, 255, 0.5)' stroke-width='2' stroke-linecap='round' stroke-miterlimit='10' d='M4 7h22M4 15h22M4 23h22'/></svg>");
+}

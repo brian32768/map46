@@ -4,7 +4,7 @@
   "description": "Geocache test app",
   "author": "Brian Wilson",
   "scripts": {
-    "test": "parcel serve --log-level 2 --open chrome index.html",
+    "test": "parcel serve --open chrome index.html",
     "build": "parcel build index.html --no-minify",
     "start": "node server.js"
   },
@@ -19,9 +19,9 @@
   ],
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/brian32768/parceltest/issues"
+    "url": "https://github.com/brian32768/map46/issues"
   },
-  "homepage": "https://github.com/brian32768/parceltest#readme",
+  "homepage": "https://github.com/brian32768/map46#readme",
   "dependencies": {
     "jquery": "^3.3.1",
     "maki": "^2.1.0",
@@ -30,10 +30,6 @@
   "devDependencies": {
     "@mapbox/maki": "^4.0.0",
     "bootstrap": "^4.1.3",
-    "glyphicons-halflings": "^1.9.1",
-    "gulp": "^4.0.0",
-    "node-sass": "^4.9.3",
-    "popper.js": "^1.14.4",
-    "sass": "^1.13.0"
+    "popper.js": "^1.14.4"
   }
 }
