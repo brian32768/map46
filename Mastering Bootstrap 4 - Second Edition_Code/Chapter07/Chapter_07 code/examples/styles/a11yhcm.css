@@ -1,0 +1,52 @@
+.a11yhcm.enabled::after {
+	content: '✓'
+}
+
+.navbar-myphoto .navbar-brand {
+    color: white;
+    font-weight: bold;
+}
+
+.navbar-myphoto .nav-item > .nav-link {
+    color: white;
+}
+
+.navbar-myphoto .nav-item > .active {
+   color: gray !important;
+   text-decoration: underline;
+}
+
+.navbar-myphoto .nav-item > .nav-link:hover {
+    background-color: #504747;
+    color: gray;
+}
+
+.navbar-myphoto .nav-pills > li.active > a {
+    background-color: #504747;
+    color: gray;
+}
+
+.navbar-myphoto .dropdown-menu {
+    background-color: #504747;
+    border-color: black;
+}
+
+.navbar-myphoto .dropdown-menu > a  {
+    color: white;
+    background-color: #504747;
+}
+
+.navbar-myphoto .dropdown-menu > a:hover  {
+    color: gray;
+    background-color: #504747;
+}
+
+.navbar-myphoto .dropdown-menu > a:focus  {
+    color: gray;
+    background-color: #504747;
+}
+
+.navbar-myphoto .dropdown-menu > .active > a:focus {
+    color: gray;
+    background-color: #504747;
+}
