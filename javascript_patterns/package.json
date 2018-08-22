@@ -1,7 +1,7 @@
 {
-  "name": "geocaches",
+  "name": "javascript_patterns",
   "version": "1.0.0",
-  "description": "Geocache test app",
+  "description": "Testing javascript ideas",
   "author": "Brian Wilson",
   "scripts": {
     "test": "parcel serve --open chrome index.html",
@@ -13,24 +13,13 @@
     "url": "git+https://github.com/brian32768/map46.git"
   },
   "keywords": [
-    "openlayers",
-    "openlayers 5",
-    "xyz"
+    "javascript"
   ],
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/brian32768/map46/issues"
   },
   "homepage": "https://github.com/brian32768/map46#readme",
-  "dependencies": {
-    "jquery": "^3.3.1",
-    "maki": "^2.1.0",
-    "mock.js": "^0.2.0",
-    "ol": "^5.1.3"
-  },
-  "devDependencies": {
-    "@mapbox/maki": "^4.0.0",
-    "bootstrap": "^4.1.3",
-    "popper.js": "^1.14.4"
-  }
+  "dependencies": {},
+  "devDependencies": {}
 }

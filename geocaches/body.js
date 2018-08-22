@@ -1,7 +1,6 @@
 ﻿// body.js
 
 import { Map, View } from 'ol';
-import Overlay from 'ol/Overlay.js';
 import {Tile as TileLayer, Vector as VectorLayer} from 'ol/layer.js';
 import {defaults as defaultInteractions, DragAndDrop} from 'ol/interaction.js';
 import {GPX, KML} from 'ol/format.js';
@@ -12,40 +11,17 @@ import Feature from 'ol/Feature.js';
 import Geolocation from 'ol/Geolocation.js';
 import Point from 'ol/geom/Point.js';
 
+// Used to show position on status bar
+import {toStringHDMS} from 'ol/coordinate.js';
+import {toLonLat} from 'ol/proj.js';
+
+import {popupOverlay, popupContainer} from './popup.js';
+
 import 'bootstrap/dist/js/bootstrap.min.js';
-// bootstrap will pull in jquery and popper
+// bootstrap dependencies will pull in jquery and popper
 
-var esri = "https://services.arcgisonline.com/ArcGIS/rest/services/";
+var esri    = "https://services.arcgisonline.com/ArcGIS/rest/services/";
 var service = 'World_Street_Map';
-
-// Popup stuff ---------------------------------------------------------
-
-// Elements that make up the popup.
-var container = document.getElementById('popup');
-var content = document.getElementById('popup-content');
-var closer = document.getElementById('popup-closer');
-
-//
-// Create an overlay to anchor the popup to the map.
-//
-var popup_overlay = new Overlay({
-    element: container,
-    autoPan: true,
-    autoPanAnimation: {
-        duration: 250
-    }
-});
-
-//
-// Add a click handler to hide the popup.
-// @return {boolean} Don't follow the href.
-//
-closer.onclick = function() {
-    overlay.setPosition(undefined);
-    closer.blur();
-    return false;
-};
-
 
 // Styles for GPX data -------------------------------------------------
 
@@ -133,7 +109,7 @@ var map = new Map({
     layers: [
 	new TileLayer({ source: new OSM() })
     ],
-    overlays: [popup_overlay],
+//    overlays: [popupOverlay],
     target: 'map',
     view: view
 });
@@ -218,17 +194,19 @@ dragAndDropInteraction.on('addfeatures', function(event) {
 });
 
 
-//
-// Show information about a GPX feature when the mouse rolls over it
-//
-var displayFeatureInfo = function(pixel) {
+// == GPX info ==
+
+// Look up GPX info and format it for display.
+featureInfo = function(pixel) {
     var features = [];
+
+    // Make a list of each GPX feature found at this pixel
     map.forEachFeatureAtPixel(pixel, function(feature) {
 	features.push(feature);
     });
 
     if (features.length > 0) {
-	// Show many features
+	// Show one or many features
 	var info = [];
 	var i, ii;
 	for (i = 0, ii = features.length; i < ii; ++i) {
@@ -236,27 +214,36 @@ var displayFeatureInfo = function(pixel) {
 		features[i].get('desc')
 	    );
 	}
-	document.getElementById('mapinfo').innerHTML = info.join(', ') || '&nbsp';
+	info.join('<br />') || '';
     } else {
-	// Show just one feature
-	document.getElementById('mapinfo').innerHTML = '&nbsp;';
+	info = '';
     }
-};
+    return info;
+}
 
 map.on('pointermove', function(evt) {
     if (evt.dragging) {
 	return;
     }
-    var pixel = map.getEventPixel(evt.originalEvent);
-    displayFeatureInfo(pixel);
+//    var pixel = map.getEventPixel(evt.originalEvent);
+
+    var coordinate = evt.coordinate;
+    var latlon = toStringHDMS(toLonLat(coordinate));
+    document.getElementById('mapinfo').innerHTML = latlon;
 });
 
-map.on('click', function(evt) {
-    displayFeatureInfo(evt.pixel);
-    console.log('click');
-});
+map.on('click', popup_click) = function(evt) {
+    // Handler for click events on map.
 
-
-
+    var mycontent = featureInfo(evt.pixel);
+    if (!mycontent) { return; } // nothing to see here 
+    
+    // Set up where the popup will pop up.
+    var coordinate = evt.coordinate;
+    popupOverlay.setPosition(coordinate);
+    popupContainer.innerHTML = mycontent;
+    
+    console.log('click ' + evt.coordinate);
+}
 
 console.log('body.js loaded');

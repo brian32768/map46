@@ -1,0 +1,14 @@
+button {
+    color: #123;
+}
+
+#header {
+    background-image: url("babyturtle.png");
+    width: 689px;
+    height: 284px;
+
+    font-family: arial;
+    color: #fff;
+    font-size: 2em;
+    text-indent: 1em;
+}

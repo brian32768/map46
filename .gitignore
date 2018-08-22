@@ -1,3 +1,8 @@
+# Parcel or node or something
+.cache/
+dist/*
+UpgradeLog.htm
+
 # Visual Studio
 .vs/
 
