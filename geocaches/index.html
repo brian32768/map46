@@ -11,6 +11,7 @@
 
   </head>
   <body>
+   
     <nav class="navbar navbar-expand-lg navbar-geocaches">
       <a class="navbar-brand" href="#">County GIS</a>
       <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navigation">
@@ -122,24 +123,46 @@
 
     <div class="container-fluid geocaches-section bg-geocaches-welcome" id="welcome">
       <div class="container">
-	<div class="jumbotron">
 	  <h1>
 	    <img src="./geocache-logo.png" width="48">
 	    Geocache Map
 	    <img src="../map46.svg" width="48">
 	  </h1>
-	</div>
       </div>
     </div>
 
-    <div class="container-fluid geocaches-section bg-geocaches-welcome" id="products">
+    <div class="container-fluid geocaches-section bg-geocaches-map" id="map">
       <div class="container">
-	put a map here
+      <div class="row" id="map_row">
+        <div id="mapinfo">&nbsp;</div>
+        <div class="map" id="map"></div>
+	<div id="popup" class="ol-popup">
+	  <a href="#" id="popup-closer" class="ol-popup-closer"></a>
+	  <div id="popup-content"></div>
+	</div>
+
+      </div>
       </div>
     </div>
 
+    <div class="row" id="gpsinfo">
+            <div class="col-md-2">
+	      <label for="track">
+		<button id="track">track position</button>
+	      </label>
+	    </div>
+
+            <div class="col-md-10">
+	      pos accuracy : <code id="accuracy"></code>&nbsp;
+	      alt : <code id="altitude"></code>&nbsp;
+	      alt accuracy : <code id="altitudeAccuracy"></code>&nbsp;
+	      head : <code id="heading"></code>&nbsp;
+	      speed : <code id="speed"></code>
+	    </div>
+	</div>
 
     <footer class="bg-geocaches-dark">Footer placeholder</footer>
+
     <script src="./body.js"></script>
   </body>
 </html>

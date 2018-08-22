@@ -13,6 +13,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		map46_notext.svg = map46_notext.svg
 	EndProjectSection
 EndProject
+Project("{9092AA53-FB77-4645-B42D-1CCCA6BD08BD}") = "geocaches", "geocaches\geocaches.njsproj", "{0E13CA14-33C4-452C-8420-2BF8184AD8BB}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -23,6 +25,10 @@ Global
 		{A2AC6402-F3B4-41DB-918F-5E5B32DD8BA9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A2AC6402-F3B4-41DB-918F-5E5B32DD8BA9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A2AC6402-F3B4-41DB-918F-5E5B32DD8BA9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0E13CA14-33C4-452C-8420-2BF8184AD8BB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0E13CA14-33C4-452C-8420-2BF8184AD8BB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0E13CA14-33C4-452C-8420-2BF8184AD8BB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0E13CA14-33C4-452C-8420-2BF8184AD8BB}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

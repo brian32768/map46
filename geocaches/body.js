@@ -1,6 +1,7 @@
 ﻿// body.js
 
 import { Map, View } from 'ol';
+import Overlay from 'ol/Overlay.js';
 import {Tile as TileLayer, Vector as VectorLayer} from 'ol/layer.js';
 import {defaults as defaultInteractions, DragAndDrop} from 'ol/interaction.js';
 import {GPX, KML} from 'ol/format.js';
@@ -13,6 +14,40 @@ import Point from 'ol/geom/Point.js';
 
 import 'bootstrap/dist/js/bootstrap.min.js';
 // bootstrap will pull in jquery and popper
+
+var esri = "https://services.arcgisonline.com/ArcGIS/rest/services/";
+var service = 'World_Street_Map';
+
+// Popup stuff ---------------------------------------------------------
+
+// Elements that make up the popup.
+var container = document.getElementById('popup');
+var content = document.getElementById('popup-content');
+var closer = document.getElementById('popup-closer');
+
+//
+// Create an overlay to anchor the popup to the map.
+//
+var popup_overlay = new Overlay({
+    element: container,
+    autoPan: true,
+    autoPanAnimation: {
+        duration: 250
+    }
+});
+
+//
+// Add a click handler to hide the popup.
+// @return {boolean} Don't follow the href.
+//
+closer.onclick = function() {
+    overlay.setPosition(undefined);
+    closer.blur();
+    return false;
+};
+
+
+// Styles for GPX data -------------------------------------------------
 
 var defaultStyle = {
     'Point': new Style({
@@ -71,7 +106,6 @@ var defaultStyle = {
     })
 };
 
-
 var styleFunction = function(feature, resolution) {
     var featureStyleFunction = feature.getStyleFunction();
     if (featureStyleFunction) {
@@ -81,9 +115,7 @@ var styleFunction = function(feature, resolution) {
     }
 };
 
-
-var esri = "https://services.arcgisonline.com/ArcGIS/rest/services/";
-var service = 'World_Street_Map';
+// ===============================================================================
 
 var dragAndDropInteraction = new DragAndDrop({
     formatConstructors: [
@@ -101,6 +133,7 @@ var map = new Map({
     layers: [
 	new TileLayer({ source: new OSM() })
     ],
+    overlays: [popup_overlay],
     target: 'map',
     view: view
 });
@@ -131,7 +164,7 @@ geolocation.on('change', function() {
 
 // handle geolocation error.
 geolocation.on('error', function(error) {
-    var info = document.getElementById('info');
+    var info = document.getElementById('gpsinfo');
     info.innerHTML = error.message;
     info.style.display = '';
 });
@@ -185,12 +218,17 @@ dragAndDropInteraction.on('addfeatures', function(event) {
 });
 
 
+//
+// Show information about a GPX feature when the mouse rolls over it
+//
 var displayFeatureInfo = function(pixel) {
     var features = [];
     map.forEachFeatureAtPixel(pixel, function(feature) {
 	features.push(feature);
     });
+
     if (features.length > 0) {
+	// Show many features
 	var info = [];
 	var i, ii;
 	for (i = 0, ii = features.length; i < ii; ++i) {
@@ -198,9 +236,10 @@ var displayFeatureInfo = function(pixel) {
 		features[i].get('desc')
 	    );
 	}
-	document.getElementById('info').innerHTML = info.join(', ') || '&nbsp';
+	document.getElementById('mapinfo').innerHTML = info.join(', ') || '&nbsp';
     } else {
-	document.getElementById('info').innerHTML = '&nbsp;';
+	// Show just one feature
+	document.getElementById('mapinfo').innerHTML = '&nbsp;';
     }
 };
 
@@ -216,5 +255,8 @@ map.on('click', function(evt) {
     displayFeatureInfo(evt.pixel);
     console.log('click');
 });
+
+
+
 
 console.log('body.js loaded');
