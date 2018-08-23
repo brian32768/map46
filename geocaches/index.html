@@ -21,8 +21,8 @@
         <ul class="navbar-nav mr-auto">
           <li class="nav-item"><a class="nav-link" href="#faq"> FAQ</a></li>
           <li class="nav-item"><a class="nav-link" href="#help"> Help</a></li>
-          <li class="nav-item"><a class="nav-link" href="#" data-toggle="modal" data-target="#workforus-modal"> Work for us</a>/li>
-          <li class="nav-item"><a class="nav-link" href="#" data-toggle="modal" data-target="#contactus-modal"> Contact Us</a></li>
+          <li class="nav-item"><a class="nav-link" href="#" data-toggle="modal" data-target="#workforus-modal"> Work for us </a></li>
+          <li class="nav-item"><a class="nav-link" href="#" data-toggle="modal" data-target="#contactus-modal"> Contact Us </a></li>
         </ul>
         <ul class="navbar-nav pull-right">
           <li class="nav-item dropdown ">
@@ -30,14 +30,10 @@
                aria-haspopup="true" aria-expanded="false"> Profile <span class="caret"></span>
             </a>
             <div class="dropdown-menu dropdown-menu-right">
-              <a class="dropdown-item" href="#" data-toggle="modal" data-target="#profile-modal">
-                Profile
-              </a>
-              <a class="dropdown-item" href="#" data-toggle="modal" data-target= "#settings-modal">
-                Settings
-              </a>
+              <a class="dropdown-item" href="#" data-toggle="modal" data-target="#profile-modal"> Profile </a>
+              <a class="dropdown-item" href="#" data-toggle="modal" data-target= "#settings-modal"> Settings </a>
               <div class="dropdown-divider"></div>
-              <a class="dropdown-item" href="#"> Logout</a>
+              <a class="dropdown-item" href="#"> Logout </a>
             </div>
           </li>
         </ul>
@@ -132,34 +128,33 @@
     </div>
 
     <div class="container-fluid geocaches-section bg-geocaches-map" id="map">
-      <div class="container">
-      <div class="row" id="map_row">
-        <div id="mapinfo">&nbsp;</div>
-        <div class="map" id="map"></div>
-	<div id="popup" class="ol-popup">
-	  <a href="#" id="popup-closer" class="ol-popup-closer"></a>
-	  <div id="popup-content"></div>
+        <div id="cursor_position">&nbsp;</div>
+	<div class="container">
+	  <div class="row" id="map_row">
+            <div class="map" id="map"></div>
+	    <div id="popup" class="ol-popup">
+	      <a href="#" id="popup-closer" class="ol-popup-closer"></a>
+	      <div id="popup-content"></div>
+	    </div>
 	</div>
-
-      </div>
       </div>
     </div>
 
     <div class="row" id="gpsinfo">
-            <div class="col-md-2">
-	      <label for="track">
-		<button id="track">track position</button>
-	      </label>
-	    </div>
+      <div class="col-md-2">
+	<label for="track">
+	  <button id="track" class="tracking">track position</button>
+	</label>
+      </div>
 
-            <div class="col-md-10">
-	      pos accuracy : <code id="accuracy"></code>&nbsp;
-	      alt : <code id="altitude"></code>&nbsp;
-	      alt accuracy : <code id="altitudeAccuracy"></code>&nbsp;
-	      head : <code id="heading"></code>&nbsp;
-	      speed : <code id="speed"></code>
-	    </div>
-	</div>
+      <div class="col-md-10">
+	pos accuracy : <code id="accuracy"></code>&nbsp;
+	alt : <code id="altitude"></code>&nbsp;
+	alt accuracy : <code id="altitudeAccuracy"></code>&nbsp;
+	head : <code id="heading"></code>&nbsp;
+	speed : <code id="speed"></code>
+      </div>
+    </div>
 
     <footer class="bg-geocaches-dark">Footer placeholder</footer>
 

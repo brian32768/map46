@@ -3,25 +3,43 @@
 
 import Overlay from 'ol/Overlay.js';
 
-// Elements that make up the popup.
-var popup_container = document.getElementById('popup');
-var popup_closer    = document.getElementById('popup-closer');
+/* 
+ FIXME
 
-export var popupContainer = document.getElementById('popup-content');
+ I could probably refactor this to make it more object oriented,
+ it exposes too much I think. But it's Javascript not C#
+ and hey! I only learned how to write objects TODAY :-)
 
-// Create an overlay to anchor the popup to the map.
-export var popupOverlay = new Overlay({
-    element: popup_container,
-    autoPan: true,
-    autoPanAnimation: {
-        duration: 250
+ FIXME
+
+ This code shows a popup for geolocation point too. Interesting. It's ugly though.
+*/
+
+export class Popup {
+    constructor() {
+	// Elements that make up the popup.
+	this.container = document.getElementById('popup-content');
+	this.closer    = document.getElementById('popup-closer');
+	
+	// Create an overlay to anchor the popup to the map.
+	this.overlay = new Overlay({
+	    element: document.getElementById('popup'),
+	    autoPan: true,
+	    autoPanAnimation: {
+		duration: 250
+	    }
+	});
+
+	// Close the popup if the close button is clicked.
+	this.closer.onclick = function(){
+	    this.overlay.setPosition(undefined);
+	    this.closer.blur();
+	};
     }
-});
 
-// Handler for the popup close button
-popup_closer.onclick = function() {
-    popupOverlay.setPosition(undefined);
-    popup_closer.blur();
-    return false;
+    // Close the popup if one is open.
+    close() {
+	this.overlay.setPosition(undefined);
+	this.closer.blur();
+    }
 };
-

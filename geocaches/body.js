@@ -8,14 +8,13 @@ import {OSM, Vector as VectorSource} from 'ol/source.js';
 import {Circle as CircleStyle, Fill, Stroke, Style} from 'ol/style.js';
 
 import Feature from 'ol/Feature.js';
-import Geolocation from 'ol/Geolocation.js';
-import Point from 'ol/geom/Point.js';
 
 // Used to show position on status bar
 import {toStringHDMS} from 'ol/coordinate.js';
 import {toLonLat} from 'ol/proj.js';
 
-import {popupOverlay, popupContainer} from './popup.js';
+import {Popup} from './popup.js';
+import {Geolocator} from './geolocation.js';
 
 import 'bootstrap/dist/js/bootstrap.min.js';
 // bootstrap dependencies will pull in jquery and popper
@@ -104,81 +103,39 @@ var view = new View({
     center: [-13784553, 5762546],
     zoom: 11});
 
+var popup = new Popup();
+
 var map = new Map({
     interactions: defaultInteractions().extend([dragAndDropInteraction]),
     layers: [
 	new TileLayer({ source: new OSM() })
     ],
-    overlays: [popupOverlay],
+    overlays: [popup.overlay],
     target: 'map',
     view: view
 });
 
-// == GEOLOCATION ==
+// == GPS position ==
 
-var geolocation = new Geolocation({
-    trackingOptions : { enableHighAccuracy: true },
-    projection : view.getProjection()
-});
-
-function el(id) {
-    return document.getElementById(id);
-}
-
-el('track').addEventListener('change', function() {
-    geolocation.setTracking(this.checked);
-});
-
-// update the HTML page when the position changes.
-geolocation.on('change', function() {
-    el('accuracy').innerText = geolocation.getAccuracy() + ' [m]';
-    el('altitude').innerText = geolocation.getAltitude() + ' [m]';
-    el('altitudeAccuracy').innerText = geolocation.getAltitudeAccuracy() + ' [m]';
-    el('heading').innerText = geolocation.getHeading() + ' [rad]';
-    el('speed').innerText = geolocation.getSpeed() + ' [m/s]';
-});
-
-// handle geolocation error.
-geolocation.on('error', function(error) {
-    var info = document.getElementById('gpsinfo');
-    info.innerHTML = error.message;
-    info.style.display = '';
-});
-
-var accuracyFeature = new Feature();
-geolocation.on('change:accuracyGeometry', function() {
-    accuracyFeature.setGeometry(geolocation.getAccuracyGeometry());
-});
-
-var positionFeature = new Feature();
-positionFeature.setStyle(new Style({
+var gps_position_feature = new Feature();
+gps_position_feature.setStyle(new Style({
     image: new CircleStyle({
 	radius: 6,
-	fill: new Fill({
-	    color: '#3399CC'
-	}),
-	stroke: new Stroke({
-	    color: '#fff',
-	    width: 2
-	})
+	fill: new Fill({ color: '#3399CC' }),
+	stroke: new Stroke({ color: '#fff', width: 2 })
     })
 }));
+var gps_accuracy_feature = new Feature();
 
-geolocation.on('change:position', function() {
-    var coordinates = geolocation.getPosition();
-    positionFeature.setGeometry(coordinates ?
-				new Point(coordinates) : null);
-    view.setCenter(coordinates);
-    console.log('updated position', coordinates);
-});
-
-new VectorLayer({
+// Add a new vector layer to the map.
+var vector_layer = new VectorLayer({
     map: map,
     source: new VectorSource({
-	features: [accuracyFeature, positionFeature]
+	features: [gps_accuracy_feature, gps_position_feature]
     })
 });
 
+var mylocation = new Geolocator(view, gps_position_feature, gps_accuracy_feature);
 
 // == DRAG AND DROP ==
 
@@ -192,7 +149,6 @@ dragAndDropInteraction.on('addfeatures', function(event) {
     }));
     map.getView().fit(vectorSource.getExtent());
 });
-
 
 // == GPX info ==
 
@@ -221,13 +177,25 @@ var featureInfo = function(pixel) {
     return info;
 }
 
+// Install event handlers
+
+/*
+The reason this is turned off is that when you click a dot near the top of the map,
+it cause a scroll which then immediately fires this event. Fix somehow?? A counter??
+map.on('movestart', function(evt) {
+if the popup is open, increment counter
+if counter is > 1 then
+    popup.close();
+});
+*/
+
 map.on('pointermove', function(evt) {
     // Handler for the map cursor
     if (evt.dragging) {	return; }
 
     var coordinate = evt.coordinate;
     var latlon = toStringHDMS(toLonLat(coordinate));
-    document.getElementById('mapinfo').innerHTML = latlon;
+    document.getElementById('cursor_position').innerHTML = latlon;
 });
 
 map.on('click', function(evt) {
@@ -239,8 +207,8 @@ map.on('click', function(evt) {
     
     // Set up where the popup will pop up.
     var coordinate = evt.coordinate;
-    popupOverlay.setPosition(coordinate);
-    popupContainer.innerHTML = mycontent;
+    popup.overlay.setPosition(coordinate);
+    popup.container.innerHTML = mycontent;
     
     console.log('click ' + evt.coordinate);
 });

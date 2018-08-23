@@ -7,7 +7,23 @@ h1 {
     text-align: center;
 }
 
+#cursor_position {
+    font: arial;
+    text-align: right;
+    color: white;
+    background-color: darkgrey;
+    padding-right: 10px;
+}
 
+.tracking {
+    color: white;
+    background-color: black;
+}
+
+.tracking_on {
+    color: white;
+    background-color: green;
+}
 
 .ol-popup {
     position: absolute;
