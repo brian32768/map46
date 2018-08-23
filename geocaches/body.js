@@ -109,7 +109,7 @@ var map = new Map({
     layers: [
 	new TileLayer({ source: new OSM() })
     ],
-//    overlays: [popupOverlay],
+    overlays: [popupOverlay],
     target: 'map',
     view: view
 });
@@ -197,7 +197,7 @@ dragAndDropInteraction.on('addfeatures', function(event) {
 // == GPX info ==
 
 // Look up GPX info and format it for display.
-featureInfo = function(pixel) {
+var featureInfo = function(pixel) {
     var features = [];
 
     // Make a list of each GPX feature found at this pixel
@@ -222,19 +222,18 @@ featureInfo = function(pixel) {
 }
 
 map.on('pointermove', function(evt) {
-    if (evt.dragging) {
-	return;
-    }
-//    var pixel = map.getEventPixel(evt.originalEvent);
+    // Handler for the map cursor
+    if (evt.dragging) {	return; }
 
     var coordinate = evt.coordinate;
     var latlon = toStringHDMS(toLonLat(coordinate));
     document.getElementById('mapinfo').innerHTML = latlon;
 });
 
-map.on('click', popup_click) = function(evt) {
+map.on('click', function(evt) {
     // Handler for click events on map.
 
+//    var pixel = map.getEventPixel(evt.originalEvent);
     var mycontent = featureInfo(evt.pixel);
     if (!mycontent) { return; } // nothing to see here 
     
@@ -244,6 +243,6 @@ map.on('click', popup_click) = function(evt) {
     popupContainer.innerHTML = mycontent;
     
     console.log('click ' + evt.coordinate);
-}
+});
 
 console.log('body.js loaded');

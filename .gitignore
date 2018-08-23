@@ -3,7 +3,7 @@ __MACOSX/
 
 # Parcel or node or something
 .cache/
-dist/*
+dist/
 UpgradeLog.htm
 
 # Visual Studio
