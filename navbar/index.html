@@ -4,6 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <link rel="shortcut icon" href="../favicon.ico" type="image/x-icon">
     <title>navbar test</title>
 
     <script src="./head.js"></script>
@@ -16,8 +17,12 @@
       <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navigation">
         <span class="navbar-toggler-icon"></span>
       </button>
+
       <div class="collapse navbar-collapse" id="navigation">
         <ul class="navbar-nav mr-auto">
+          <li class="nav-item">
+	    <button id="sidebar-collapse" class="btn btn-info">sidebar</button>
+	  </li>
           <li class="nav-item"><a class="nav-link" href="#welcome"> Welcome</a></li>
           <li class="nav-item"><a class="nav-link" href="#products"> Products</a></li>
           <li class="nav-item"><a class="nav-link" href="#services"> Services</a></li>
@@ -50,22 +55,42 @@
 	  <h1>Responsive navbar</h1>
 	</div>
       </div>
-    </div>
 
-    <div class="container-fluid example-section bg-example-welcome" id="products">
-      <div class="container">
-	<h3>Products</h3>
-	This app demonstrates the bootstrap responsive navbar.
-	When the browser window gets narrow (on a phone for example),
-	the navbar collapses down into a "hamburger" icon. Click
-	on the hamburger to see the navbar items.
-      </div>
-    </div>
+      <div class="wrapper">
+	<div id="sidebar" class="sidebar.active">
+	  <div class="sidebar-header">
+	    <h3>table of contents</h3>
+	  </div>
+	  <ol class="list-unstyled components">
+	    <li>Basic economic theory</li>
+	    <li>Quarks and intelligence</li>
+	    <li>Burning Man and society</li>
+	    <li>History of exploration</li>
+	    <li>Early childhood development</li>
+	    <li>Secrets of the Ritual</li>
+	  </ol>
+	</div>
+	<div id="content">
+	  <div class="container">
+	    <h3>Minor Planets</h3>
+	    <p>
+Minor Planets was the one solid account we had and naturally we wanted to hold on to it. The company was a blue-chip mining operation working the beryllium-rich asteroid belt out of San Francisco. It was one of the first outfits to use servo-pilots on its freight runs and we'd been awarded the refuel rights for two years because of our orbital position. The servos themselves were beautiful pieces of machinery and just about as close as science had come so far to producing the pure android. Every one of them was plastic hand-molded and of course they were equipped with rationaloid circuits. They had to be to ferry those big cargoes back and forth from the rock belt to Frisco. As rationaloids, Minor Planets had to pay them wages under California law, but I'll bet it wasn't half what the company would have to pay human pilots for doing the same thing.
+	    </p>
+	  </div>
 
-    <div class="container-fluid example-section bg-example-welcome" id="services">
-      <div class="container">
-	<h3>Services</h3>
-	I haven't written anything here.
+	  <div class="container">
+	    <h3>Products</h3>
+	    This app demonstrates the bootstrap responsive navbar.
+	    When the browser window gets narrow (on a phone for example),
+	    the navbar collapses down into a "hamburger" icon. Click
+	    on the hamburger to see the navbar items.
+	  </div>
+	</div>
+
+	<div class="container">
+	  <h3>Services</h3>
+	  I haven't written anything here.
+	</div>
       </div>
     </div>
 

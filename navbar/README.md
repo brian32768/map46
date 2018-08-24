@@ -1,6 +1,7 @@
 # map46/navbar
 
-This app just demonstrates a responsive navbar.
+This app demonstrates a responsive navbar.
+Today I added collapsible sidebars.
 
 # Install some packages
 

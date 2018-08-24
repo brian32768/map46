@@ -1,4 +1,32 @@
-﻿body {
+﻿.wrapper {
+    display: flex;
+    width: 100%;
+    align-items: stretch;
+}
+
+#sidebar {
+    background-color: #FFD;
+    min-width: 250px;
+    max-width: 250px;
+    min-height: 100vh;
+}
+
+/* hide on desktop, show on mobile */
+#sidebar.active {
+    margin-left: -250px;
+}
+
+@media (max-width: 768px) {
+    #sidebar {
+	margin-left: -250px;
+    }
+    #sidebar-active {
+	margin-left: 0;
+    }
+}
+
+
+body {
     background-color: darkgray;
 }
 
