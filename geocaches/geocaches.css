@@ -2,9 +2,8 @@
     background-color: darkgray;
 }
 
-h1 {
-    color: brown;
-    text-align: center;
+#branding {
+    color: #9FEFEF;
 }
 
 #cursor_position {
