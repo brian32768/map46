@@ -9,7 +9,7 @@ Currently the file can be in GPX, GeoJSON, IGC, KML or TopoJSON format.
 
 In theory install only the global ones, assuming you have not already.
 
- npm install --global gulp-cli
+ npm install --global parcel-builder
 
 Parcel should be able to install the others using
 
@@ -19,16 +19,16 @@ because of entries in package-lock.json.
 
 I listed everything that I did here anyway, just in case.
 
- npm install --save-dev ol
- npm install --save-dev bootstrap
- npm install --save-dev sass
- npm install --save-dev node-sass
- npm install --save-dev gulp@^next
- npm install --save-dev glyphicons-halflings
+ npm install --save ol
+ npm install --save bootstrap
+ npm install --save sass
+ npm install --save node-sass
+ npm install --save gulp@^next
+ npm install --save glyphicons-halflings
 
 Bootstrap wants this but for some reason does not install it.
 
- npm install --save-dev popper.js@^1.14.4
+ npm install --save popper.js@^1.14.4
 
 # test it (from a cmd not a bash)
 
