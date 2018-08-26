@@ -15,6 +15,7 @@ import {toLonLat} from 'ol/proj.js';
 
 import {Popup} from './popup.js';
 import {Geolocator} from './geolocation.js';
+import {GetGPX} from './garmin.js';
 
 import 'bootstrap/dist/js/bootstrap.min.js';
 // bootstrap dependencies will pull in jquery and popper
@@ -201,7 +202,6 @@ map.on('pointermove', function(evt) {
 map.on('click', function(evt) {
     // Handler for click events on map.
 
-//    var pixel = map.getEventPixel(evt.originalEvent);
     var mycontent = featureInfo(evt.pixel);
     if (!mycontent) { return; } // nothing to see here 
     
@@ -212,5 +212,9 @@ map.on('click', function(evt) {
     
     console.log('click ' + evt.coordinate);
 });
+
+document.getElementById('readgpx').addEventListener('click', function() {
+	GetGPX();
+    });
 
 console.log('body.js loaded');

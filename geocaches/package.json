@@ -5,6 +5,7 @@
   "author": "Brian Wilson",
   "scripts": {
     "test": "parcel serve --open chrome index.html",
+    "testnc": "parcel serve index.html",
     "build": "parcel build index.html",
     "start": "node server.js"
   },
