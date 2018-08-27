@@ -1,0 +1,201 @@
+﻿body {
+    background-color: darkgray;
+}
+
+#branding {
+    color: #9FEFEF;
+}
+
+#cursor_position {
+    font: arial;
+    text-align: right;
+    color: white;
+    background-color: darkgrey;
+    padding-right: 10px;
+}
+
+.tracking {
+    color: white;
+    background-color: black;
+}
+
+.tracking_on {
+    color: white;
+    background-color: green;
+}
+
+.ol-popup {
+    position: absolute;
+    background-color: white;
+    -webkit-filter: drop-shadow(0 1px 4px rgba(0,0,0,0.2));
+    filter: drop-shadow(0 1px 4px rgba(0,0,0,0.2));
+    padding: 15px;
+    border-radius: 10px;
+    border: 1px solid #cccccc;
+    bottom: 12px;
+    left: -50px;
+    min-width: 280px;
+}
+.ol-popup:after, .ol-popup:before {
+    top: 100%;
+    border: solid transparent;
+    content: " ";
+    height: 0;
+    width: 0;
+    position: absolute;
+    pointer-events: none;
+}
+.ol-popup:after {
+    border-top-color: white;
+    border-width: 10px;
+    left: 48px;
+    margin-left: -10px;
+}
+.ol-popup:before {
+    border-top-color: #cccccc;
+    border-width: 11px;
+    left: 48px;
+    margin-left: -11px;
+}
+.ol-popup-closer {
+    text-decoration: none;
+    position: absolute;
+    top: 2px;
+    right: 8px;
+}
+.ol-popup-closer:after {
+    content: "✖";
+}
+
+
+
+
+#top {
+    background-color: lightgray;
+}
+
+#gpsinfo {
+    color: white;
+    background-color: darkgray;
+}
+
+#bottom {
+    background-color: lightgray;
+}
+
+#main {
+    background-color: lightgray;
+}
+
+#menu {
+    background-color: lightgray;
+}
+
+#nav {
+    color: white;
+    background-color: gray;
+}
+
+button {
+    color: white;
+    background-color: black;
+}
+
+.bg-taxlots-light {
+	background-color: white;
+	color: #504747;
+}
+
+.bg-taxlots-welcome {
+	background-size: cover;
+	color: #504747;
+}
+
+.bg-taxlots-map {
+	background-size: cover;
+	color: #504747;
+}
+
+.jumbotron-welcome {
+	background-size: cover;
+	color: white;
+}
+
+.bg-taxlots-dark .nav-tabs a {
+	color: white;
+}
+
+.navbar-taxlots {
+	background-color: #504747;
+	border-color: black;
+	border-radius: 0;
+	margin-bottom: 0px;
+}
+
+.navbar-taxlots .navbar-brand {
+	color: white;
+	font-weight: bold;
+}
+
+.navbar-taxlots .nav-item > .nav-link {
+	color: white;
+}
+
+.navbar-taxlots .nav-item > .nav-link:hover {
+	background-color: #504747;
+	color: gray;
+}
+
+.navbar-taxlots .nav-pills > li.active > a {
+	background-color: #504747;
+	color: gray;
+}
+
+.navbar-taxlots .dropdown-menu {
+	background-color: #504747;
+	border-color: black;
+}
+
+.navbar-taxlots .dropdown-menu > a  {
+	color: white;
+	background-color: #504747;
+}
+
+.navbar-taxlots .dropdown-menu > a:hover  {
+	color: gray;
+	background-color: #504747;
+}
+
+.navbar-taxlots .dropdown-menu > a:focus  {
+	color: gray;
+	background-color: #504747;
+}
+
+.navbar-taxlots .dropdown-menu > .active > a:focus {
+	color: gray;
+	background-color: #504747;
+}
+
+.navbar-taxlots > .navbar-toggler {
+	color: white;
+}
+
+.nav-pills > .active > a, .nav-pills > .active > a:hover {
+    background-color: grey;
+}
+
+.nav-pills .nav-link.active, .nav-pills .nav-link.active:focus, .nav-pills .nav-link.active:hover,
+.nav-pills .nav-item.open .nav-link,
+.nav-pills .nav-item.open .nav-link:focus,
+.nav-pills .nav-item.open .nav-link:hover {
+  background-color: grey;
+}
+
+.navbar-taxlots>.navbar-toggler {
+  color: white;
+  border: 1px solid rgba(255, 255, 255, 0.5);
+}
+
+.navbar-taxlots .navbar-toggler-icon {
+  background-image: url("data:image/svg+xml;charset=utf8,<svg viewBox='0 0 30 30' xmlns='http://www.w3.org/2000/svg'><path stroke='rgba(255, 255, 255, 0.5)' stroke-width='2' stroke-linecap='round' stroke-miterlimit='10' d='M4 7h22M4 15h22M4 23h22'/></svg>");
+}

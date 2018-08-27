@@ -1,0 +1,35 @@
+{
+  "name": "taxlots",
+  "version": "1.0.0",
+  "description": "Taxlots test app",
+  "author": "Brian Wilson",
+  "scripts": {
+    "test": "parcel serve --open chrome index.html",
+    "build": "parcel build index.html",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/brian32768/map46.git"
+  },
+  "keywords": [
+    "openlayers",
+    "openlayers 5",
+    "taxlots"
+  ],
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/brian32768/map46/issues"
+  },
+  "homepage": "https://github.com/brian32768/map46#readme",
+  "dependencies": {
+    "jquery": "^3.3.1",
+    "maki": "^2.1.0",
+    "ol": "^5.1.3"
+  },
+  "devDependencies": {
+    "@mapbox/maki": "^4.0.0",
+    "bootstrap": "^4.1.3",
+    "popper.js": "^1.14.4"
+  }
+}

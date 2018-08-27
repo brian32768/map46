@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <link rel="shortcut icon" href="../favicon.ico" type="image/x-icon">
+    <title>map 46 taxlots</title>
+
+    <script src="./head.js"></script>
+    <link rel="stylesheet" href="./webmaps.css" />
+
+  </head>
+  <body>
+   
+    <nav class="navbar navbar-expand-lg navbar-taxlots">
+      <span id="branding">
+	<img src="../map46-light.svg" width="36">
+	Taxlots Map &nbsp;
+      </span>
+      <a class="navbar-brand" href="#">County GIS</a>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navigation">
+        <ul class="navbar-nav mr-auto">
+          <li class="nav-item"><a class="nav-link" href="#faq"> FAQ</a></li>
+          <li class="nav-item"><a class="nav-link" href="#help"> Help</a></li>
+          <li class="nav-item"><a class="nav-link" href="#" data-toggle="modal" data-target="#contactus-modal"> Contact Us </a></li>
+        </ul>
+        <ul class="navbar-nav pull-right">
+          <li class="nav-item dropdown ">
+            <a href="#" class="nav-link dropdown-toggle" data-toggle= "dropdown" role="button"
+               aria-haspopup="true" aria-expanded="false"> Profile <span class="caret"></span>
+            </a>
+            <div class="dropdown-menu dropdown-menu-right">
+              <a class="dropdown-item" href="#" data-toggle="modal" data-target="#profile-modal"> Profile </a>
+              <a class="dropdown-item" href="#" data-toggle="modal" data-target= "#settings-modal"> Settings </a>
+              <div class="dropdown-divider"></div>
+              <a class="dropdown-item" href="#"> Logout </a>
+            </div>
+          </li>
+        </ul>
+      </div>
+    </nav>
+
+    <!------------------------------------------------------------------------------------->
+
+    <div class="modal fade" id="contactus-modal">
+      <div class="modal-dialog">
+	<div class="modal-content">
+	  <div class="modal-header">
+            <h4 class="modal-title" id="profile-modal-label">Contact us</h4>
+	    <button type="button" class="close" data-dismiss="modal"><span>&times;</span></button>
+	  </div>
+
+	  <div class="modal-body">
+	    Call extension 1134.
+	    Email <a href="mailto:gis-info@co.clatsop.or.us">gis-info@co.clatsop.or.us</a>
+	  </div>
+
+	</div>
+      </div>
+    </div>
+
+    
+    <div class="modal fade" id="profile-modal">
+      <div class="modal-dialog">
+	<div class="modal-content">
+	  <div class="modal-header">
+            <h4 class="modal-title" id="profile-modal-label">Profile</h4>
+	    <button type="button" class="close" data-dismiss="modal"><span>&times;</span></button>
+	  </div>
+
+	  <div class="modal-body">
+	    Profile
+	  </div>
+
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+          </div>
+	</div>
+      </div>
+    </div>
+
+    <div class="modal fade" id="settings-modal">
+      <div class="modal-dialog">
+	<div class="modal-content">
+	  <div class="modal-header">
+            <h4 class="modal-title" id="settings-modal-label">Settings</h4>
+	    <button type="button" class="close" data-dismiss="modal"><span>&times;</span></button>
+	  </div>
+
+	  <div class="modal-body">
+	    Settings
+	  </div>
+
+          <div class="modal-footer">
+            <button type="button" class="btn btn-success">Save changes</button>
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+          </div>
+	</div>
+      </div>
+    </div>
+
+    <!------------------------------------------------------------------------------------->
+
+    <div class="container-fluid taxlots-section bg-taxlots-map" id="map">
+        <div id="cursor_position">&nbsp;</div>
+	<div class="container">
+	  <div class="row" id="map_row">
+            <div class="map" id="map"></div>
+	    <div id="popup" class="ol-popup">
+	      <a href="#" id="popup-closer" class="ol-popup-closer"></a>
+	      <div id="popup-content"></div>
+	    </div>
+	</div>
+      </div>
+    </div>
+
+    <footer class="bg-taxlots-dark">Every page needs a footer</footer>
+
+    <script src="./body.js"></script>
+  </body>
+</html>
