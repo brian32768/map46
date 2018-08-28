@@ -16,7 +16,7 @@ function el(id) {
 export class Geolocator {
 
     
-    constructor(view, position_feature, accuracy_feature, headingChanged) {
+    constructor(view, position_feature, accuracy_feature) {
 
 	var geolocation = new Geolocation({
 	    trackingOptions : { enableHighAccuracy: true },
@@ -51,13 +51,12 @@ export class Geolocator {
 	    var heading = geolocation.getHeading();
 	    var speed   = geolocation.getSpeed();
 
-	    /* Uncomment this to test with real numbers.
+	    /* Uncomment this to test with real numbers. */
 	    posacc = 10;
 	    alt = 100;
 	    altacc = posacc * 2;
 	    heading = 3.14;
 	    speed = 6;
-	    */
 	    
 	    var msg = '';
 	    if (typeof posacc != 'undefined') {
@@ -72,12 +71,15 @@ export class Geolocator {
 
 	    if (typeof heading != 'undefined') {
 		// If heading changes more than 10% then callback to rotate map.
-		if (heading < (this.old_heading * .90)
-		    || heading > (this.old_heading * 1.10)) {
-		    headingChanged(heading);
+		if ((heading < (this.old_heading * .90))
+		    || (heading > (this.old_heading * 1.10)) ) {
+
+		    view.rotation = heading;
+		    console.log("Rotation set to " + heading);
+
 		    this.old_heading = heading;
 		}
-		msg += ' head: ' + Math.round(new_heading * 57.29578) + '°';
+		msg += ' head: ' + Math.round(heading * 57.29578) + '°';
 	    }
 
 	    if (typeof speed != 'undefined') {

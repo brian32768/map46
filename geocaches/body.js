@@ -142,12 +142,7 @@ var vector_layer = new VectorLayer({
     })
 });
 
-var mylocation = new Geolocator(view, gps_position_feature, gps_accuracy_feature, function(heading_in_radians) {
-    view.rotation = heading_in_radians;
-});
-
-
-
+var mylocation = new Geolocator(view, gps_position_feature, gps_accuracy_feature);
 
 // == DRAG AND DROP ==
 
