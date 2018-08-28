@@ -1,6 +1,8 @@
 ﻿// body.js
 
-import { Map, View } from 'ol';
+import Map from 'ol/Map.js';
+import View from 'ol/View.js';
+import { defaults as defaultControls, OverviewMap } from 'ol/control.js';
 import {Tile as TileLayer, Vector as VectorLayer} from 'ol/layer.js';
 import {defaults as defaultInteractions, DragAndDrop} from 'ol/interaction.js';
 import {GPX, KML} from 'ol/format.js';
@@ -100,12 +102,16 @@ var dragAndDropInteraction = new DragAndDrop({
 
 var view = new View({
     center: [-13784553, 5762546],
-    zoom: 11});
+    zoom: 11,
+    minZoom: 10,
+    maxZoom: 19
+});
 
 var popup = new Popup();
 
 var map = new Map({
     interactions: defaultInteractions().extend([dragAndDropInteraction]),
+    controls: defaultControls().extend([ new OverviewMap() ]),
     layers: [
 	new TileLayer({ source: new OSM() })
     ],
@@ -114,25 +120,10 @@ var map = new Map({
     view: view
 });
 
-// == GPS position ==
+// == Overview map ==
 
-var gps_position_feature = new Feature();
-gps_position_feature.setStyle(new Style({
-    image: new CircleStyle({
-	radius: 6,
-	fill: new Fill({ color: '#3399CC' }),
-	stroke: new Stroke({ color: '#fff', width: 2 })
-    })
-}));
-var gps_accuracy_feature = new Feature();
 
-// Add a new vector layer to the map.
-var vector_layer = new VectorLayer({
-    map: map,
-    source: new VectorSource({
-	features: [gps_accuracy_feature, gps_position_feature]
-    })
-});
+
 
 // == DRAG AND DROP ==
 
