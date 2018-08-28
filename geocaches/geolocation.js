@@ -1,16 +1,11 @@
 // geolocation.js
-//
+// Report our current position
+
 import Geolocation from 'ol/Geolocation.js';
 import Point from 'ol/geom/Point.js';
 
-/* FIXME -- This is tied too tightly to the UI!! 
-
-I think a good way to handle it would be to build a descriptive string
-and let the caller handle display it.
-
-String should go BLANK when track is turned off.
-
-*/
+// Build a descriptive string and let the caller handle display it.
+// String should go BLANK when track is turned off.
 
 var tracking_toggled = false;
 
@@ -19,11 +14,16 @@ function el(id) {
 }
 
 export class Geolocator {
-    constructor(view, position_feature, accuracy_feature,) {
+
+    
+    constructor(view, position_feature, accuracy_feature, headingChanged) {
+
 	var geolocation = new Geolocation({
 	    trackingOptions : { enableHighAccuracy: true },
 	    projection : view.getProjection()
 	});
+
+	this.old_heading = 0;
 
 	el('track').addEventListener('click', function() {
 	    el('track').classList.toggle("tracking_on");
@@ -40,9 +40,9 @@ export class Geolocator {
 	    console.log("Tracking " + tracking);
 	});
 
-	// Install handlers
+	// === Install handlers ===
 
-	// Update the position metadata display when the GPS data changes.
+	// Handle display of GPS metadata when the GPS data changes.
 	geolocation.on('change', function() {
 
 	    var posacc  = geolocation.getAccuracy();
@@ -69,9 +69,17 @@ export class Geolocator {
 	    if (typeof altacc != 'undefined') {
 		msg += ' elev acc: ' + Math.round(altacc * 3.28084) + "'";
 	    }
+
 	    if (typeof heading != 'undefined') {
-		msg += ' head: ' + Math.round(heading * 57.29578) + '°';
+		// If heading changes more than 10% then callback to rotate map.
+		if (heading < (this.old_heading * .90)
+		    || heading > (this.old_heading * 1.10)) {
+		    headingChanged(heading);
+		    this.old_heading = heading;
+		}
+		msg += ' head: ' + Math.round(new_heading * 57.29578) + '°';
 	    }
+
 	    if (typeof speed != 'undefined') {
 		msg += ' speed: ' + Math.round(speed * 2.2369362920544025) + ' mph';
 	    }
@@ -86,7 +94,7 @@ export class Geolocator {
 	    info.style.display = '';
 	});
 
-	// Handle change of position on map.
+	// Handle dot that shows our position on the map.
 	geolocation.on('change:position', function() {
 	    var coordinates = geolocation.getPosition();
 	    position_feature.setGeometry(coordinates ? new Point(coordinates) : null);
@@ -99,7 +107,7 @@ export class Geolocator {
 	    }
 	});
 
-	// Handle change of accuracy on map.
+	// Handle change of accuracy on map. Ring gets bigger or smaller.
 	geolocation.on('change:accuracyGeometry', function() {
 	    accuracy_feature.setGeometry(geolocation.getAccuracyGeometry());
 	});

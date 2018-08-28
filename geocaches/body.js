@@ -1,6 +1,8 @@
 ﻿// body.js
+//
 
-import { Map, View } from 'ol';
+import Map from 'ol/Map.js';
+import View from 'ol/View.js';
 import {Tile as TileLayer, Vector as VectorLayer} from 'ol/layer.js';
 import {defaults as defaultInteractions, DragAndDrop} from 'ol/interaction.js';
 import {GPX, KML} from 'ol/format.js';
@@ -102,7 +104,11 @@ var dragAndDropInteraction = new DragAndDrop({
 
 var view = new View({
     center: [-13784553, 5762546],
-    zoom: 11});
+    zoom: 11,
+    minZoom: 10,
+    maxZoom: 19,
+    rotation: 0
+});
 
 var popup = new Popup();
 
@@ -136,7 +142,12 @@ var vector_layer = new VectorLayer({
     })
 });
 
-var mylocation = new Geolocator(view, gps_position_feature, gps_accuracy_feature);
+var mylocation = new Geolocator(view, gps_position_feature, gps_accuracy_feature, function(heading_in_radians) {
+    view.rotation = heading_in_radians;
+});
+
+
+
 
 // == DRAG AND DROP ==
 
@@ -213,8 +224,11 @@ map.on('click', function(evt) {
     console.log('click ' + evt.coordinate);
 });
 
+/*
 document.getElementById('readgpx').addEventListener('click', function() {
 	GetGPX();
     });
+
+*/
 
 console.log('body.js loaded');
