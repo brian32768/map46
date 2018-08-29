@@ -6,22 +6,70 @@ import { defaults as defaultControls, OverviewMap } from 'ol/control.js';
 import {Tile as TileLayer, Vector as VectorLayer} from 'ol/layer.js';
 import {defaults as defaultInteractions, DragAndDrop} from 'ol/interaction.js';
 import {GPX, KML} from 'ol/format.js';
-import {OSM, Vector as VectorSource} from 'ol/source.js';
+import OSM from 'ol/source/OSM.js';
 import {Circle as CircleStyle, Fill, Stroke, Style} from 'ol/style.js';
-
 import Feature from 'ol/Feature.js';
+import EsriJSON from 'ol/format/EsriJSON.js';
+import {tile as tileStrategy} from 'ol/loadingstrategy.js';
+import VectorSource from 'ol/source/Vector.js';
+import XYZ from 'ol/source/XYZ.js';
+import {createXYZ} from 'ol/tilegrid.js';
+
+import jquery from 'jquery/dist/jquery.min.js';
 
 // Used to show position on status bar
 import {toStringHDMS} from 'ol/coordinate.js';
 import {toLonLat} from 'ol/proj.js';
 
 import {Popup} from './popup.js';
+//import {geojson} from './geojson.js';
 
 import 'bootstrap/dist/js/bootstrap.min.js';
 // bootstrap dependencies will pull in jquery and popper
 
 var esri    = "https://services.arcgisonline.com/ArcGIS/rest/services/";
 var service = 'World_Street_Map';
+
+// ==== Our taxlots service ====
+
+var taxlotsUrl = 'https://cc-gis.clatsop.co.clatsop.or.us/arcgis/rest/services/web_mercator/Taxlots_3857/MapServer/';
+var taxlotsLayer = '0';
+var esrijsonFormat = new EsriJSON();
+
+var taxlotsVectorSource = new VectorSource({
+    loader: function(extent, resolution, projection) {
+	
+        var url = taxlotsUrl + taxlotsLayer + '/query/?f=json&' +
+            'returnGeometry=true&spatialRel=esriSpatialRelIntersects&geometry=' +
+            encodeURIComponent('{"xmin":' + extent[0] + ',"ymin":' +
+			       extent[1] + ',"xmax":' + extent[2] + ',"ymax":' + extent[3] +
+			       ',"spatialReference":{"wkid":102100}}') +
+            '&geometryType=esriGeometryEnvelope&inSR=102100&outFields=*' +
+            '&outSR=102100';
+	
+        jquery.ajax({url: url, dataType: 'jsonp', success: function(response) {
+            if (response.error) {
+		alert(response.error.message + '\n' +
+                      response.error.details.join('\n'));
+            } else {
+		// dataProjection will be read from document
+		var features = esrijsonFormat.readFeatures(response, {
+                    featureProjection: projection
+		});
+		if (features.length > 0) {
+                    taxlotsVectorSource.addFeatures(features);
+		}
+            }
+        }});
+    },
+    strategy: tileStrategy(createXYZ({
+        tileSize: 512
+    }))
+});
+
+var taxlots_layer = new VectorLayer({
+    source: taxlotsVectorSource
+});
 
 // Styles for GPX data -------------------------------------------------
 
@@ -101,29 +149,30 @@ var dragAndDropInteraction = new DragAndDrop({
 });
 
 var view = new View({
-    center: [-13784553, 5762546],
+/*    center: [-13784553, 5762546],
     zoom: 11,
     minZoom: 10,
-    maxZoom: 19
+    maxZoom: 19*/
+    center: [0,0], zoom: 2
 });
 
 var popup = new Popup();
 
 var map = new Map({
     interactions: defaultInteractions().extend([dragAndDropInteraction]),
-    controls: defaultControls().extend([ new OverviewMap() ]),
+    controls: defaultControls().extend([
+	new OverviewMap()
+    ]),
     layers: [
-	new TileLayer({ source: new OSM() })
+	new TileLayer({
+	    source: new OSM()
+	}),
+	taxlots_layer
     ],
     overlays: [popup.overlay],
     target: 'map',
     view: view
 });
-
-// == Overview map ==
-
-
-
 
 // == DRAG AND DROP ==
 

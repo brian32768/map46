@@ -15,6 +15,14 @@ In theory install only the global ones, assuming you have not already.
 Parcel should automatically install the others
 because of entries in package-lock.json.
 
+# Get some taxlots
+
+I project the data into Web Mercator and put it into an FGDB using an ESRI Model called "Copy and project".
+I was forced to export the data to GEOJSON using GDAL because ESRI tools fail.
+The file taxlots.json contains the data.
+
+FIXME I should strip unused attributes.
+
 # Test it
 
 NB from cmd not bash.
