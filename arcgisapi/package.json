@@ -1,0 +1,26 @@
+{
+  "name": "arcgisapi",
+  "version": "1.0.0",
+  "description": "arcgisapi test app",
+  "author": "Brian Wilson",
+  "scripts": {
+    "test": "parcel serve --open chrome index.html",
+    "testnc": "parcel serve index.html",
+    "build": "parcel build index.html",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/brian32768/map46.git"
+  },
+  "keywords": [
+    "arcgisapi"
+  ],
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/brian32768/map46/issues"
+  },
+  "homepage": "https://github.com/brian32768/map46#readme",
+  "dependencies": {},
+  "devDependencies": {}
+}
