@@ -2,7 +2,9 @@
 //
 // The code for my very first ArcGIS API for Javascript demo.
 
-/* Using parcel-bundler instead of Dojo
+/* Using parcel-bundler instead of Dojo should I ever figure out how
+to get npm working.
+
 import Map from "esri/Map";
 import MapView from "esri/views/MapView";
 import FeatureLayer from "esri/layers/FeatureLayer";
