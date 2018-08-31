@@ -5,11 +5,10 @@ import View from 'ol/View.js';
 import { defaults as defaultControls, OverviewMap } from 'ol/control.js';
 import {Tile as TileLayer, Vector as VectorLayer} from 'ol/layer.js';
 import {defaults as defaultInteractions, DragAndDrop} from 'ol/interaction.js';
-import {GPX, KML} from 'ol/format.js';
+import {GPX, KML, EsriJSON, GeoJSON} from 'ol/format.js';
 import OSM from 'ol/source/OSM.js';
 import {Circle as CircleStyle, Fill, Stroke, Style} from 'ol/style.js';
 import Feature from 'ol/Feature.js';
-import EsriJSON from 'ol/format/EsriJSON.js';
 import {tile as tileStrategy} from 'ol/loadingstrategy.js';
 import VectorSource from 'ol/source/Vector.js';
 import XYZ from 'ol/source/XYZ.js';
@@ -30,27 +29,64 @@ import 'bootstrap/dist/js/bootstrap.min.js';
 var esri    = "https://services.arcgisonline.com/ArcGIS/rest/services/";
 var service = 'World_Street_Map';
 
-// ==== Our taxlots service ====
+// ==== Our Clatsop services ====
 
-var taxlotsUrl = 'https://cc-gis.clatsop.co.clatsop.or.us/arcgis/rest/services/web_mercator/Taxlots_3857/MapServer/';
-var taxlotsLayer = '0';
+// DON'T FORGET THE TRAILING SLASH.
+var buildingUrl   = 'https://cc-gis.clatsop.co.clatsop.or.us/arcgis/rest/services/web_mercator/buildings_microsoft/FeatureServer/';
+var buildingLayer = '0'; // clatsop_buildings
+var taxlotsUrl    = 'https://cc-gis.clatsop.co.clatsop.or.us/arcgis/rest/services/Assessment_and_Taxation/Taxlots/FeatureServer/';
+var taxlotsLayer  = '0';
+var geojsonFormat = new GeoJSON();
 var esrijsonFormat = new EsriJSON();
+
+var buildingVectorSource = new VectorSource({
+    loader: function(extent, resolution, projection) {
+	
+        var url = buildingUrl + buildingLayer + '/query/?f=json&' +
+            'returnGeometry=true&spatialRel=esriSpatialRelIntersects&geometry=' +
+            encodeURIComponent(  '{"xmin":' + extent[0] + ',"ymin":' + extent[1]
+				 + ',"xmax":' + extent[2] + ',"ymax":' + extent[3]
+				 + ',"spatialReference":{"wkid":3857}}')
+            + '&geometryType=esriGeometryEnvelope&inSR=2913&outFields=*'
+	    + '&outSR=3857';
+	
+        jquery.ajax({url: url, dataType: 'jsonp', success: function(response) {
+            if (response.error) {
+		console.log(response.error.message + response.error.details + ' IS IT SHARED?');
+            } else {
+		// dataProjection will be read from document
+		var features = esrijsonFormat.readFeatures(response, {
+                    featureProjection: projection
+		});
+		if (features.length > 0) {
+                    buildingVectorSource.addFeatures(features);
+		}
+            }
+        }});
+    },
+    strategy: tileStrategy(createXYZ({
+        tileSize: 512
+    }))
+});
+
+var building_layer = new VectorLayer({
+    source: buildingVectorSource
+});
 
 var taxlotsVectorSource = new VectorSource({
     loader: function(extent, resolution, projection) {
 	
         var url = taxlotsUrl + taxlotsLayer + '/query/?f=json&' +
             'returnGeometry=true&spatialRel=esriSpatialRelIntersects&geometry=' +
-            encodeURIComponent('{"xmin":' + extent[0] + ',"ymin":' +
-			       extent[1] + ',"xmax":' + extent[2] + ',"ymax":' + extent[3] +
-			       ',"spatialReference":{"wkid":102100}}') +
-            '&geometryType=esriGeometryEnvelope&inSR=102100&outFields=*' +
-            '&outSR=102100';
+            encodeURIComponent(  '{"xmin":' + extent[0] + ',"ymin":' + extent[1]
+			       + ',"xmax":' + extent[2] + ',"ymax":' + extent[3]
+			       + ',"spatialReference":{"wkid":3857}}')
+            + '&geometryType=esriGeometryEnvelope&inSR=3857&outFields=*'
+            + '&outSR=3857';
 	
         jquery.ajax({url: url, dataType: 'jsonp', success: function(response) {
             if (response.error) {
-		alert(response.error.message + '\n' +
-                      response.error.details.join('\n'));
+		console.log('taxlots error' + response.error.message + response.error.details);
             } else {
 		// dataProjection will be read from document
 		var features = esrijsonFormat.readFeatures(response, {
@@ -68,8 +104,15 @@ var taxlotsVectorSource = new VectorSource({
 });
 
 var taxlots_layer = new VectorLayer({
-    source: taxlotsVectorSource
+    source: taxlotsVectorSource,
+    style: new Style({
+	stroke: new Stroke({
+	    color: "#ff0000", // see https://gis.stackexchange.com/questions/132607/how-to-change-color-of-a-layer-in-openlayers#132608
+	    width: 1
+	})
+    })
 });
+
 
 // Styles for GPX data -------------------------------------------------
 
@@ -149,11 +192,11 @@ var dragAndDropInteraction = new DragAndDrop({
 });
 
 var view = new View({
-/*    center: [-13784553, 5762546],
+    center: [-13784553, 5762546],
     zoom: 11,
     minZoom: 10,
-    maxZoom: 19*/
-    center: [0,0], zoom: 2
+    maxZoom: 19
+//    center: [0,0], zoom: 2
 });
 
 var popup = new Popup();
@@ -167,6 +210,7 @@ var map = new Map({
 	new TileLayer({
 	    source: new OSM()
 	}),
+	building_layer,
 	taxlots_layer
     ],
     overlays: [popup.overlay],
