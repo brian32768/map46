@@ -19,12 +19,13 @@ because of entries in package-lock.json.
 
 I listed everything that I did here anyway, just in case.
 
- npm install --save ol
- npm install --save bootstrap
- npm install --save sass
- npm install --save node-sass
- npm install --save gulp@^next
- npm install --save glyphicons-halflings
+  npm install --save ol
+  npm install --save ol-layerswitcher
+  npm install --save bootstrap
+  npm install --save sass
+  npm install --save node-sass
+  npm install --save gulp@^next
+  npm install --save glyphicons-halflings
 
 Bootstrap wants this but for some reason does not install it.
 

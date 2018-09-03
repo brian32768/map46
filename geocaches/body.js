@@ -1,29 +1,78 @@
-﻿// body.js
-//
+﻿// geocaches body.js
 
 import Map from 'ol/Map.js';
 import View from 'ol/View.js';
+import {defaults as defaultControls, OverviewMap} from 'ol/control.js';
 import {Tile as TileLayer, Vector as VectorLayer} from 'ol/layer.js';
 import {defaults as defaultInteractions, DragAndDrop} from 'ol/interaction.js';
-import {GPX, KML} from 'ol/format.js';
+import {GPX, KML, EsriJSON, GeoJSON} from 'ol/format.js';
 import {OSM, Vector as VectorSource} from 'ol/source.js';
 import {Circle as CircleStyle, Fill, Stroke, Style} from 'ol/style.js';
-
 import Feature from 'ol/Feature.js';
+import {tile as tileStrategy} from 'ol/loadingstrategy.js';
+import XYZ from 'ol/source/XYZ.js';
+import {createXYZ} from 'ol/tilegrid.js';
 
 // Used to show position on status bar
 import {toStringHDMS} from 'ol/coordinate.js';
-import {toLonLat} from 'ol/proj.js';
+import {transform as Transform, toLonLat} from 'ol/proj.js';
+
+// layerswitcher
+import LayerSwitcher from 'ol-layerswitcher/dist/ol-layerswitcher.js';
+import './scroll.js';
 
 import {Popup} from './popup.js';
 import {Geolocator} from './geolocation.js';
 import {GetGPX} from './garmin.js';
 
+import jquery from 'jquery/dist/jquery.min.js';
 import 'bootstrap/dist/js/bootstrap.min.js';
-// bootstrap dependencies will pull in jquery and popper
 
 var esri    = "https://services.arcgisonline.com/ArcGIS/rest/services/";
 var service = 'World_Street_Map';
+
+// DON'T FORGET THE TRAILING SLASH.
+var greensourceUrl   = 'https://maps.orbisinc.com/arcgis/rest/services/Huntlease/GWR_PERMITS_MAP/MapServer/';
+var greensourceLayer = '6'; // 6 = Clatsop Ownership 
+var esrijsonFormat = new EsriJSON();
+
+var greensourceVectorSource = new VectorSource({
+    loader: function(extent, resolution, projection) {
+	
+        var url = greensourceUrl + greensourceLayer + '/query/?f=json&' +
+            'returnGeometry=true&spatialRel=esriSpatialRelIntersects&geometry=' +
+            encodeURIComponent(  '{"xmin":' + extent[0] + ',"ymin":' + extent[1]
+				 + ',"xmax":' + extent[2] + ',"ymax":' + extent[3]
+				 + ',"spatialReference":{"wkid":3857}}')
+            + '&geometryType=esriGeometryEnvelope&inSR=2913&outFields=*'
+	    + '&outSR=3857';
+	
+        jquery.ajax({url: url, dataType: 'jsonp', success: function(response) {
+            if (response.error) {
+		console.log(response.error.message + response.error.details + ' IS IT SHARED?');
+            } else {
+		// dataProjection will be read from document
+		var features = esrijsonFormat.readFeatures(response, {
+                    featureProjection: projection
+		});
+		if (features.length > 0) {
+                    greensourceVectorSource.addFeatures(features);
+		}
+            }
+        }});
+    },
+    strategy: tileStrategy(createXYZ({
+        tileSize: 512
+    }))
+});
+
+var greensource_layer = new VectorLayer({
+    source: greensourceVectorSource,
+    opacity: .70,
+    style: function(feature,resolution) {
+	return defaultStyle[feature.getGeometry().getType()];
+    }
+});
 
 // Styles for GPX data -------------------------------------------------
 
@@ -48,7 +97,7 @@ var defaultStyle = {
     }),
     'Polygon': new Style({
 	fill: new Fill({
-	    color: 'rgba(0,255,255,0.5)'
+	    color: 'rgba(0,255,128,0.5)'
 	}),
 	stroke: new Stroke({
 	    color: '#0ff',
@@ -115,7 +164,8 @@ var popup = new Popup();
 var map = new Map({
     interactions: defaultInteractions().extend([dragAndDropInteraction]),
     layers: [
-	new TileLayer({ source: new OSM() })
+	new TileLayer({ source: new OSM() }),
+	greensource_layer
     ],
     overlays: [popup.overlay],
     target: 'map',
