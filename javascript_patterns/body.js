@@ -1,7 +1,7 @@
 // body.js
 
-import {getDatestamp, datestamp} from './mock.js';
-import {Thing, TallThing} from './thing.js';
+import {getDatestamp, datestamp} from './module_ec6.js';
+import {Thing, TallThing} from './class_ec6.js';
 
 function intervalHandler(evt) {
     document.getElementById('header').innerHTML = 'The turtle time is ' + getDatestamp();

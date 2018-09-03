@@ -1,4 +1,4 @@
-// thing.js
+// class_ec6.js
 //
 // Implementing a class in EC6 format.
 
@@ -38,4 +38,4 @@ export class TallThing extends Thing {
     }
 }
 
-console.log('thing loaded');
+console.log('class_ec6 loaded');
