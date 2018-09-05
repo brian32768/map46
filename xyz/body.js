@@ -1,9 +1,8 @@
-﻿// body.js
+﻿// xyz body.js
 
 import { Map, View } from "ol";
 import TileLayer from "ol/layer/Tile";
 import XYZ from "ol/source/XYZ";
-//import OSM from "ol/source/OSM";
 import "bootstrap/dist/js/bootstrap.js";
 
 var esri = "https://services.arcgisonline.com/ArcGIS/rest/services/";

@@ -1,4 +1,4 @@
-﻿// xyz body.js
+﻿// layers body.js
 
 import { Map, View } from "ol";
 import TileLayer from "ol/layer/Tile";

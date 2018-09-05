@@ -1,4 +1,6 @@
-import "sass/sass.js";
+// xyz head.js
+//
+
 import 'bootstrap/dist/css/bootstrap';
 
 // This does not work yet. Almost.
