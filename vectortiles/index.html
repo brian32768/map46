@@ -1,69 +1,19 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Vector Tile Info</title>
+    <title>Mapbox Vector Tiles</title>
     <link rel="stylesheet" href="https://openlayers.org/en/v5.2.0/css/ol.css" type="text/css">
     <!-- The line below is only needed for old environments like Internet Explorer and Android 4.x -->
     <script src="https://cdn.polyfill.io/v2/polyfill.min.js?features=requestAnimationFrame,Element.prototype.classList,URL"></script>
-
+    <script src="https://openlayers.org/en/v5.2.0/examples/resources/mapbox-streets-v6-style.js"></script>
     <style>
-      #map {
-        position: relative;
-      }
-
-      #info {
-        z-index: 1;
-        opacity: 0;
-        position: absolute;
-        bottom: 0;
-        left: 0;
-        margin: 0;
-        background: rgba(0,60,136,0.7);
-        color: white;
-        border: 0;
-        transition: opacity 100ms ease-in;
+      .map {
+        background: #f8f4f0;
       }
     </style>
   </head>
   <body>
-    <div id="map" class="map">
-      <pre id="info"/>
-    </div>
-    <script>
-      import Map from 'ol/Map.js';
-      import View from 'ol/View.js';
-      import MVT from 'ol/format/MVT.js';
-      import VectorTileLayer from 'ol/layer/VectorTile.js';
-      import VectorTileSource from 'ol/source/VectorTile.js';
-
-      var map = new Map({
-        target: 'map',
-        view: new View({
-          center: [0, 0],
-          zoom: 2
-        }),
-        layers: [new VectorTileLayer({
-          source: new VectorTileSource({
-            format: new MVT(),
-            url: 'https://basemaps.arcgis.com/v1/arcgis/rest/services/World_Basemap/VectorTileServer/tile/{z}/{y}/{x}.pbf'
-          })
-        })]
-      });
-
-      map.on('pointermove', showInfo);
-
-      var info = document.getElementById('info');
-      function showInfo(event) {
-        var features = map.getFeaturesAtPixel(event.pixel);
-        if (!features) {
-          info.innerText = '';
-          info.style.opacity = 0;
-          return;
-        }
-        var properties = features[0].getProperties();
-        info.innerText = JSON.stringify(properties, null, 2);
-        info.style.opacity = 1;
-      }
-    </script>
+    <div id="map" class="map"></div>
+    <script src="./mapbox.js"></script>
   </body>
 </html>
