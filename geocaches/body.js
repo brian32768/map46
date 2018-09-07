@@ -19,7 +19,7 @@ import {transform as Transform, toLonLat} from 'ol/proj.js';
 
 // layerswitcher
 import LayerSwitcher from 'ol-layerswitcher/dist/ol-layerswitcher.js';
-import './scroll.js';
+import {control_scroll} from './scroll.js';
 
 import {Popup} from './popup.js';
 import {Geolocator} from './geolocation.js';

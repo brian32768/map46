@@ -1,10 +1,17 @@
 // body.js
 
-import {getDatestamp, datestamp} from './module_ec6.js';
+// Modules are one pattern for organizing your code.
+//import {m_ec3} from './module_ec3.js';  // old terse and confusing syntax
+import {getDatestamp as ec6_datestamp} from './module_ec6.js';  // new and improved syntax
+import {m_ec3} from './module_ec3.js';
+//    console.log(m_ec3.getDatestamp());
+
+// Classes are another pattern for organization.
 import {Thing, TallThing} from './class_ec6.js';
 
 function intervalHandler(evt) {
-    document.getElementById('header').innerHTML = 'The turtle time is ' + getDatestamp();
+    document.getElementById('header').innerHTML = 'EC6 time is ' + ec6_datestamp();
+    document.getElementById('footer').innerHTML = 'EC3 time is ' + m_ec3.getDatestamp();
 }
 
 var btn = document.getElementById('ici');

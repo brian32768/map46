@@ -5,7 +5,7 @@ import {OSM, Stamen} from 'ol/source.js';
 import {Group as LayerGroup} from 'ol/layer.js';
 import ImageArcGISRest from 'ol/source';
 
-(function() {
+export function map_w_scroller() {
 
     var thunderforestAttributions = [
         'Tiles &copy; <a href="http://www.thunderforest.com/">Thunderforest</a>',
@@ -109,4 +109,7 @@ import ImageArcGISRest from 'ol/source';
 
     map.addControl(new LayerSwitcher());
 
-})();
+}
+
+console.log("module scroll.js loaded");
+
