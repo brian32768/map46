@@ -7,7 +7,7 @@ import {Tile as TileLayer, Vector as VectorLayer} from 'ol/layer.js';
 import {defaults as defaultInteractions} from 'ol/interaction.js';
 import {EsriJSON, GeoJSON} from 'ol/format.js';
 import OSM from 'ol/source/OSM.js';
-import {Circle as CircleStyle, Fill, Stroke, Style} from 'ol/style.js';
+import {Circle as CircleStyle, Fill, Stroke, Style, Text} from 'ol/style.js';
 import Feature from 'ol/Feature.js';
 import {tile as tileStrategy} from 'ol/loadingstrategy.js';
 import VectorSource from 'ol/source/Vector.js';
@@ -104,6 +104,87 @@ var taxlotsVectorSource = new VectorSource({
     }))
 });
 
+var openSansAdded = false;
+
+var myDom = {
+    polygons: {
+        text: 'normal',
+        align: '',
+        baseline: 'Middle',
+        rotation: 0,
+        font: 'Arial',
+        weight: 'Normal',
+        placement: 'Point',
+        maxangle: 0,
+        overflow: '',
+        size: '24px',
+        offsetX: 0,
+        offsetY: 0,
+        color: 'black',
+        outline: 'white',
+        outlineWidth: 2,
+        maxreso: 1200,
+    }
+};
+
+var getText = function(feature, resolution, dom) {
+    var type = dom.text.value;
+    var maxResolution = dom.maxreso.value;
+    var text = feature.get('Taxlot');
+
+    if (resolution > maxResolution) {
+        text = '';
+    } else if (type == 'hide') {
+        text = '';
+    } else if (type == 'shorten') {
+        text = text.trunc(12);
+    } else if (type == 'wrap' && (!dom.placement || dom.placement.value != 'line')) {
+        text = stringDivider(text, 16, '\n');
+    }
+
+    return text;
+};
+
+var createTextStyle = function(feature, resolution, dom) {
+    var align = dom.align.value;
+    var baseline = dom.baseline.value;
+    var size = dom.size.value;
+    var offsetX = parseInt(dom.offsetX.value, 10);
+    var offsetY = parseInt(dom.offsetY.value, 10);
+    var weight = dom.weight.value;
+    var placement = dom.placement ? dom.placement.value : undefined;
+    var maxAngle = dom.maxangle ? parseFloat(dom.maxangle.value) : undefined;
+    var overflow = dom.overflow ? (dom.overflow.value == 'true') : undefined;
+    var rotation = parseFloat(dom.rotation.value);
+    if (dom.font.value == '\'Open Sans\'' && !openSansAdded) {
+        var openSans = document.createElement('link');
+        openSans.href = 'https://fonts.googleapis.com/css?family=Open+Sans';
+        openSans.rel = 'stylesheet';
+        document.getElementsByTagName('head')[0].appendChild(openSans);
+        openSansAdded = true;
+    }
+    var font = weight + ' ' + size + ' ' + dom.font.value;
+    var fillColor = dom.color.value;
+    var outlineColor = dom.outline.value;
+    var outlineWidth = parseInt(dom.outlineWidth.value, 10);
+
+    return new Text({
+        textAlign: align == '' ? undefined : align,
+        textBaseline: baseline,
+        font: font,
+        text: getText(feature, resolution, dom),
+        fill: new Fill({color: fillColor}),
+        stroke: new Stroke({color: outlineColor, width: outlineWidth}),
+        offsetX: offsetX,
+        offsetY: offsetY,
+        placement: placement,
+        maxAngle: maxAngle,
+        overflow: overflow,
+        rotation: rotation
+    });
+};
+
+
 var taxlots_layer = new VectorLayer({
     source: taxlotsVectorSource,
     style: new Style({
@@ -114,66 +195,10 @@ var taxlots_layer = new VectorLayer({
 	    color: "#ff0000", // see https://gis.stackexchange.com/questions/132607/how-to-change-color-of-a-layer-in-openlayers#132608
 	    width: 1
 	})
+        text: createTextStyle(feature, resolution, myDom.polygons)
     })
 });
 
-
-var defaultStyle = {
-    'Point': new Style({
-	image: new CircleStyle({
-	    fill: new Fill({
-		color: 'rgba(0,128,128,0.5)'
-	    }),
-	    radius: 5,
-	    stroke: new Stroke({
-		color: '#ff0',
-		width: 1
-	    })
-	})
-    }),
-    'LineString': new Style({
-	stroke: new Stroke({
-	    color: '#f00',
-	    width: 3
-	})
-    }),
-    'Polygon': new Style({
-	fill: new Fill({
-	    color: 'rgba(0,255,255,0.5)'
-	}),
-	stroke: new Stroke({
-	    color: '#0ff',
-	    width: 1
-	})
-    }),
-    'MultiPoint': new Style({
-	image: new CircleStyle({
-	    fill: new Fill({
-		color: 'rgba(255,0,255,0.5)'
-	    }),
-	    radius: 5,
-	    stroke: new Stroke({
-		color: '#f0f',
-		width: 1
-	    })
-	})
-    }),
-    'MultiLineString': new Style({
-	stroke: new Stroke({
-	    color: '#0f0',
-	    width: 3
-	})
-    }),
-    'MultiPolygon': new Style({
-	fill: new Fill({
-	    color: 'rgba(0,0,255,0.5)'
-	}),
-	stroke: new Stroke({
-	    color: '#00f',
-	    width: 1
-	})
-    })
-};
 
 // ===============================================================================
 
