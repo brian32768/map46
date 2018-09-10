@@ -34,7 +34,7 @@ var service = 'World_Street_Map';
 const buildingUrl   = 'https://cc-gis.clatsop.co.clatsop.or.us/arcgis/rest/services/web_mercator/buildings_microsoft/FeatureServer';
 var buildingLayer = '0'; // clatsop_buildings
 
-const taxlotsUrl    = 'https://cc-gis.clatsop.co.clatsop.or.us/arcgis/rest/services/Taxlots_WM/FeatureServer';
+const taxlotsUrl    = 'https://cc-gis.clatsop.co.clatsop.or.us/arcgis/rest/services/web_mercator/CC_Taxlots/FeatureServer';
 var taxlotsLayer  = '0';
 
 var geojsonFormat = new GeoJSON();
