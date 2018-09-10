@@ -5,11 +5,29 @@ import VectorTileLayer from 'ol/layer/VectorTile.js';
 import VectorTileSource from 'ol/source/VectorTile.js';
 import {Fill, Icon, Stroke, Style, Text} from 'ol/style.js';
 
-var taxlots = "https://tiles.arcgis.com/tiles/l89P2qlKPxgrFDLw/arcgis/rest/services/Taxlots_wm/VectorTileServer/tile/{z}/{y}/{x}.pbf";
+// Copied from ArcGIS.com
+const taxlots_url = "https://tiles.arcgis.com/tiles/l89P2qlKPxgrFDLw/arcgis/rest/services/Clatsop_DBO_taxlots_wm/VectorTileServer";
+
+var selection = {};
+
+var id_property = '';
+var taxlots = url + "/tile/{z}/{y}/{x}.pbf";
 var taxlot_layer = new VectorTileLayer({
     source: new VectorTileSource({
 	format: new MVT(),
-	url: taxlots
+	url: taxlots,
+	style: function(feature) {
+	    var selected = 1 ; // !!selection[feature.get(id_property)];
+	    return new Style({
+		stroke: new Stroke({
+		    color: selected? 'rgba(200,20,20,0.8)' : 'gray',
+		    width: selected? 2 : 1
+		}),
+		fill: new Fill({
+		    color: selected? 'rgba(200,20,20,0.1)' : 'rgba(20,20,20,0.9)'
+		})
+	    });
+	}
     })
 });
 
@@ -64,4 +82,37 @@ var map = new Map({
 	center: [-13784553, 5802546],
 	zoom: 11, minZoom: 10, maxZoom: 19
     })
+});
+
+//var selectElement = document.getElementById('type');
+
+map.on('click', function(event) {
+    var features = map.getFeaturesAtPixel(event.pixel);
+    if (!features) {
+        selection = {}; // clear selection
+        // force redraw of layer style
+        taxlot_layer.setStyle(taxlot_layer.getStyle());
+        return;
+    }
+    var i = 0;
+    for (let f of features) {
+	console.log("feature " + i + ":" + f.getGeometry())
+	i++;
+    }
+    var feature = features[0];
+    var keys = Object.keys(feature);
+    console.log('keys = ' + keys); // show property names
+    var fid = feature.get(id_property);
+
+    selection = {}; // clear any existing selection
+/*
+    if (selectElement.value === 'singleselect') {
+        selection = {};
+    }
+*/
+    // add selected feature to lookup
+    selection[fid] = feature;
+
+    // force redraw of layer style
+    taxlot_layer.setStyle(taxlot_layer.getStyle());
 });
