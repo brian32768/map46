@@ -4,8 +4,8 @@ import Map from 'ol/Map.js';
 import View from 'ol/View.js';
 import { defaults as defaultControls, OverviewMap } from 'ol/control.js';
 import {Tile as TileLayer, Vector as VectorLayer} from 'ol/layer.js';
-import {defaults as defaultInteractions, DragAndDrop} from 'ol/interaction.js';
-import {GPX, KML, EsriJSON, GeoJSON} from 'ol/format.js';
+import {defaults as defaultInteractions} from 'ol/interaction.js';
+import {EsriJSON, GeoJSON} from 'ol/format.js';
 import OSM from 'ol/source/OSM.js';
 import {Circle as CircleStyle, Fill, Stroke, Style} from 'ol/style.js';
 import Feature from 'ol/Feature.js';
@@ -31,18 +31,19 @@ var service = 'World_Street_Map';
 
 // ==== Our Clatsop services ====
 
-// DON'T FORGET THE TRAILING SLASH.
-var buildingUrl   = 'https://cc-gis.clatsop.co.clatsop.or.us/arcgis/rest/services/web_mercator/buildings_microsoft/FeatureServer/';
+const buildingUrl   = 'https://cc-gis.clatsop.co.clatsop.or.us/arcgis/rest/services/web_mercator/buildings_microsoft/FeatureServer';
 var buildingLayer = '0'; // clatsop_buildings
-var taxlotsUrl    = 'https://cc-gis.clatsop.co.clatsop.or.us/arcgis/rest/services/Assessment_and_Taxation/Taxlots/FeatureServer/';
+
+const taxlotsUrl    = 'https://cc-gis.clatsop.co.clatsop.or.us/arcgis/rest/services/Taxlots_WM/FeatureServer';
 var taxlotsLayer  = '0';
+
 var geojsonFormat = new GeoJSON();
 var esrijsonFormat = new EsriJSON();
 
 var buildingVectorSource = new VectorSource({
     loader: function(extent, resolution, projection) {
 	
-        var url = buildingUrl + buildingLayer + '/query/?f=json&' +
+        var url = buildingUrl + '/' + buildingLayer + '/query/?f=json&' +
             'returnGeometry=true&spatialRel=esriSpatialRelIntersects&geometry=' +
             encodeURIComponent(  '{"xmin":' + extent[0] + ',"ymin":' + extent[1]
 				 + ',"xmax":' + extent[2] + ',"ymax":' + extent[3]
@@ -76,7 +77,7 @@ var building_layer = new VectorLayer({
 var taxlotsVectorSource = new VectorSource({
     loader: function(extent, resolution, projection) {
 	
-        var url = taxlotsUrl + taxlotsLayer + '/query/?f=json&' +
+        var url = taxlotsUrl + '/' + taxlotsLayer + '/query/?f=json&' +
             'returnGeometry=true&spatialRel=esriSpatialRelIntersects&geometry=' +
             encodeURIComponent(  '{"xmin":' + extent[0] + ',"ymin":' + extent[1]
 			       + ',"xmax":' + extent[2] + ',"ymax":' + extent[3]
@@ -106,6 +107,9 @@ var taxlotsVectorSource = new VectorSource({
 var taxlots_layer = new VectorLayer({
     source: taxlotsVectorSource,
     style: new Style({
+	fill: new Fill({
+	    color: 'rgba(200,200,200,0.10)' // If there is no fill then clicks won't get caught.
+	}),
 	stroke: new Stroke({
 	    color: "#ff0000", // see https://gis.stackexchange.com/questions/132607/how-to-change-color-of-a-layer-in-openlayers#132608
 	    width: 1
@@ -113,8 +117,6 @@ var taxlots_layer = new VectorLayer({
     })
 });
 
-
-// Styles for GPX data -------------------------------------------------
 
 var defaultStyle = {
     'Point': new Style({
@@ -173,27 +175,11 @@ var defaultStyle = {
     })
 };
 
-var styleFunction = function(feature, resolution) {
-    var featureStyleFunction = feature.getStyleFunction();
-    if (featureStyleFunction) {
-	return featureStyleFunction.call(feature, resolution);
-    } else {
-	return defaultStyle[feature.getGeometry().getType()];
-    }
-};
-
 // ===============================================================================
 
-var dragAndDropInteraction = new DragAndDrop({
-    formatConstructors: [
-	GPX,
-	KML
-    ]
-});
-
 var view = new View({
-    center: [-13784553, 5762546],
-    zoom: 11,
+    center: [-13799309, 5765712],
+    zoom: 15,
     minZoom: 10,
     maxZoom: 19
 //    center: [0,0], zoom: 2
@@ -202,7 +188,6 @@ var view = new View({
 var popup = new Popup();
 
 var map = new Map({
-    interactions: defaultInteractions().extend([dragAndDropInteraction]),
     controls: defaultControls().extend([
 	new OverviewMap()
     ]),
@@ -210,36 +195,21 @@ var map = new Map({
 	new TileLayer({
 	    source: new OSM()
 	}),
-	building_layer,
-	taxlots_layer
+	taxlots_layer,
+	building_layer
     ],
     overlays: [popup.overlay],
     target: 'map',
     view: view
 });
 
-// == DRAG AND DROP ==
-
-dragAndDropInteraction.on('addfeatures', function(event) {
-    var vectorSource = new VectorSource({
-	features: event.features
-    });
-    map.addLayer(new VectorLayer({
-	source: vectorSource,
-	style: styleFunction
-    }));
-    map.getView().fit(vectorSource.getExtent());
-});
-
-// == GPX info ==
-
-// Look up GPX info and format it for display.
+// Look up info and format it for display.
 var featureInfo = function(pixel) {
     var features = [];
 
-    // Make a list of each GPX feature found at this pixel
     map.forEachFeatureAtPixel(pixel, function(feature) {
 	features.push(feature);
+	console.log("found " + feature);
     });
 
     if (features.length > 0) {
@@ -247,12 +217,18 @@ var featureInfo = function(pixel) {
 	var info = [];
 	var i, ii;
 	for (i = 0, ii = features.length; i < ii; ++i) {
-	    info.push('<em>' + features[i].get('name') + '</em> ' + 
-		features[i].get('desc')
-	    );
+	    var attribute_names = Object.keys(features[i].values_);
+	    var taxlot = features[i].get('Taxlot');
+	    if (taxlot) {
+		info.push('<em>Taxlot ' + taxlot + '</em> <br />' + 
+			  features[i].get('ORTaxlot'));
+	    } else {
+		console.log(attribute_names);
+	    }
 	}
 	info.join('<br />') || '';
     } else {
+	console.log('no feature here');
 	info = '';
     }
     return info;
@@ -282,8 +258,10 @@ map.on('pointermove', function(evt) {
 map.on('click', function(evt) {
     // Handler for click events on map.
 
-//    var pixel = map.getEventPixel(evt.originalEvent);
-    var mycontent = featureInfo(evt.pixel);
+//  var pixel = map.getEventPixel(evt.originalEvent);
+    var pixel = evt.pixel;
+//    console.log('pixel ' + pixel);
+    var mycontent = featureInfo(pixel);
     if (!mycontent) { return; } // nothing to see here 
     
     // Set up where the popup will pop up.
