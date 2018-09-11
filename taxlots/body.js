@@ -109,65 +109,67 @@ var openSansAdded = false;
 var myDom = {
     polygons: {
         text: 'normal',
-        align: '',
-        baseline: 'Middle',
+        align: 'center',
+        baseline: 'middle',
         rotation: 0,
-        font: 'Arial',
-        weight: 'Normal',
-        placement: 'Point',
-        maxangle: 0,
+        font: 'arial',
+        weight: 'normal',
+        placement: 'point',
+        maxangle: '0',
         overflow: '',
-        size: '24px',
-        offsetX: 0,
-        offsetY: 0,
-        color: 'black',
-        outline: 'white',
-        outlineWidth: 2,
-        maxreso: 1200,
+        size: '12px',
+        offsetX: '0',
+        offsetY: '0',
+        color: '#000',
+        outline: '#fff',
+        outlineWidth: '2',
+        maxreso: 3,
     }
 };
 
 var getText = function(feature, resolution, dom) {
-    var type = dom.text.value;
-    var maxResolution = dom.maxreso.value;
+    var type = dom.text;
+    var maxResolution = dom.maxreso;
     var text = feature.get('Taxlot');
 
-    if (resolution > maxResolution) {
-        text = '';
-    } else if (type == 'hide') {
-        text = '';
-    } else if (type == 'shorten') {
-        text = text.trunc(12);
-    } else if (type == 'wrap' && (!dom.placement || dom.placement.value != 'line')) {
-        text = stringDivider(text, 16, '\n');
-    }
+//    if (resolution > maxResolution) {
+//	console.log(resolution, maxResolution);
+//        text = '';
+//    }
+//    } else if (type == 'hide') {
+//        text = '';
+//    } else if (type == 'shorten') {
+//        text = text.trunc(12);
+//    } else if (type == 'wrap' && (!dom.placement || dom.placement.value != 'line')) {
+//        text = stringDivider(text, 16, '\n');
+//    }
 
     return text;
 };
 
 var createTextStyle = function(feature, resolution, dom) {
-    var align = dom.align.value;
-    var baseline = dom.baseline.value;
-    var size = dom.size.value;
-    var offsetX = parseInt(dom.offsetX.value, 10);
-    var offsetY = parseInt(dom.offsetY.value, 10);
-    var weight = dom.weight.value;
-    var placement = dom.placement ? dom.placement.value : undefined;
-    var maxAngle = dom.maxangle ? parseFloat(dom.maxangle.value) : undefined;
-    var overflow = dom.overflow ? (dom.overflow.value == 'true') : undefined;
-    var rotation = parseFloat(dom.rotation.value);
-    if (dom.font.value == '\'Open Sans\'' && !openSansAdded) {
+    var align     = dom.align;
+    var baseline  = dom.baseline;
+    var size      = dom.size;
+    var offsetX   = parseInt(dom.offsetX, 10);
+    var offsetY   = parseInt(dom.offsetY, 10);
+    var weight    = dom.weight;
+    var placement = dom.placement ? dom.placement : undefined;
+    var maxAngle  = dom.maxangle ? parseFloat(dom.maxangle) : undefined;
+    var overflow  = dom.overflow ? (dom.overflow == 'true') : undefined;
+    var rotation  = parseFloat(dom.rotation);
+
+    if (dom.font == '\'Open Sans\'' && !openSansAdded) {
         var openSans = document.createElement('link');
         openSans.href = 'https://fonts.googleapis.com/css?family=Open+Sans';
         openSans.rel = 'stylesheet';
         document.getElementsByTagName('head')[0].appendChild(openSans);
         openSansAdded = true;
     }
-    var font = weight + ' ' + size + ' ' + dom.font.value;
-    var fillColor = dom.color.value;
-    var outlineColor = dom.outline.value;
-    var outlineWidth = parseInt(dom.outlineWidth.value, 10);
-
+    var font = weight + ' ' + size + ' ' + dom.font;
+    var fillColor = dom.color;
+    var outlineColor = dom.outline;
+    var outlineWidth = parseInt(dom.outlineWidth, 10);
     return new Text({
         textAlign: align == '' ? undefined : align,
         textBaseline: baseline,
@@ -184,19 +186,24 @@ var createTextStyle = function(feature, resolution, dom) {
     });
 };
 
+function taxlot_style(feature, resolution) {
+    // see https://gis.stackexchange.com/questions/132607/how-to-change-color-of-a-layer-in-openlayers#132608
+    return new Style({
+	// If there is no fill defined then clicks won't get caught in our polygons.
+	fill: new Fill({
+	    color: 'rgba(200,200,200,0.10)'
+	}),
+	stroke: new Stroke({
+	    color: "#ff0000", 
+	    width: 1
+	}),
+        text: createTextStyle(feature, resolution, myDom.polygons)
+    });
+}
 
 var taxlots_layer = new VectorLayer({
     source: taxlotsVectorSource,
-    style: new Style({
-	fill: new Fill({
-	    color: 'rgba(200,200,200,0.10)' // If there is no fill then clicks won't get caught.
-	}),
-	stroke: new Stroke({
-	    color: "#ff0000", // see https://gis.stackexchange.com/questions/132607/how-to-change-color-of-a-layer-in-openlayers#132608
-	    width: 1
-	})
-        text: createTextStyle(feature, resolution, myDom.polygons)
-    })
+    style:  taxlot_style
 });
 
 
