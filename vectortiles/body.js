@@ -11,7 +11,7 @@ const taxlots_url = "https://tiles.arcgis.com/tiles/l89P2qlKPxgrFDLw/arcgis/rest
 var selection = {};
 
 var id_property = '';
-var taxlots = url + "/tile/{z}/{y}/{x}.pbf";
+var taxlots = taxlots_url + "/tile/{z}/{y}/{x}.pbf";
 var taxlot_layer = new VectorTileLayer({
     source: new VectorTileSource({
 	format: new MVT(),
@@ -46,6 +46,7 @@ var mapbox_basemap = new VectorTileLayer({
 });
 */
 
+// Does not work due to CORS erroer, need "Access-Control-Allow-Origin" added to header.
 var esri_basemap = new VectorTileLayer({
     source: new VectorTileSource({
 	format: new MVT(),

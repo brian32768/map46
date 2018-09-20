@@ -292,7 +292,7 @@ map.on('click', function(evt) {
 
 //  var pixel = map.getEventPixel(evt.originalEvent);
     var pixel = evt.pixel;
-//    console.log('pixel ' + pixel);
+
     var mycontent = featureInfo(pixel);
     if (!mycontent) { return; } // nothing to see here 
     
@@ -300,8 +300,13 @@ map.on('click', function(evt) {
     var coordinate = evt.coordinate;
     popup.overlay.setPosition(coordinate);
     popup.container.innerHTML = mycontent;
-    
-    console.log('click ' + evt.coordinate);
+//    console.log('click ' + evt.coordinate);
+});
+
+map.on('moveend', function(evt) {
+    var z = view.getZoom();
+    var r = view.getResolution();
+    console.log('moveend zoom ' + z + ' res ' + r);
 });
 
 console.log('body.js loaded');
