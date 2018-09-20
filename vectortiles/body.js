@@ -15,20 +15,20 @@ var taxlots = taxlots_url + "/tile/{z}/{y}/{x}.pbf";
 var taxlot_layer = new VectorTileLayer({
     source: new VectorTileSource({
 	format: new MVT(),
-	url: taxlots,
-	style: function(feature) {
-	    var selected = 1 ; // !!selection[feature.get(id_property)];
-	    return new Style({
-		stroke: new Stroke({
-		    color: selected? 'rgba(200,20,20,0.8)' : 'gray',
-		    width: selected? 2 : 1
-		}),
-		fill: new Fill({
-		    color: selected? 'rgba(200,20,20,0.1)' : 'rgba(20,20,20,0.9)'
-		})
-	    });
-	}
-    })
+	url: taxlots
+    }),
+    style: function(feature) {
+	var selected = 1 ; // !!selection[feature.get(id_property)];
+	return new Style({
+	    stroke: new Stroke({
+		color: selected? 'rgba(200,20,20,0.8)' : 'gray',
+		width: selected? 2 : 1
+	    }),
+	    fill: new Fill({
+		color: selected? 'rgba(200,20,20,0.1)' : 'rgba(20,20,20,0.9)'
+	    })
+	});
+    }
 });
 
 /*
@@ -59,7 +59,15 @@ var maptiler_contour_layer = new VectorTileLayer({
     source: new VectorTileSource({
 	format: new MVT(),
 	url: "https://maps.tilehosting.com/data/contours/{z}/{x}/{y}.pbf?key=oldTeLsOq24wfrAW6JQ5"
-    })
+    }),
+    style: function(feature) {
+	return new Style({
+	    stroke: new Stroke({
+		color: 'rgba(194,144,27,50)',
+		width: 1
+	    })
+	});
+    }
 });
 
 var maptiler_basemap = new VectorTileLayer({
@@ -73,9 +81,9 @@ var maptiler_basemap = new VectorTileLayer({
 var map = new Map({
     layers: [
 	maptiler_basemap,
-	maptiler_contour_layer,
 //	esri_basemap,
 //	mapbox_basemap,
+	maptiler_contour_layer,
 	taxlot_layer
     ],
     target: 'map',
