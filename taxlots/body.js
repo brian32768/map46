@@ -5,7 +5,7 @@ import View from 'ol/View.js';
 import { defaults as defaultControls, OverviewMap } from 'ol/control.js';
 import {Tile as TileLayer, Vector as VectorLayer} from 'ol/layer.js';
 import {defaults as defaultInteractions} from 'ol/interaction.js';
-import {EsriJSON, GeoJSON} from 'ol/format.js';
+import {EsriJSON} from 'ol/format.js';
 import OSM from 'ol/source/OSM.js';
 import {Circle as CircleStyle, Fill, Stroke, Style, Text} from 'ol/style.js';
 import Feature from 'ol/Feature.js';
@@ -21,7 +21,6 @@ import {toStringHDMS} from 'ol/coordinate.js';
 import {toLonLat} from 'ol/proj.js';
 
 import {Popup} from './popup.js';
-//import {geojson} from './geojson.js';
 
 import 'bootstrap/dist/js/bootstrap.min.js';
 // bootstrap dependencies will pull in jquery and popper
@@ -31,78 +30,51 @@ var service = 'World_Street_Map';
 
 // ==== Our Clatsop services ====
 
-const buildingUrl   = 'https://cc-gis.clatsop.co.clatsop.or.us/arcgis/rest/services/web_mercator/buildings_microsoft/FeatureServer';
-var buildingLayer = '0'; // clatsop_buildings
+const building_url            = 'https://cc-gis.clatsop.co.clatsop.or.us/arcgis/rest/services/web_mercator/buildings_microsoft/FeatureServer/0';
+const taxlots_url             = 'https://cc-gis.clatsop.co.clatsop.or.us/arcgis/rest/services/web_mercator/CC_Taxlots/FeatureServer/0';
+const zones_boundaries_url    = "https://cc-gis.clatsop.co.clatsop.or.us/arcgis/rest/services/web_mercator/zoning_Boundaries/MapServer/0"
 
-const taxlotsUrl    = 'https://cc-gis.clatsop.co.clatsop.or.us/arcgis/rest/services/web_mercator/CC_Taxlots/FeatureServer';
-var taxlotsLayer  = '0';
+const zones_commercial_url    = "https://cc-gis.clatsop.co.clatsop.or.us/arcgis/rest/services/web_mercator/zoning_Commercial/MapServer/0"
 
-var geojsonFormat = new GeoJSON();
+const zones_noncommercial_url = "https://cc-gis.clatsop.co.clatsop.or.us/arcgis/rest/services/web_mercator/zoning_Noncommercial/MapServer/0"
+const zones_residential_url   = "https://cc-gis.clatsop.co.clatsop.or.us/arcgis/rest/services/web_mercator/zoning_Residential/MapServer/0"
+
+
+
 var esrijsonFormat = new EsriJSON();
 
-var buildingVectorSource = new VectorSource({
-    loader: function(extent, resolution, projection) {
-	
-        var url = buildingUrl + '/' + buildingLayer + '/query/?f=json&' +
-            'returnGeometry=true&spatialRel=esriSpatialRelIntersects&geometry=' +
-            encodeURIComponent(  '{"xmin":' + extent[0] + ',"ymin":' + extent[1]
-				 + ',"xmax":' + extent[2] + ',"ymax":' + extent[3]
-				 + ',"spatialReference":{"wkid":3857}}')
-            + '&geometryType=esriGeometryEnvelope&inSR=2913&outFields=*'
-	    + '&outSR=3857';
-	
+function makeVectorSource(my_url) {
+    /* I assume that all the data is projected into Web Mercator here. */
+    
+    var source = new VectorSource({
+	loader: function(extent, resolution, projection) {
+//	    console.log("extent:", extent);
+//	    console.log("resolution:", resolution);
+//	    console.log("projection:", projection); 
+        var url = my_url + '/' + '/query/?f=json&' +
+	    'returnGeometry=true&spatialRel=esriSpatialRelIntersects&geometry=' +
+	    encodeURIComponent(    '{"xmin":' + extent[0] + ',"ymin":' + extent[1]
+				 + ',"xmax":' + extent[2] + ',"ymax":' + extent[3])
+	    + '&geometryType=esriGeometryEnvelope&outFields=*';
+	    
         jquery.ajax({url: url, dataType: 'jsonp', success: function(response) {
-            if (response.error) {
-		console.log(response.error.message + response.error.details + ' IS IT SHARED?');
-            } else {
+	    if (response.error) {
+		console.log(response.error.message + response.error.details + ' IS IT SHARED? I can\'t do auth!');
+	    } else {
 		// dataProjection will be read from document
 		var features = esrijsonFormat.readFeatures(response, {
-                    featureProjection: projection
+		    featureProjection: projection
 		});
 		if (features.length > 0) {
-                    buildingVectorSource.addFeatures(features);
+		    source.addFeatures(features);
 		}
-            }
+	    }
         }});
     },
-    strategy: tileStrategy(createXYZ({
-        tileSize: 512
-    }))
-});
-
-var building_layer = new VectorLayer({
-    source: buildingVectorSource
-});
-
-var taxlotsVectorSource = new VectorSource({
-    loader: function(extent, resolution, projection) {
-	
-        var url = taxlotsUrl + '/' + taxlotsLayer + '/query/?f=json&' +
-            'returnGeometry=true&spatialRel=esriSpatialRelIntersects&geometry=' +
-            encodeURIComponent(  '{"xmin":' + extent[0] + ',"ymin":' + extent[1]
-			       + ',"xmax":' + extent[2] + ',"ymax":' + extent[3]
-			       + ',"spatialReference":{"wkid":3857}}')
-            + '&geometryType=esriGeometryEnvelope&inSR=3857&outFields=*'
-            + '&outSR=3857';
-	
-        jquery.ajax({url: url, dataType: 'jsonp', success: function(response) {
-            if (response.error) {
-		console.log('taxlots error' + response.error.message + response.error.details);
-            } else {
-		// dataProjection will be read from document
-		var features = esrijsonFormat.readFeatures(response, {
-                    featureProjection: projection
-		});
-		if (features.length > 0) {
-                    taxlotsVectorSource.addFeatures(features);
-		}
-            }
-        }});
-    },
-    strategy: tileStrategy(createXYZ({
-        tileSize: 512
-    }))
-});
+    strategy: tileStrategy(createXYZ({ tileSize: 512 }))
+    });
+    return source;
+}
 
 var openSansAdded = false;
 
@@ -130,7 +102,7 @@ var myDom = {
 var getText = function(feature, resolution, dom) {
     var type = dom.text;
     var maxResolution = dom.maxreso;
-    var text = feature.get('Taxlot');
+    var text = feature.get('OBJECTID');
 
 //    if (resolution > maxResolution) {
 //	console.log(resolution, maxResolution);
@@ -201,13 +173,34 @@ function taxlot_style(feature, resolution) {
     });
 }
 
-var taxlots_layer = new VectorLayer({
-    source: taxlotsVectorSource,
-    style:  taxlot_style
-});
-
+function zone_style(feature, resolution) {
+    // see https://gis.stackexchange.com/questions/132607/how-to-change-color-of-a-layer-in-openlayers#132608
+    return new Style({
+	// If there is no fill defined then clicks won't get caught in our polygons.
+	fill: new Fill({
+	    color: 'rgba(200,100,100,0.50)'
+	}),
+	stroke: new Stroke({
+	    color: "#ff8080", 
+	    width: 1
+	}),
+        text: createTextStyle(feature, resolution, myDom.polygons)
+    });
+}
 
 // ===============================================================================
+
+var building_layer = new VectorLayer({    source: makeVectorSource(building_url) });
+
+var zones_boundaries_layer = new VectorLayer({source: makeVectorSource(zones_boundaries_url) });
+var zones_commercial_layer = new VectorLayer({source: makeVectorSource(zones_commercial_url) });
+var zones_noncommercial_layer = new VectorLayer({source: makeVectorSource(zones_noncommercial_url) });
+var zones_residential_layer = new VectorLayer({source: makeVectorSource(zones_residential_url) });
+
+var taxlots_layer = new VectorLayer({
+    source: makeVectorSource(taxlots_url),
+    style:  taxlot_style
+});
 
 var view = new View({
     center: [-13799309, 5765712],
@@ -227,15 +220,22 @@ var map = new Map({
 	new TileLayer({
 	    source: new OSM()
 	}),
-	taxlots_layer,
-	building_layer
+
+	zones_boundaries_layer,
+	zones_commercial_layer,
+	zones_noncommercial_layer,
+	zones_residential_layer,
+	
+	//building_layer,
+	//taxlots_layer
+	// last layer is drawn at top
     ],
     overlays: [popup.overlay],
     target: 'map',
     view: view
 });
 
-// Look up info and format it for display.
+// Look up info and format it for display in a popup.
 var featureInfo = function(pixel) {
     var features = [];
 
@@ -250,10 +250,11 @@ var featureInfo = function(pixel) {
 	var i, ii;
 	for (i = 0, ii = features.length; i < ii; ++i) {
 	    var attribute_names = Object.keys(features[i].values_);
-	    var taxlot = features[i].get('Taxlot');
-	    if (taxlot) {
-		info.push('<em>Taxlot ' + taxlot + '</em> <br />' + 
-			  features[i].get('ORTaxlot'));
+	    var f = features[i].get('Zone');
+	    if (f) {
+		info.push('<em>Zone ' + f + '</em> <br />'
+			  + attribute_names
+			 );
 	    } else {
 		console.log(attribute_names);
 	    }
@@ -306,7 +307,7 @@ map.on('click', function(evt) {
 map.on('moveend', function(evt) {
     var z = view.getZoom();
     var r = view.getResolution();
-    console.log('moveend zoom ' + z + ' res ' + r);
+    //console.log('moveend zoom ' + z + ' res ' + r);
 });
 
 console.log('body.js loaded');

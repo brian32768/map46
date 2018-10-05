@@ -80,8 +80,8 @@ var maptiler_basemap = new VectorTileLayer({
 
 var map = new Map({
     layers: [
-	maptiler_basemap,
-//	esri_basemap,
+//	maptiler_basemap,
+	esri_basemap,
 //	mapbox_basemap,
 	maptiler_contour_layer,
 	taxlot_layer
