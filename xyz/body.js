@@ -50,11 +50,11 @@ function makeVectorSource(my_url) {
 }
 
 var taxlots       = 'https://cc-gis.clatsop.co.clatsop.or.us/arcgis/rest/services/web_mercator/CC_Taxlots/FeatureServer/0';
-var commercial    = "https://cc-gis.clatsop.co.clatsop.or.us/arcgis/rest/services/web_mercator/zoning_Commercial/MapServer";
-var noncommercial = "https://cc-gis.clatsop.co.clatsop.or.us/arcgis/rest/services/web_mercator/zoning_Noncommercial/MapServer";
-var boundaries    = "https://cc-gis.clatsop.co.clatsop.or.us/arcgis/rest/services/web_mercator/zoning_Boundaries/MapServer";
-var residential   = "https://cc-gis.clatsop.co.clatsop.or.us/arcgis/rest/services/web_mercator/zoning_Residential/MapServer";
 
+// Whitney's Map of Astoria And Environs. https://davidrumsey.georeferencer.com/maps/731856088227/
+var whitneys      = "https://maps.georeferencer.com/georeferences/731856088227/2017-02-20T14:25:19.132722Z/map";
+
+// DOGAMI hillshade of Oregon
 var bareearth     = "https://gis.dogami.oregon.gov/arcgis/rest/services/Public/BareEarthHS/ImageServer";
 
 const maxres = 100;
@@ -70,11 +70,11 @@ var layers = [
 			opacity: 0.7
 		   }),
 
-    new TileLayer({ 	source: new TileArcGISRest({ url: commercial    }), opacity: 0.5, maxResolution: maxres }), 
-    new TileLayer({ 	source: new TileArcGISRest({ url: noncommercial }), opacity: 0.5, maxResolution: maxres }), 
-    new TileLayer({ 	source: new TileArcGISRest({ url: boundaries    }), opacity: 0.5, maxResolution: maxres }), 
-    new TileLayer({ 	source: new TileArcGISRest({ url: residential   }), opacity: 0.5, maxResolution: maxres }),
-
+    new TileLayer({     source: new XYZ({ url: whitneys + '/{z}/{x}/{y}.png' + '?key=mpLuNUCkgUrSGkCrPyoT' }),
+			opacity: 0.5
+		  }),
+    
+    
     new VectorLayer({   source: makeVectorSource(taxlots),  maxResolution: 25 })
 ];
 
@@ -87,10 +87,7 @@ for (var i = 0; i < layercount; i++) {
 var map = new Map({
     target: 'map',
     layers: layers,
-    view: new View({
-        center: [-13775000, 5800000],
-        zoom: 12
-    })
+    view: new View({center: [-13775000, 5800000], zoom: 12 })
 });
 
 
