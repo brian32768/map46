@@ -30,6 +30,7 @@
     "express": "^4.16.3",
     "jquery": "^3.3.1",
     "ol": "^5.2.0",
+    "ol-ext": "^3.0.2",
     "ol-layerswitcher": "^3.0.0",
     "popper.js": "^1.14.4"
   },

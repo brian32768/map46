@@ -8,6 +8,9 @@ import XYZ from 'ol/source/XYZ.js';
 import {createXYZ} from 'ol/tilegrid.js';
 import {Group as LayerGroup} from 'ol/layer';
 
+import LayerSwitcher from 'ol-layerswitcher';
+import {defaults as defaultControls, ScaleLine} from 'ol/control.js';
+
 import {Circle as CircleStyle, Fill, Stroke, Style, Text} from 'ol/style.js';
 import Feature from 'ol/Feature.js';
 import {EsriJSON} from 'ol/format.js';
@@ -50,14 +53,15 @@ function makeVectorSource(my_url) {
     return source;
 }
 
-var taxlots       = 'https://cc-gis.clatsop.co.clatsop.or.us/arcgis/rest/services/web_mercator/CC_Taxlots/FeatureServer/0';
+//var taxlots       = 'https://cc-gis.clatsop.co.clatsop.or.us/arcgis/rest/services/web_mercator/CC_Taxlots/FeatureServer/0';
+var taxlots       = 'https://cc-gis.clatsop.co.clatsop.or.us/arcgis/rest/services/web_mercator/CC_Taxlots/MapServer';
 
 var commercial    = "https://cc-gis.clatsop.co.clatsop.or.us/arcgis/rest/services/web_mercator/zoning_Commercial/MapServer";
 var noncommercial = "https://cc-gis.clatsop.co.clatsop.or.us/arcgis/rest/services/web_mercator/zoning_Noncommercial/MapServer";
 var boundaries    = "https://cc-gis.clatsop.co.clatsop.or.us/arcgis/rest/services/web_mercator/zoning_Boundaries/MapServer";
 var residential   = "https://cc-gis.clatsop.co.clatsop.or.us/arcgis/rest/services/web_mercator/zoning_Residential/MapServer";
 
-var bareearth     = "https://gis.dogami.oregon.gov/arcgis/rest/services/Public/BareEarthHS/ImageServer";
+var hillshade     = "https://gis.dogami.oregon.gov/arcgis/rest/services/Public/BareEarthHS/ImageServer";
 
 var zoning_layers = new LayerGroup({
     layers: [
@@ -72,8 +76,9 @@ var zoning_layers = new LayerGroup({
     zindex: 1
 });
 
-var hillshade_layer = new ImageLayer({    source: new ImageArcGISRest({ url: bareearth,
+var hillshade_layer = new ImageLayer({    source: new ImageArcGISRest({ url: hillshade,
 									params: {},
+									crossOrigin: 'anonymous',
 									ratio: 1
 								      }),
 					  maxResolution: 200,
@@ -85,7 +90,8 @@ var layers = [
     new TileLayer({ 	source: new OSM() }), 
     hillshade_layer,
     zoning_layers,
-    new VectorLayer({   source: makeVectorSource(taxlots),  maxResolution: 25, zindex:0 })
+//    new VectorLayer({   source: makeVectorSource(taxlots),  maxResolution: 25, zindex:0 })
+    new TileLayer({ 	source: new TileArcGISRest({ url: taxlots    }) }), 
 ];
 
 var layercount = layers.length;
@@ -94,14 +100,27 @@ for (var i = 0; i < layercount; i++) {
     console.log("Layer ", layer.getMinResolution(), layer.getMaxResolution());
 }
 
+var layerswitcher = new LayerSwitcher();
+var scaleline = new ScaleLine();
+scaleline.setUnits("us");
+
 var map = new Map({
     target: 'map',
     layers: layers,
     view: new View({
         center: [-13775000, 5800000],
         zoom: 12
-    })
+    }),
+    controls: defaultControls({
+	// attributionOptions: { collapsible: false }
+    }).extend([
+	scaleline,
+	layerswitcher
+    ])
 });
+console.log('switcher=', layerswitcher);
+console.log('scaleline=', scaleline);
+console.log('controls ', map.controls);
 
 /* 
    Toggle the hillshade layer on and off.

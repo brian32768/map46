@@ -52,7 +52,10 @@ function makeVectorSource(my_url) {
 var taxlots       = 'https://cc-gis.clatsop.co.clatsop.or.us/arcgis/rest/services/web_mercator/CC_Taxlots/FeatureServer/0';
 
 // Whitney's Map of Astoria And Environs. https://davidrumsey.georeferencer.com/maps/731856088227/
-var whitneys      = "https://maps.georeferencer.com/georeferences/731856088227/2017-02-20T14:25:19.132722Z/map";
+//var whitneys_astoria  = "https://maps.georeferencer.com/georeferences/731856088227/2017-02-20T14:25:19.132722Z/map";
+
+// Benicia, California
+var benicia           = "https://maps.georeferencer.com/georeferences/246596689284/2017-02-20T14:25:19.132722Z/map";
 
 // DOGAMI hillshade of Oregon
 var bareearth     = "https://gis.dogami.oregon.gov/arcgis/rest/services/Public/BareEarthHS/ImageServer";
@@ -70,8 +73,16 @@ var layers = [
 			opacity: 0.7
 		   }),
 
-    new TileLayer({     source: new XYZ({ url: whitneys + '/{z}/{x}/{y}.png' + '?key=mpLuNUCkgUrSGkCrPyoT' }),
-			opacity: 0.5
+//    new TileLayer({     source: new XYZ({ url: whitneys_astoria + '/{z}/{x}/{y}.png' + '?key=mpLuNUCkgUrSGkCrPyoT',
+//    attributions: '<a href="http://davidrumsey.georeferencer.com/">David Rumsey</a>'
+//}),
+//			opacity: 0.5
+//		  }),
+    
+    new TileLayer({     source: new XYZ({ url: benicia + '/{z}/{x}/{y}.png' + '?key=mpLuNUCkgUrSGkCrPyoT',
+					  attributions: '<a href="http://davidrumsey.georeferencer.com/">David Rumsey</a>'
+					}),
+			opacity: 0.5,
 		  }),
     
     
@@ -87,7 +98,8 @@ for (var i = 0; i < layercount; i++) {
 var map = new Map({
     target: 'map',
     layers: layers,
-    view: new View({center: [-13775000, 5800000], zoom: 12 })
+  //view: new View({center: [-13775000, 5800000], zoom: 12 }) // clatsop
+    view: new View({center: [-13596000, 4586400], zoom: 15 }) // benicia arsenal
 });
 
 

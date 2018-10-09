@@ -48,9 +48,9 @@ function makeVectorSource(my_url) {
     
     var source = new VectorSource({
 	loader: function(extent, resolution, projection) {
-//	    console.log("extent:", extent);
-//	    console.log("resolution:", resolution);
-//	    console.log("projection:", projection); 
+	    console.log("extent:", extent);
+	    console.log("resolution:", resolution);
+	    console.log("projection:", projection); 
         var url = my_url + '/' + '/query/?f=json&' +
 	    'returnGeometry=true&spatialRel=esriSpatialRelIntersects&geometry=' +
 	    encodeURIComponent(    '{"xmin":' + extent[0] + ',"ymin":' + extent[1]
@@ -221,13 +221,13 @@ var map = new Map({
 	    source: new OSM()
 	}),
 
-	zones_boundaries_layer,
-	zones_commercial_layer,
-	zones_noncommercial_layer,
-	zones_residential_layer,
+	//zones_boundaries_layer,
+	//zones_commercial_layer,
+	//zones_noncommercial_layer,
+	//zones_residential_layer,
 	
-	//building_layer,
-	//taxlots_layer
+	building_layer,
+	taxlots_layer
 	// last layer is drawn at top
     ],
     overlays: [popup.overlay],
