@@ -11,7 +11,4 @@ import 'bootstrap/dist/css/bootstrap';
 //import maki from 'maki';
 //var a = maki.layouts.all['all'];
 
-
-
-
-
+import 'ol-ext/control/Permalink.css';

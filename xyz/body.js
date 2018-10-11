@@ -1,6 +1,6 @@
 ﻿// body.js
 
-import { Map, View } from "ol";
+import {Map, View} from "ol";
 import {Tile as TileLayer, Image as ImageLayer, Vector as VectorLayer} from "ol/layer";
 import {OSM, TileArcGISRest, ImageArcGISRest, Vector as VectorSource} from 'ol/source';
 import {tile as tileStrategy} from 'ol/loadingstrategy.js';
@@ -11,8 +11,10 @@ import {Circle as CircleStyle, Fill, Stroke, Style, Text} from 'ol/style.js';
 import Feature from 'ol/Feature.js';
 import {EsriJSON} from 'ol/format.js';
 
-import "bootstrap/dist/js/bootstrap.js";
+import 'bootstrap/dist/js/bootstrap.js';
 import jquery from 'jquery/dist/jquery.min.js';
+
+import Permalink from 'ol-ext/control/Permalink.js';
 
 var esrijsonFormat = new EsriJSON();
 
@@ -63,7 +65,9 @@ var bareearth     = "https://gis.dogami.oregon.gov/arcgis/rest/services/Public/B
 const maxres = 100;
 
 var layers = [
-    new TileLayer({ 	source: new OSM() }), 
+    new TileLayer({ 	source: new OSM(),
+			permalink: "O"
+		  }), 
 
     new ImageLayer({    source: new ImageArcGISRest({ url: bareearth,
 						      params: {},
@@ -83,10 +87,12 @@ var layers = [
 					  attributions: '<a href="http://davidrumsey.georeferencer.com/">David Rumsey</a>'
 					}),
 			opacity: 0.5,
+			permalink: "B"
 		  }),
     
-    
-    new VectorLayer({   source: makeVectorSource(taxlots),  maxResolution: 25 })
+    new VectorLayer({   source: makeVectorSource(taxlots),
+			maxResolution: 25
+		    })
 ];
 
 var layercount = layers.length;
@@ -102,9 +108,14 @@ var map = new Map({
     view: new View({center: [-13596000, 4586400], zoom: 15 }) // benicia arsenal
 });
 
+var pl_ctrl = new Permalink({
+    onclick: function(url)
+    {
+	console.log("Permalink url = ", url);
+	document.location = "mailto:?subject=subject&body=" + encodeURIComponent(url); // causes an email app to open with this URL in body.
+    },
+    urlReplace: true // Default is true; causes the URL to continuously update with the position in latlon and zoom level.
+});
+map.addControl(pl_ctrl);
 
 console.log('body.js loaded');
-
-
-
-

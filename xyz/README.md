@@ -1,17 +1,25 @@
 # xyz
 
-# Install some packages
+Make an OpenLayers map using an XYZ raster tile service.
 
-Parcel should be able to install packages on demand. 
+Today I added the ol-ext package so I could play with the permalink feature. 2018-10-11
 
-  npm install bootstrap
-  npm install ol
+# Install packages
+
+We're using Parcel here and I commit the package.json file so it should be able to install packages on demand
+which means you only have to do this after cloning.
+
+  npm install
+
+But you can do this too.
+
+  npm install bootstrap ol ol-ext --save
 
 Bootstrap wants this but for some reason does not install it.
 
- npm install popper.js@^1.14.4
+ npm install popper.js@^1.14.4 --save
 
-# test it (from a cmd not a bash)
+# Test it (from a cmd not a bash)
 
   npm test
 
@@ -20,8 +28,12 @@ and the set up there launches a brower but this is the URL
 
   http://localhost:1234/
 
+# Build it
 
+ npm run-script build
 
+# Deploy it to https://map46.com/
 
+  scp -r dist/* bellman.wildsong.biz:/var/www/map46/html
 
-
+(I usually do an "rm -f" to clean out the html folder first.)
