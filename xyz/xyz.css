@@ -2,6 +2,11 @@
     background-color: darkgray;
 }
 
+h1 {
+    // This almost works
+    // content: url('./node_modules/@mapbox/maki/icons/aquarium-15.svg')
+}
+
 #top {
     background-color: lightgray;
 }
@@ -28,3 +33,7 @@ button {
     background-color: black;
 }
 
+.compass {
+    /* Reference this so it gets included as an asset */
+    content: url('./images/compass.png');
+}

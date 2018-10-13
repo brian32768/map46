@@ -1,98 +1,67 @@
 ﻿// body.js
 
 import {Map, View} from "ol";
-import {Tile as TileLayer, Image as ImageLayer, Vector as VectorLayer} from "ol/layer";
-import {OSM, TileArcGISRest, ImageArcGISRest, Vector as VectorSource} from 'ol/source';
+import {Tile as TileLayer, Image as ImageLayer} from 'ol/layer';
+import {OSM, TileArcGISRest, ImageArcGISRest, Stamen} from 'ol/source';
 import {tile as tileStrategy} from 'ol/loadingstrategy.js';
 import XYZ from 'ol/source/XYZ.js';
 import {createXYZ} from 'ol/tilegrid.js';
-
-import {Circle as CircleStyle, Fill, Stroke, Style, Text} from 'ol/style.js';
-import Feature from 'ol/Feature.js';
-import {EsriJSON} from 'ol/format.js';
 
 import 'bootstrap/dist/js/bootstrap.js';
 import jquery from 'jquery/dist/jquery.min.js';
 
 import Permalink from 'ol-ext/control/Permalink.js';
+import Cloud from 'ol-ext/control/Cloud.js';
+import Search from './search.js';
 
-var esrijsonFormat = new EsriJSON();
+//import Compass from 'ol-ext/control/Compass.js';
 
-function makeVectorSource(my_url) {
-    /* I assume that all the data is projected into Web Mercator here. */
-    
-    var source = new VectorSource({
-	loader: function(extent, resolution, projection) {
-//	    console.log("extent:", extent);
-//	    console.log("resolution:", resolution);
-//	    console.log("projection:", projection); 
-        var url = my_url + '/' + '/query/?f=json&' +
-	    'returnGeometry=true&spatialRel=esriSpatialRelIntersects&geometry=' +
-	    encodeURIComponent(    '{"xmin":' + extent[0] + ',"ymin":' + extent[1]
-				 + ',"xmax":' + extent[2] + ',"ymax":' + extent[3])
-	    + '&geometryType=esriGeometryEnvelope&outFields=*';
-	    
-        jquery.ajax({url: url, dataType: 'jsonp', success: function(response) {
-	    if (response.error) {
-		console.log(response.error.message + response.error.details + ' IS IT SHARED? I can\'t do auth!');
-	    } else {
-		// dataProjection will be read from document
-		var features = esrijsonFormat.readFeatures(response, {
-		    featureProjection: projection
-		});
-		if (features.length > 0) {
-		    source.addFeatures(features);
-		}
-	    }
-        }});
-    },
-    strategy: tileStrategy(createXYZ({ tileSize: 512 }))
-    });
-    return source;
-}
+var stamen_watercolor_layer = new TileLayer({
+    title: "Watercolor",
+    type: 'base',
+    source: new Stamen({ layer:"watercolor" }),
+    crossOrigin: 'anonymous',
+    opacity: 0.5,
+    permalink: "WC",
+    visible: true,
+    zindex: 2
+});
 
-var taxlots       = 'https://cc-gis.clatsop.co.clatsop.or.us/arcgis/rest/services/web_mercator/CC_Taxlots/FeatureServer/0';
+var osm_streets_layer  = new TileLayer({
+    title: 'Streets',
+    type: 'base',
+    source: new OSM(),
+    crossOrigin: 'anonymous',
+    opacity: 0.5,
+    permalink: 'Streets',
+    visible: true,
+    zindex: 3
+});
 
 // Whitney's Map of Astoria And Environs. https://davidrumsey.georeferencer.com/maps/731856088227/
-//var whitneys_astoria  = "https://maps.georeferencer.com/georeferences/731856088227/2017-02-20T14:25:19.132722Z/map";
+const whitneys_astoria_url  = "https://maps.georeferencer.com/georeferences/731856088227/2017-02-20T14:25:19.132722Z/map";
+const starting_location = {center: [-13775000, 5800000], zoom: 12}; // astoria downtown
 
-// Benicia, California
-var benicia           = "https://maps.georeferencer.com/georeferences/246596689284/2017-02-20T14:25:19.132722Z/map";
+// Thompson&West Map Of Benicia, California
+//const thompson_benicia_url = "https://maps.georeferencer.com/georeferences/246596689284/2017-02-20T14:25:19.132722Z/map";
+//const starting_location    = {center: [-13596000, 4586400], zoom: 15}; // benicia arsenal
 
-// DOGAMI hillshade of Oregon
-var bareearth     = "https://gis.dogami.oregon.gov/arcgis/rest/services/Public/BareEarthHS/ImageServer";
+let davidrumsey_layer  = new TileLayer({
+    source: new XYZ({ url: whitneys_astoria_url + '/{z}/{x}/{y}.png' + '?key=mpLuNUCkgUrSGkCrPyoT',
+		      attributions: '<a href="http://davidrumsey.georeferencer.com/">David Rumsey</a>'
+		    }),
+    opacity: .5,
+    permalink: "B",
+    zindex: 1
+});
 
 const maxres = 100;
 
 var layers = [
-    new TileLayer({ 	source: new OSM(),
-			permalink: "O"
-		  }), 
-
-    new ImageLayer({    source: new ImageArcGISRest({ url: bareearth,
-						      params: {},
-						      ratio: 1
-						    }),
-			maxResolution: 200,
-			opacity: 0.7
-		   }),
-
-//    new TileLayer({     source: new XYZ({ url: whitneys_astoria + '/{z}/{x}/{y}.png' + '?key=mpLuNUCkgUrSGkCrPyoT',
-//    attributions: '<a href="http://davidrumsey.georeferencer.com/">David Rumsey</a>'
-//}),
-//			opacity: 0.5
-//		  }),
-    
-    new TileLayer({     source: new XYZ({ url: benicia + '/{z}/{x}/{y}.png' + '?key=mpLuNUCkgUrSGkCrPyoT',
-					  attributions: '<a href="http://davidrumsey.georeferencer.com/">David Rumsey</a>'
-					}),
-			opacity: 0.5,
-			permalink: "B"
-		  }),
-    
-    new VectorLayer({   source: makeVectorSource(taxlots),
-			maxResolution: 25
-		    })
+    stamen_watercolor_layer,
+    osm_streets_layer,
+    //astoria_layer,
+    davidrumsey_layer,
 ];
 
 var layercount = layers.length;
@@ -104,8 +73,7 @@ for (var i = 0; i < layercount; i++) {
 var map = new Map({
     target: 'map',
     layers: layers,
-  //view: new View({center: [-13775000, 5800000], zoom: 12 }) // clatsop
-    view: new View({center: [-13596000, 4586400], zoom: 15 }) // benicia arsenal
+    view: new View(starting_location)
 });
 
 var pl_ctrl = new Permalink({
@@ -114,8 +82,101 @@ var pl_ctrl = new Permalink({
 	console.log("Permalink url = ", url);
 	document.location = "mailto:?subject=subject&body=" + encodeURIComponent(url); // causes an email app to open with this URL in body.
     },
-    urlReplace: true // Default is true; causes the URL to continuously update with the position in latlon and zoom level.
+    urlReplace: false // Default is true; causes the URL to continuously update with the position in latlon and zoom level.
 });
 map.addControl(pl_ctrl);
+
+function fix_opacity() {
+    if (osm_streets_layer.getVisible() || stamen_watercolor_layer.getVisible()) {
+	davidrumsey_layer.setOpacity(.5);
+    } else {
+	davidrumsey_layer.setOpacity(1);
+    }
+
+    osm_streets_layer.setOpacity(1);
+    stamen_watercolor_layer.setOpacity(1);
+    if (stamen_watercolor_layer.getVisible()) {
+	osm_streets_layer.setOpacity(.5);
+    }
+}
+
+search = new Search();
+map.addControl(search.mapcontrol);
+map.addLayer(search.selectionlayer);
+
+// Select feature when click on the reference index
+search.mapcontrol.on('select', function(e) {
+    // console.log(e);
+    search.selectionlayer.getSource().clear();
+    // Check if we get a geojson to describe the search
+    if (e.search.geojson) {
+	var format = new ol.format.GeoJSON();
+	var f = format.readFeature(e.search.geojson, { dataProjection: "EPSG:4326", featureProjection: map.getView().getProjection() });
+	search.selectionlayer.getSource().addFeature(f);
+	var view = map.getView();
+	var resolution = view.getResolutionForExtent(f.getGeometry().getExtent(), map.getSize());
+	var zoom = view.getZoomForResolution(resolution);
+	var center = ol.extent.getCenter(f.getGeometry().getExtent());
+	// redraw before zoom
+	setTimeout(function(){
+	    view.animate({
+		center: center,
+		zoom: Math.min(zoom, 16)
+	    });
+	}, 100);
+    }
+    else {
+	map.getView().animate({
+	    center:e.coordinate,
+	    zoom: Math.max(map.getView().getZoom(),16)
+	});
+    }
+});
+
+/*
+// This is not working yet. Parcel does not replace the URL
+var compass = new Compass({
+    image: "./images/compass.png",
+//    style: strokestyle
+});
+map.addControl(compass);
+*/
+
+// ------------------------------------------------------------------------
+
+// There's an option to set windspeed and direction on this control.
+var cloudControl = new Cloud();
+var cloudsVisible = true;
+map.addControl(cloudControl);
+
+var cloudbtn = document.getElementById("cloudToggle");
+cloudbtn.addEventListener("click", cloudToggle);
+function cloudToggle(evt) {
+    var v = !cloudsVisible;
+    if (v) {
+	map.addControl(cloudControl);
+    } else {
+	map.removeControl(cloudControl);
+    }
+    cloudsVisible = v;
+}
+
+var streetsbtn = document.getElementById("streetsToggle");
+streetsbtn.addEventListener("click", streetsToggle);
+function streetsToggle(evt) {
+    var v = !osm_streets_layer.getVisible();
+    osm_streets_layer.setVisible(v);
+    console.log('streets',v);
+    fix_opacity();
+}
+
+var wcbtn = document.getElementById("watercolorToggle");
+wcbtn.addEventListener("click", watercolorToggle);
+function watercolorToggle(evt) {
+    var v = !stamen_watercolor_layer.getVisible();
+    stamen_watercolor_layer.setVisible(v);
+    console.log('watercolor',v);
+    fix_opacity();
+}
 
 console.log('body.js loaded');

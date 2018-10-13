@@ -17,9 +17,11 @@ import {EsriJSON} from 'ol/format.js';
 import "bootstrap/dist/js/bootstrap.js";
 import jquery from 'jquery/dist/jquery.min.js';
 
-import LayerSwitcher from 'ol-ext/control/LayerSwitcher.js';
 import {defaults as defaultControls, ScaleLine} from 'ol/control.js';
 
+// ol-ext stuff
+import LayerSwitcher from 'ol-ext/control/LayerSwitcher.js';
+import Permalink from 'ol-ext/control/Permalink.js';
 import {Bookmarks} from "./bookmarks.js";
 
 var esrijsonFormat = new EsriJSON();
@@ -65,6 +67,7 @@ var noncommercial = "https://cc-gis.clatsop.co.clatsop.or.us/arcgis/rest/service
 var boundaries    = "https://cc-gis.clatsop.co.clatsop.or.us/arcgis/rest/services/web_mercator/zoning_Boundaries/MapServer";
 var residential   = "https://cc-gis.clatsop.co.clatsop.or.us/arcgis/rest/services/web_mercator/zoning_Residential/MapServer";
 
+var world_imagery = "https://services.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer"
 var hillshade     = "https://gis.dogami.oregon.gov/arcgis/rest/services/Public/BareEarthHS/ImageServer";
 
 var zoning_layers = new LayerGroup({
@@ -105,15 +108,31 @@ var hillshade_layer = new ImageLayer({
     visible: true
 });
     
-var layers = [
-    hillshade_layer,
-    new TileLayer({
+var world_imagery_layer = new ImageLayer({
+    title: 'World Imagery',
+    type: 'base',
+    source: new ImageArcGISRest({ url: world_imagery,
+				  params: {},
+				  crossOrigin: 'anonymous',
+				  ratio: 1
+				}),
+    maxResolution: 200,
+    visible: false
+});
+
+var streets_layer = new TileLayer({
 	title: 'Streets',
 	type: 'base',
  	source: new OSM(),
 	crossOrigin: 'anonymous',
-	opacity: 0.7
-    }), 
+	opacity: 0.7,
+	visible: true
+    });
+    
+var layers = [
+    hillshade_layer,
+    world_imagery_layer,
+    streets_layer,
     zoning_layers,
 //    new VectorLayer({   source: makeVectorSource(taxlots),  maxResolution: 25, zindex:0 })
     new TileLayer({
@@ -155,13 +174,31 @@ map.addControl(scaleline);
 
 map.addControl(Bookmarks());
 
-/* 
-   Toggle the hillshade layer on and off.
-*/
-function toggleHillshade(evt) {
-    var v = !hillshade_layer.getVisible();
-    hillshade_layer.setVisible(v);
+var pl_ctrl = new Permalink({
+    onclick: function(url)
+    {
+	console.log("Permalink url = ", url);
+	document.location = "mailto:?subject=subject&body=" + encodeURIComponent(url); // causes an email app to open with this URL in body.
+    },
+    urlReplace: true // Default is true; causes the URL to continuously update with the position in latlon and zoom level.
+});
+map.addControl(pl_ctrl);
+
+var imgbtn = document.getElementById("imagery_button");
+imgbtn.addEventListener("click", toggleImagery);
+
+function toggleImagery(evt) {
+    var streets_visible = streets_layer.getVisible();
+    if (streets_visible) {
+	streets_layer.setVisible(false);
+	world_imagery_layer.setVisible(true);
+	hillshade_layer.setVisible(false);
+	imgbtn.innerText = "streets";
+    } else {
+	streets_layer.setVisible(true);
+	world_imagery_layer.setVisible(false);
+	imgbtn.innerText = "aerial";
+    }
 }
-document.getElementById("hillshade_button").addEventListener("click", toggleHillshade);
 
 console.log('body.js loaded');

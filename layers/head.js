@@ -7,4 +7,4 @@ import "ol-ext/dist/ol-ext.css";
 
 import "ol-ext/control/GeoBookmark.css";
 import "ol-ext/control/LayerSwitcher.css";
-import "ol-ext/control/LayerSwitcherImage.css";
+import "ol-ext/control/Permalink.css";
