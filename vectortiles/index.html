@@ -1,11 +1,26 @@
 <!DOCTYPE html>
 <html>
   <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,IE=11" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <meta name="description" content="Test Openlayers vector tiles." />
+    <meta name="keywords" content="ol5, vector tiles" />
+
+    <!-- FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    
+    <link rel="shortcut icon" href="../favicon.ico" type="image/x-icon">
+    <link rel="icon" href="../favicon.ico" type="image/x-icon">
+
     <title>Mapbox Vector Tiles test app</title>
-    <link rel="stylesheet" href="https://openlayers.org/en/v5.2.0/css/ol.css" type="text/css">
+    
     <!-- The line below is only needed for old environments like Internet Explorer and Android 4.x -->
     <script src="https://cdn.polyfill.io/v2/polyfill.min.js?features=requestAnimationFrame,Element.prototype.classList,URL"></script>
-    <script src="https://openlayers.org/en/v5.2.0/examples/resources/mapbox-streets-v6-style.js"></script>
+
+    <script src="./head.js"></script>
+
     <style>
       .map {
         background: #f8f4f0;
@@ -15,6 +30,7 @@
   <body>
     <h1>Mapbox vector tiles test app</h1>
     <div id="map" class="map"></div>
+
     <script src="./body.js"></script>
   </body>
 </html>
