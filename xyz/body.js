@@ -12,9 +12,10 @@ import jquery from 'jquery/dist/jquery.min.js';
 
 import Permalink from 'ol-ext/control/Permalink.js';
 import Cloud from 'ol-ext/control/Cloud.js';
-import Search from './search.js';
 
-//import Compass from 'ol-ext/control/Compass.js';
+// wrappers for ol-ext objects
+import {Search} from './search.js';
+import {CompassRose} from './compassrose.js';
 
 var stamen_watercolor_layer = new TileLayer({
     title: "Watercolor",
@@ -100,12 +101,13 @@ function fix_opacity() {
     }
 }
 
-search = new Search();
-map.addControl(search.mapcontrol);
+var search = new Search();
+console.log("search=", search);
+map.addControl(search.mapControl);
 map.addLayer(search.selectionlayer);
 
 // Select feature when click on the reference index
-search.mapcontrol.on('select', function(e) {
+search.mapControl.on('select', function(e) {
     // console.log(e);
     search.selectionlayer.getSource().clear();
     // Check if we get a geojson to describe the search
@@ -127,24 +129,20 @@ search.mapcontrol.on('select', function(e) {
     }
     else {
 	map.getView().animate({
-	    center:e.coordinate,
+	    center: e.coordinate,
 	    zoom: Math.max(map.getView().getZoom(),16)
 	});
     }
 });
 
-/*
-// This is not working yet. Parcel does not replace the URL
-var compass = new Compass({
-    image: "./images/compass.png",
-//    style: strokestyle
-});
-map.addControl(compass);
-*/
+var mycompass = new CompassRose();
+map.addControl(mycompass.mapControl);
 
 // ------------------------------------------------------------------------
 
 // There's an option to set windspeed and direction on this control.
+// The ol-ext example control/canvas/map.control.compass.html has
+// excellent examples on how to use doc properties.
 var cloudControl = new Cloud();
 var cloudsVisible = true;
 map.addControl(cloudControl);
@@ -160,6 +158,7 @@ function cloudToggle(evt) {
     }
     cloudsVisible = v;
 }
+
 
 var streetsbtn = document.getElementById("streetsToggle");
 streetsbtn.addEventListener("click", streetsToggle);

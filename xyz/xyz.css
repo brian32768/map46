@@ -33,7 +33,15 @@ button {
     background-color: black;
 }
 
-.compass {
-    /* Reference this so it gets included as an asset */
-    content: url('./images/compass.png');
+/* ======================================================================== */
+
+/* Define the size and position in the css */
+.ol-compassctrl.left
+{
+    bottom: 0;
+    left: 30;
+    width: 80px;
+    height: 80px;
+    -webkit-transform: translate(0,-50%);
+    transform: translate(0,-50%);
 }

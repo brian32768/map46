@@ -8,8 +8,8 @@ import {Style, Circle, Stroke, Fill} from 'ol/style';
 
 export class Search {
 
-    constructor () {
-	this.mapcontrol = new SearchNominatim({
+    constructor() {
+	this.mapControl = new SearchNominatim({
 	    //target: $(".options").get(0),
 	    polygon: $("#polygon").prop("checked"),
 	    position: true	// Search, with priority to geo position
@@ -38,7 +38,7 @@ export class Search {
 		})
 	    })
 	});
-    }
+    } // constructor
 
     toString() {
 	return 'search control';
