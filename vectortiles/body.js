@@ -4,7 +4,7 @@
 
 import {Map, View} from 'ol';
 import {transform as Transform} from 'ol/proj';
-import OSM from 'ol/source/OSM.js';
+//import OSM from 'ol/source/OSM.js';
 import {Tile as TileLayer} from 'ol/layer';
 
 import MVT from 'ol/format/MVT.js';
@@ -14,8 +14,12 @@ import {Fill, Icon, Stroke, Style, Text} from 'ol/style.js';
 
 import createMapboxStreetsStyle from './mapboxstyles.js';
 
-// Copied from ArcGIS.com
-const taxlotsUrl = "https://tiles.arcgis.com/tiles/l89P2qlKPxgrFDLw/arcgis/rest/services/Clatsop_DBO_taxlots_wm/VectorTileServer";
+import Permalink from 'ol-ext/control/Permalink.js';
+
+// Stored on ArcGIS.com
+//const taxlotsUrl = "https://tiles.arcgis.com/tiles/l89P2qlKPxgrFDLw/arcgis/rest/services/Clatsop_DBO_taxlots_wm/VectorTileServer";
+// Stored on local server
+const taxlotsUrl = "http://cc-gis.clatsop.co.clatsop.or.us/arcgis/rest/services/Hosted/WM_taxlots/VectorTileServer";
 
 var selection = {}; // list of selected features
 
@@ -24,6 +28,8 @@ const startingLocation = {
     zoom: 13, minZoom: 10, maxZoom: 19
 }; 
 
+/*
+// Conventional raster tile streets layer, for testing.
 var osmStreetsLayer  = new TileLayer({
     title: 'Streets',
     type: 'base',
@@ -34,16 +40,20 @@ var osmStreetsLayer  = new TileLayer({
     visible: true,
     zindex: 3
 });
+*/
 
 var id_property = '';
 var taxlots = taxlotsUrl + "/tile/{z}/{y}/{x}.pbf";
 
 var taxlotsLayer = new VectorTile({
+    title: 'Taxlots',
     declutter: true,
     source: new VectorTileSource({
 	format: new MVT(),
 	url: taxlots
     }),
+    permalink: 'taxlots',
+    visible: true,
     style: function(feature) {
 	var selected = !!selection[feature.get(id_property)];
 	return new Style({
@@ -72,6 +82,8 @@ var mapboxBasemap = new VectorTile({
 });
 
 /*
+// ESRI vector tiles, I don't have a good style for them yet. 
+// The data seems pretty sketchy anyway, like it's only for proof of concept.
 var esriBasemap = new VectorTile({
     source: new VectorTileSource({
 	title: 'ESRI World Basemap',
@@ -80,7 +92,7 @@ var esriBasemap = new VectorTile({
 	format: new MVT(),
 	url: 'https://basemaps.arcgis.com/v1/arcgis/rest/services/World_Basemap/VectorTileServer/tile/{z}/{y}/{x}.pbf',
     })
-//    style: createMapboxStreetsStyle(Style, Fill, Stroke, Icon, Text)
+//    style: createMapboxStreetsStyle(Style, Fill, Stroke, Icon, Text) // This is not good for ESRI
 });
 */
 
@@ -134,7 +146,6 @@ var map = new Map({
 
 //var selectElement = document.getElementById('type'); // singleselect | multiselect
 
-
 map.on('click', function(event) {
     var features = map.getFeaturesAtPixel(event.pixel);
     if (!features) {
@@ -164,3 +175,48 @@ map.on('click', function(event) {
     // force redraw of layer style
     taxlotsLayer.setStyle(taxlotsLayer.getStyle());
 });
+
+/* Adding this control is only 1/2 the story; it's not needed. If you
+   use Permalink then the URL will be rewritten to always include
+   location and layer visibility options, so that hitting refresh does
+   not cause the map to reset back to the startingLocation. */
+
+var pl_ctrl = new Permalink({
+    onclick: function(url) {
+	copyToClipboard(url); // Just copy the URL to the clipboard. I need a flash or highlight or something as feedback.
+	//document.location = "mailto:?subject=subject&body=" + encodeURIComponent(url); // causes an email app to open with this URL in body.
+    },
+    urlReplace: true // Default is true; causes the URL to continuously update with the position in latlon and zoom level.
+});
+map.addControl(pl_ctrl);
+
+// Copies a string to the clipboard. Must be called from within an 
+// event handler such as click. May return false if it failed, but
+// this is not always possible. Browser support for Chrome 43+, 
+// Firefox 42+, Safari 10+, Edge and IE 10+.
+// IE: The clipboard feature may be disabled by an administrator. By
+// default a prompt is shown the first time the clipboard is 
+// used (per session).
+function copyToClipboard(text) {
+    if (window.clipboardData && window.clipboardData.setData) {
+        // IE specific code path to prevent textarea being shown while dialog is visible.
+        return clipboardData.setData("Text", text); 
+
+    } else if (document.queryCommandSupported && document.queryCommandSupported("copy")) {
+        var textarea = document.createElement("textarea");
+        textarea.textContent = text;
+        textarea.style.position = "fixed";  // Prevent scrolling to bottom of page in MS Edge.
+        document.body.appendChild(textarea);
+        textarea.select();
+        try {
+            return document.execCommand("copy");  // Security exception may be thrown by some browsers.
+        } catch (ex) {
+            console.warn("Copy to clipboard failed.", ex);
+            return false;
+        } finally {
+            document.body.removeChild(textarea);
+        }
+    }
+}
+
+// That's all!

@@ -8,39 +8,6 @@ import {Circle as CircleStyle, Fill, Stroke, Style, Text} from 'ol/style.js';
 var openSansAdded = false;
 
 var myDom = {
-    points: {
-        text: document.getElementById('points-text'),
-        align: document.getElementById('points-align'),
-        baseline: document.getElementById('points-baseline'),
-        rotation: document.getElementById('points-rotation'),
-        font: document.getElementById('points-font'),
-        weight: document.getElementById('points-weight'),
-        size: document.getElementById('points-size'),
-        offsetX: document.getElementById('points-offset-x'),
-        offsetY: document.getElementById('points-offset-y'),
-        color: document.getElementById('points-color'),
-        outline: document.getElementById('points-outline'),
-        outlineWidth: document.getElementById('points-outline-width'),
-        maxreso: document.getElementById('points-maxreso')
-    },
-    lines: {
-        text: document.getElementById('lines-text'),
-        align: document.getElementById('lines-align'),
-        baseline: document.getElementById('lines-baseline'),
-        rotation: document.getElementById('lines-rotation'),
-        font: document.getElementById('lines-font'),
-        weight: document.getElementById('lines-weight'),
-        placement: document.getElementById('lines-placement'),
-        maxangle: document.getElementById('lines-maxangle'),
-        overflow: document.getElementById('lines-overflow'),
-        size: document.getElementById('lines-size'),
-        offsetX: document.getElementById('lines-offset-x'),
-        offsetY: document.getElementById('lines-offset-y'),
-        color: document.getElementById('lines-color'),
-        outline: document.getElementById('lines-outline'),
-        outlineWidth: document.getElementById('lines-outline-width'),
-        maxreso: document.getElementById('lines-maxreso')
-    },
     polygons: {
         text: document.getElementById('polygons-text'),
         align: document.getElementById('polygons-align'),
@@ -143,52 +110,10 @@ var vectorPolygons = new VectorLayer({
 });
 
 
-// Lines
-function lineStyleFunction(feature, resolution) {
-    return new Style({
-        stroke: new Stroke({
-            color: 'green',
-            width: 2
-        }),
-        text: createTextStyle(feature, resolution, myDom.lines)
-    });
-}
-
-var vectorLines = new VectorLayer({
-    source: new VectorSource({
-        url: 'line-samples.geojson',
-        format: new GeoJSON()
-    }),
-    style: lineStyleFunction
-});
-
-
-// Points
-function pointStyleFunction(feature, resolution) {
-    return new Style({
-        image: new CircleStyle({
-            radius: 10,
-            fill: new Fill({color: 'rgba(255, 0, 0, 0.1)'}),
-            stroke: new Stroke({color: 'red', width: 1})
-        }),
-        text: createTextStyle(feature, resolution, myDom.points)
-    });
-}
-
-var vectorPoints = new VectorLayer({
-    source: new VectorSource({
-        url: 'point-samples.geojson',
-        format: new GeoJSON()
-    }),
-    style: pointStyleFunction
-});
-
 var map = new Map({
     layers: [
-	//        new TileLayer({   source: new OSM()  }),
+	new TileLayer({   source: new OSM()  }),
         vectorPolygons,
-        vectorLines,
-        vectorPoints
     ],
     target: 'map',
     view: new View({
@@ -196,16 +121,6 @@ var map = new Map({
         zoom: 8
     })
 });
-
-document.getElementById('refresh-points')
-    .addEventListener('click', function() {
-        vectorPoints.setStyle(pointStyleFunction);
-    });
-
-document.getElementById('refresh-lines')
-    .addEventListener('click', function() {
-        vectorLines.setStyle(lineStyleFunction);
-    });
 
 document.getElementById('refresh-polygons')
     .addEventListener('click', function() {
