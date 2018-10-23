@@ -7,8 +7,8 @@ import {Circle as CircleStyle, Fill, Stroke, Style, Text} from 'ol/style.js';
 
 var openSansAdded = false;
 
-var myDom = {
-    polygons: {
+// Load all the styles from the HTML form.
+var polygon_styles = {
         text: document.getElementById('polygons-text'),
         align: document.getElementById('polygons-align'),
         baseline: document.getElementById('polygons-baseline'),
@@ -25,7 +25,6 @@ var myDom = {
         outline: document.getElementById('polygons-outline'),
         outlineWidth: document.getElementById('polygons-outline-width'),
         maxreso: document.getElementById('polygons-maxreso')
-    }
 };
 
 var getText = function(feature, resolution, dom) {
@@ -97,7 +96,7 @@ function polygonStyleFunction(feature, resolution) {
         fill: new Fill({
             color: 'rgba(0, 0, 255, 0.1)'
         }),
-        text: createTextStyle(feature, resolution, myDom.polygons)
+        text: createTextStyle(feature, resolution, polygon_styles)
     });
 }
 

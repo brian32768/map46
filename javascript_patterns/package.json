@@ -4,9 +4,8 @@
   "description": "Testing javascript ideas",
   "author": "Brian Wilson",
   "scripts": {
-    "test": "parcel serve --open chrome index.html",
     "build": "parcel build index.html --no-minify",
-    "start": "node server.js"
+    "start": "parcel serve --open chrome index.html"
   },
   "repository": {
     "type": "git",
@@ -20,6 +19,8 @@
     "url": "https://github.com/brian32768/map46/issues"
   },
   "homepage": "https://github.com/brian32768/map46#readme",
-  "dependencies": {},
+  "dependencies": {
+    "src": "^1.1.2"
+  },
   "devDependencies": {}
 }

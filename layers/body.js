@@ -37,10 +37,11 @@ var taxlots_labels   = taxlots + '0';
 var taxlots_features = taxlots + '1';
 //var taxlotsMapServer = 'https://cc-gis.clatsop.co.clatsop.or.us/arcgis/rest/services/web_mercator/CC_Taxlots/MapServer';
 
-var commercial    = "https://cc-gis.clatsop.co.clatsop.or.us/arcgis/rest/services/web_mercator/zoning_Commercial/MapServer";
-var noncommercial = "https://cc-gis.clatsop.co.clatsop.or.us/arcgis/rest/services/web_mercator/zoning_Noncommercial/MapServer";
-var boundaries    = "https://cc-gis.clatsop.co.clatsop.or.us/arcgis/rest/services/web_mercator/zoning_Boundaries/MapServer";
-var residential   = "https://cc-gis.clatsop.co.clatsop.or.us/arcgis/rest/services/web_mercator/zoning_Residential/MapServer";
+var zoning          = 'https://cc-gis.clatsop.co.clatsop.or.us/arcgis/rest/services/Zoning_3857/FeatureServer/';
+var zoning_boundaries    = zoning + '3';
+var zoning_commercial    = zoning + '4';
+var zoning_noncommercial = zoning + '5';
+var zoning_residential   = zoning + '6';
 
 var world_imagery = "https://services.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer"
 var hillshade     = "https://gis.dogami.oregon.gov/arcgis/rest/services/Public/BareEarthHS/ImageServer";
@@ -82,24 +83,24 @@ function makeVectorSource(my_url) {
 }
 
 
-var zoning_layers = new LayerGroup({
+var zoning_feature_layers = new LayerGroup({
     'title': 'Zoning',
     layers: [
-	new TileLayer({
-	    title: 'Commercial',
-	    source: new TileArcGISRest({ url: commercial    })
-	}), 
-	new TileLayer({
-	    title: 'Noncommercial',
-	    source: new TileArcGISRest({ url: noncommercial })
-	}), 
-	new TileLayer({
+	new VectorLayer({
 	    title: 'Boundaries',
-	    source: new TileArcGISRest({ url: boundaries    })
+	    source: makeVectorSource(zoning_boundaries)
 	}), 
-	new TileLayer({
+	new VectorLayer({
+	    title: 'Commercial',
+	    source: makeVectorSource(zoning_commercial)
+	}), 
+	new VectorLayer({
+	    title: 'Noncommercial',
+	    source: makeVectorSource(zoning_noncommercial)
+	}), 
+	new VectorLayer({
 	    title: 'Residential',
-	    source: new TileArcGISRest({ url: residential   })
+	    source: makeVectorSource(zoning_residential)
 	})
     ],
     visible: true,
@@ -186,9 +187,9 @@ var layers = [
     hillshade_layer,
     world_imagery_layer,
     streets_layer,
-    zoning_layers,
+    zoning_feature_layers,
     taxlots_feature_layer,
-    taxlots_label_layer
+//    taxlots_label_layer
 ];
 
 var layercount = layers.length;

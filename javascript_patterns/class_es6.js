@@ -1,4 +1,4 @@
-// class_es6.js
+// class_es6.js javascript_patterns
 //
 // Implementing a class in ES6 format.
 
@@ -27,7 +27,6 @@ export class Thing {
 
 // I can add some static data too, not just methods.
 Thing.bar = '101';
-
 
 // Inheritance or 'subclass' if you prefer
 export class TallThing extends Thing {
