@@ -4,9 +4,8 @@
   "description": "OpenLayers 5 XYZ test app",
   "author": "Brian Wilson",
   "scripts": {
-    "test": "parcel serve --log-level 2 --open chrome index.html",
     "build": "parcel build index.html --no-minify",
-    "start": "node server.js"
+    "start": "parcel serve --open chrome index.html"
   },
   "repository": {
     "type": "git",

@@ -1,4 +1,4 @@
-﻿// body.js
+﻿// body.js xyz
 
 import {Map, View} from "ol";
 import {Tile as TileLayer, Image as ImageLayer} from 'ol/layer';
@@ -6,6 +6,7 @@ import {OSM, TileArcGISRest, ImageArcGISRest, Stamen} from 'ol/source';
 import {tile as tileStrategy} from 'ol/loadingstrategy.js';
 import XYZ from 'ol/source/XYZ.js';
 import {createXYZ} from 'ol/tilegrid.js';
+import {ATTRIBUTION} from 'ol/source/OSM.js';
 
 import 'bootstrap/dist/js/bootstrap.js';
 import jquery from 'jquery/dist/jquery.min.js';
@@ -74,7 +75,11 @@ for (var i = 0; i < layercount; i++) {
 var map = new Map({
     target: 'map',
     layers: layers,
-    view: new View(starting_location)
+    view: new View(starting_location),
+    attributionOptions: {
+	collapsible: false
+    },
+    attributions: [ATTRIBUTION, 'Ziggy Stardust']
 });
 
 var pl_ctrl = new Permalink({
