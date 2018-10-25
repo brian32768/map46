@@ -10,6 +10,9 @@ https://scotch.io/bar-talk/4-javascript-design-patterns-you-should-know
     module_es3.js    A module defined the old way
     module_es6.js    A module defined a more recent way
 
+  images/
+    image assets
+
 
 localstorage.js  Using browser storage
 
