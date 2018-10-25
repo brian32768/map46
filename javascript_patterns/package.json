@@ -1,11 +1,12 @@
 {
   "name": "javascript_patterns",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Testing javascript ideas",
   "author": "Brian Wilson",
   "scripts": {
-    "build": "parcel build index.html --no-minify",
-    "start": "parcel serve --open chrome index.html"
+      "build":  "parcel build index.html --no-minify",
+      "start":  "parcel serve index.html",
+      "chrome": "parcel serve --open chrome index.html"
   },
   "repository": {
     "type": "git",
