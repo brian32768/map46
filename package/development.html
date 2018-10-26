@@ -1,0 +1,38 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Building packages</title>
+  </head>
+  <body>
+    <h1>Building packages</h1>
+
+    <p>
+      What I am trying to do here is bundle a package for distribution and reuse,
+    but still allow using Parcel to test and develop.
+    </p>
+
+    <p>
+      I want to be able to just write code and run it, the normal way for me is
+    </p>
+    <code>
+      npm run chrome
+    </code>
+
+    <p>
+      And to build the library for separate use.
+    </p>
+
+    <code>
+      import fun from "myfunlibrary";
+      fun("times");
+    </code>
+
+    <p>
+      <i>Open the console (F12) to see if things worked, you won't know by looking at this page.</i>
+    </p>
+
+    I think I can do this by using a separate entry point + build command.
+    
+    <script src="./body.js"></script>
+  </body>
+</html>

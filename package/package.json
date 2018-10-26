@@ -1,27 +1,28 @@
 {
-  "name": "packages",
-  "version": "1.0.0",
-  "description": "Testing packager ideas",
-  "author": "Brian Wilson",
-  "scripts": {
-    "build": "parcel build index.html --no-minify",
-    "start": "parcel serve --open chrome index.html"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/brian32768/map46.git"
-  },
-  "keywords": [
-    "javascript"
-  ],
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/brian32768/map46/issues"
-  },
-  "homepage": "https://github.com/brian32768/map46#readme",
-  "dependencies": {
-    "base64-encode-string": "^1.0.0",
-    "src": "^1.0.0"
-  },
-  "devDependencies": {}
+    "name": "packages",
+    "version": "1.0.0",
+    "description": "Testing packager ideas",
+    "author": "Brian Wilson",
+    "scripts": {
+	"build": "parcel build src/index.js --outdir build --detailed-report",
+	"test":  "parcel serve development.html --open",
+	"start": "parcel serve packagetest.html --open"
+    },
+    "repository": {
+	"type": "git",
+	"url": "git+https://github.com/brian32768/map46.git"
+    },
+    "keywords": [
+	"javascript"
+    ],
+    "license": "ISC",
+    "bugs": {
+	"url": "https://github.com/brian32768/map46/issues"
+    },
+    "homepage": "https://github.com/brian32768/map46#readme",
+    "dependencies": {
+	"base64-encode-string": "^1.0.0",
+	"src": "^1.0.0"
+    },
+    "devDependencies": {}
 }
