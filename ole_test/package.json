@@ -1,0 +1,35 @@
+{
+  "name": "ole_test",
+  "version": "1.0.0",
+  "description": "Test of the Ole OpenLayers extension",
+  "main": "index.html",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "parcel serve index.html --open",
+    "build": "parcel build index.html --no-minify"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/brian32768/map46.git"
+  },
+  "keywords": [
+    "arcgis",
+    "REST",
+    "openlayers"
+  ],
+  "author": "Brian H Wilson",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/brian32768/map46/issues"
+  },
+  "homepage": "https://github.com/brian32768/map46#readme",
+  "dependencies": {
+    "bootstrap": "^4.1.3",
+    "jquery": "^3.3.1",
+    "ol": "^5.2.0",
+    "ol-ext": "^3.0.2",
+    "ole-brian32768": "^1.0.2",
+    "popper.js": "^1.14.4"
+  },
+  "devDependencies": {}
+}

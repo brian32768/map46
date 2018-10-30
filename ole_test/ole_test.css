@@ -1,0 +1,42 @@
+﻿body {
+    background-color: darkgray;
+}
+
+#top {
+    background-color: lightgray;
+}
+
+#bottom {
+    background-color: lightgray;
+}
+
+#main {
+    background-color: lightgray;
+}
+
+#menu {
+    background-color: lightgray;
+}
+
+#nav {
+    color: white;
+    background-color: gray;
+}
+
+button {
+    color: white;
+    background-color: black;
+}
+
+/* ======================================================================== */
+
+/* Define the size and position in the css */
+.ol-compassctrl.left
+{
+    bottom: 0;
+    left: 30;
+    width: 80px;
+    height: 80px;
+    -webkit-transform: translate(0,-50%);
+    transform: translate(0,-50%);
+}
