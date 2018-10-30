@@ -2,14 +2,14 @@
   "name": "xyz",
   "version": "1.0.0",
   "description": "OpenLayers 5 XYZ test app",
-  "author": "Brian Wilson",
+  "author": "Brian H Wilson",
   "scripts": {
     "build": "parcel build index.html --no-minify",
-    "start": "parcel serve --open chrome index.html"
+    "start": "parcel serve index.html --open"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/brian32768/map46.git"
+    "url": "git+ssh://git@github.com/brian32768/map46.git"
   },
   "keywords": [
     "openlayers",
