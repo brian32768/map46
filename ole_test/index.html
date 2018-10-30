@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,IE=11" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <meta name="description" content="Test various Openlayers features and extensions." />
+    <meta name="keywords" content="arcgis, rest, openlayers" />
+
+    <!-- FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    
+    <link rel="shortcut icon" href="../favicon.ico" type="image/x-icon">
+    <link rel="icon" href="../favicon.ico" type="image/x-icon">
+
+    <title>Olé test</title>
+    
+    <script src="./head.js"></script>
+
+    <link rel="stylesheet" href="/node_modules/ol/ol.css">
+</head>
+<body>
+    <div class="container">
+        <!-- row 1 -->
+        <div class="row" id="top">
+            <div class="col-md-12">
+              <h1>OpenLayers + Olé</h1>
+               <p> Watch me use ArcGIS services with OpenLayers.</p>
+            </div>
+        </div>
+
+        <!-- row 2 -->
+        <div class="row" id="menu">
+	  <div class="col-md-12">
+            <div class="dropdown">
+
+                <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">
+                    Layers
+                    <span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu">
+		  <li><button id="restToggle">ArcGIS REST Service Group</button></li>
+		  <li><button id="streetsToggle">Streets</button></li>
+		  <li><button id="watercolorToggle">Watercolor</button></li>
+		</ul>
+            </div>
+	  </div>
+        </div>
+
+        <!-- row 3 -->
+        <div class="row" id="main">
+            <div class="col-md-12" id="maprow">
+                <div class="map" id="map"></div>
+            </div>
+        </div>
+
+        <!-- row 4 -->
+        <div class="row" id="bottom">
+            <div class="col-md-4">
+              <a href="gis">County GIS</a> | 
+              <a href="help">Help</a> | 
+              <a href="faq">FAQ</a> 
+	    </div>
+
+            <div class="col-md-2">
+	      <a href="#demo" class="btn btn-info" data-toggle="collapse">About Map 46</a>
+	      <div id="demo" class="collapse">
+		<h3>Getting started! Just a logo so far.</h3> 
+	      </div>
+            </div>
+            <div class="col-md-1">
+              <a href="about"><img src="../map46.svg" width="48" height="48" /></a>
+            </div>
+        </div>
+    </div>
+
+    <script src="./body.js"></script>
+</body>
+</html>
