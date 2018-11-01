@@ -7,13 +7,13 @@ The final product will be here, all those other folders are just r&d projects.
 Projection- web mercator ok? Is there really any other option?
 
 * Slippy map with controls
-** zoom controls: +- and slider
-** Scalebar
+  * zoom controls: +- and slider
+  * Scalebar
 * On map frame, show
-** Zoom level
-** Scale
-** Mouse position (lat lon / usng)
-** Layer control
+  * Zoom level
+  * Scale
+  * Mouse position (lat lon / usng)
+  * Layer control
 * Legend
 * Export to PDF with templates for layout and some customizations
 * Permalinks, including copy to clipboard
@@ -22,21 +22,21 @@ Projection- web mercator ok? Is there really any other option?
 * Redlining?
 * Measure?
 * Search
-** Free text and advanced: account #, taxlot #, owner, mailing address, situs
-** Geocoded (possibly failover if free text search fails?)
-** Search results include links to taxmaps and (other).
+  * Free text and advanced: account #, taxlot #, owner, mailing address, situs
+  * Geocoded (possibly failover if free text search fails?)
+  * Search results include links to taxmaps and (other).
 * Map layers: 
-** Taxlots - FeatureServer * local live database
-** Zoning - FeatureServer * local live database
-** SLIDO? * DOGAMI service
-** Contours - need to build a new one * local static data
-** Hillshade - DOGAMI service
-** Basemap - Air photo - ESRI Clarity service?
-** Basemap - probably several? OpenStreetMap service, ESRI basemap service?
+  * Taxlots - FeatureServer * local live database
+  * Zoning - FeatureServer * local live database
+  * SLIDO? * DOGAMI service
+  * Contours - need to build a new one * local static data
+  * Hillshade - DOGAMI service
+  * Basemap - Air photo - ESRI Clarity service?
+  * Basemap - probably several? OpenStreetMap service, ESRI basemap service?
 * Link to StreetView
 * Documentation:
-** Help
-** FAQ
+  * Help
+  * FAQ
 
 ## Branding
 
