@@ -2,7 +2,7 @@
 
 import {Map, View} from "ol";
 import {Tile as TileLayer, Image as ImageLayer} from 'ol/layer';
-import {OSM, TileArcGISRest, ImageArcGISRest, Stamen} from 'ol/source';
+import {OSM, TileArcGISRest, ImageArcGISRest} from 'ol/source';
 import {tile as tileStrategy} from 'ol/loadingstrategy.js';
 import XYZ from 'ol/source/XYZ.js';
 import {createXYZ} from 'ol/tilegrid.js';
@@ -18,16 +18,13 @@ import Cloud from 'ol-ext/control/Cloud.js';
 import {Search} from './search.js';
 import {CompassRose} from './compassrose.js';
 
-var stamen_watercolor_layer = new TileLayer({
-    title: "Watercolor",
-    type: 'base',
-    source: new Stamen({ layer:"watercolor" }),
-    crossOrigin: 'anonymous',
-    opacity: 0.5,
-    permalink: "WC",
-    visible: true,
-    zindex: 2
-});
+let naip2011Url = "http://imagery.oregonexplorer.info/arcgis/rest/services/NAIP_2011/NAIP_2011_WM/ImageServer"; // 1 meter
+let naip2009Url = "http://imagery.oregonexplorer.info/arcgis/rest/services/NAIP_2009/NAIP_2009_WM/ImageServer"; // 1/2 meter
+let hhhsUrl   = "https://gis.dogami.oregon.gov/arcgis/rest/services/Public/HighestHitHS/ImageServer";
+
+let naip2011_layer = new ImageLayer({ source: new ImageArcGISRest({ ratio: 1, params: {}, url: naip2011Url }) });
+let naip2009_layer = new ImageLayer({ source: new ImageArcGISRest({ ratio: 1, params: {}, url: naip2009Url }) });
+let hhhs_layer   = new ImageLayer({ source: new ImageArcGISRest({ ratio: 1, params: {}, url: hhhsUrl}), opacity:0.5  });
 
 var osm_streets_layer  = new TileLayer({
     title: 'Streets',
@@ -60,10 +57,12 @@ let davidrumsey_layer  = new TileLayer({
 const maxres = 100;
 
 var layers = [
-    stamen_watercolor_layer,
-    osm_streets_layer,
+    naip2009_layer,
+    naip2011_layer,
+    hhhs_layer,
+    osm_streets_layer
     //astoria_layer,
-    davidrumsey_layer,
+    //davidrumsey_layer,
 ];
 
 var layercount = layers.length;
@@ -93,17 +92,6 @@ var pl_ctrl = new Permalink({
 map.addControl(pl_ctrl);
 
 function fix_opacity() {
-    if (osm_streets_layer.getVisible() || stamen_watercolor_layer.getVisible()) {
-	davidrumsey_layer.setOpacity(.5);
-    } else {
-	davidrumsey_layer.setOpacity(1);
-    }
-
-    osm_streets_layer.setOpacity(1);
-    stamen_watercolor_layer.setOpacity(1);
-    if (stamen_watercolor_layer.getVisible()) {
-	osm_streets_layer.setOpacity(.5);
-    }
 }
 
 var search = new Search();
@@ -174,12 +162,30 @@ function streetsToggle(evt) {
     fix_opacity();
 }
 
-var wcbtn = document.getElementById("watercolorToggle");
-wcbtn.addEventListener("click", watercolorToggle);
-function watercolorToggle(evt) {
-    var v = !stamen_watercolor_layer.getVisible();
-    stamen_watercolor_layer.setVisible(v);
-    console.log('watercolor',v);
+var naip2011btn = document.getElementById("naip2011Toggle");
+naip2011btn.addEventListener("click", naip2011Toggle);
+function naip2011Toggle(evt) {
+    var v = !naip2011_layer.getVisible();
+    naip2011_layer.setVisible(v);
+    console.log('naip2011',v);
+    fix_opacity();
+}
+
+var naip2009btn = document.getElementById("naip2009Toggle");
+naip2009btn.addEventListener("click", naip2009Toggle);
+function naip2009Toggle(evt) {
+    var v = !naip2009_layer.getVisible();
+    naip2009_layer.setVisible(v);
+    console.log('naip2009',v);
+    fix_opacity();
+}
+
+var hhhsbtn = document.getElementById("highesthitToggle");
+hhhsbtn.addEventListener("click", hhhsToggle);
+function hhhsToggle(evt) {
+    var v = !hhhs_layer.getVisible();
+    hhhs_layer.setVisible(v);
+    console.log('hhhs',v);
     fix_opacity();
 }
 
