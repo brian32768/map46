@@ -5,6 +5,7 @@ __MACOSX/
 .cache/
 dist/
 UpgradeLog.htm
+package-lock.json
 
 # Visual Studio
 .vs/
