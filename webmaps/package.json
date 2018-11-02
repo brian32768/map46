@@ -1,15 +1,15 @@
 {
-  "name": "vectortiles",
+  "name": "webmaps",
   "version": "1.0.0",
-  "description": "OpenLayers vector tile test app",
-  "author": "Brian Wilson",
+  "description": "Webmaps 2018 prototype",
+  "author": "Brian H Wilson",
   "scripts": {
     "build": "parcel build index.html --no-minify",
     "start": "parcel serve index.html --open"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/brian32768/map46.git"
+    "url": "git+ssh://git@github.com/brian32768/map46.git"
   },
   "keywords": [
     "openlayers",
@@ -18,15 +18,16 @@
   ],
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/brian32768/map46/issues"
+    "url": "https://github.com/brian32768/parceltest/issues"
   },
-  "homepage": "https://github.com/brian32768/map46#readme",
+  "homepage": "https://github.com/brian32768/parceltest#readme",
   "dependencies": {
     "@mapbox/maki": "^4.0.0",
     "bootstrap": "^4.1.3",
     "jquery": "^3.3.1",
     "ol": "^5.2.0",
     "ol-ext": "^3.0.2",
+    "ole-brian32768": "^1.0.2",
     "popper.js": "^1.14.4"
   },
   "devDependencies": {}

@@ -7,6 +7,7 @@ import {tile as tileStrategy} from 'ol/loadingstrategy.js';
 import XYZ from 'ol/source/XYZ.js';
 import {createXYZ} from 'ol/tilegrid.js';
 import {ATTRIBUTION} from 'ol/source/OSM.js';
+import {transform as Transform} from 'ol/proj';
 
 import 'bootstrap/dist/js/bootstrap.js';
 import jquery from 'jquery/dist/jquery.min.js';
@@ -39,7 +40,7 @@ var osm_streets_layer  = new TileLayer({
 
 // Whitney's Map of Astoria And Environs. https://davidrumsey.georeferencer.com/maps/731856088227/
 const whitneys_astoria_url  = "https://maps.georeferencer.com/georeferences/731856088227/2017-02-20T14:25:19.132722Z/map";
-const starting_location = {center: [-13775000, 5800000], zoom: 12}; // astoria downtown
+const starting_location = {center: Transform([-123.825, 46.181], 'EPSG:4326', 'EPSG:3857')}; // astoria downtown
 
 // Thompson&West Map Of Benicia, California
 //const thompson_benicia_url = "https://maps.georeferencer.com/georeferences/246596689284/2017-02-20T14:25:19.132722Z/map";
@@ -78,7 +79,7 @@ var map = new Map({
     attributionOptions: {
 	collapsible: false
     },
-    attributions: [ATTRIBUTION, 'Ziggy Stardust']
+    attributions: [ATTRIBUTION, 'Ziggy played guitar']
 });
 
 var pl_ctrl = new Permalink({

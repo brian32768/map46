@@ -21,6 +21,10 @@ import Permalink from 'ol-ext/control/Permalink.js';
 // Stored on local server
 const taxlotsUrl = "http://cc-gis.clatsop.co.clatsop.or.us/arcgis/rest/services/Hosted/WM_taxlots/VectorTileServer";
 
+// This service has lots of stuff in it including streets, spot elevations, boundaries, creeks...
+//const esriUrl = "https://basemaps.arcgis.com/arcgis/rest/services/World_Basemap_v2/VectorTileServer/";
+const esriUrl = "https://basemaps.arcgis.com/v1/arcgis/rest/services/World_Basemap/VectorTileServer/";
+
 var selection = {}; // list of selected features
 
 const startingLocation = {
@@ -42,8 +46,40 @@ var osmStreetsLayer  = new TileLayer({
 });
 */
 
-var id_property = '';
-var taxlots = taxlotsUrl + "/tile/{z}/{y}/{x}.pbf";
+// Let's try reading the capabilities huh???
+let xyzTemplate = "/tile/{z}/{y}/{x}.pbf";
+
+let id_property = '';
+let taxlots = taxlotsUrl + xyzTemplate;
+let esri = esriUrl + xyzTemplate;
+
+/*
+// ESRI vector tiles, I don't have a good style for them yet. 
+// The data seems pretty sketchy anyway, like it's only for proof of concept.
+*/
+let esriLayer = new VectorTile({
+    title: "ESRI Vector Tile Basemap",
+    declutter: true,
+    source: new VectorTileSource({
+	type:  'base',
+	crossOrigin: 'anonymous',
+	format: new MVT(),
+	url: esri
+    }),
+    visible: true,
+    style: function(feature) {
+	var selected = !!selection[feature.get(id_property)];
+	return new Style({
+	    stroke: new Stroke({
+		color: selected? 'rgba(200,20,20, 0.8)' : 'rgba(20,20,20, 0.7)',
+		width: selected? 1 : 0.5
+	    }),
+	    fill: new Fill({
+		color: selected? 'rgba(100,20,20, 0.5)' : 'rgba(20,20,20,0.1)'
+	    })
+	});
+    }
+});
 
 var taxlotsLayer = new VectorTile({
     title: 'Taxlots',
@@ -53,7 +89,7 @@ var taxlotsLayer = new VectorTile({
 	url: taxlots
     }),
     permalink: 'taxlots',
-    visible: true,
+    visible: false,
     style: function(feature) {
 	var selected = !!selection[feature.get(id_property)];
 	return new Style({
@@ -81,22 +117,6 @@ var mapboxBasemap = new VectorTile({
     style: createMapboxStreetsStyle(Style, Fill, Stroke, Icon, Text)
 });
 
-/*
-// ESRI vector tiles, I don't have a good style for them yet. 
-// The data seems pretty sketchy anyway, like it's only for proof of concept.
-var esriBasemap = new VectorTile({
-    source: new VectorTileSource({
-	title: 'ESRI World Basemap',
-	type:  'base',
-	crossOrigin: 'anonymous',
-	format: new MVT(),
-	url: 'https://basemaps.arcgis.com/v1/arcgis/rest/services/World_Basemap/VectorTileServer/tile/{z}/{y}/{x}.pbf',
-    })
-//    style: createMapboxStreetsStyle(Style, Fill, Stroke, Icon, Text) // This is not good for ESRI
-});
-*/
-
-/*
 var maptilerContourLayer = new VectorTile({
     source: new VectorTileSource({
 	title: 'Contours',
@@ -114,7 +134,6 @@ var maptilerContourLayer = new VectorTile({
 	});
     }
 });
-*/
 
 /*
 var maptilerBasemap = new VectorTile({
@@ -135,6 +154,7 @@ var layers = [
     //esriBasemap
     mapboxBasemap,
     //maptilerContourLayer,
+    //esriLayer,
     taxlotsLayer
 ];
 
