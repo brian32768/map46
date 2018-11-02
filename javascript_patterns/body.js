@@ -1,5 +1,12 @@
 // body.js javascript_patterns
 //
+// This does not work because there is a bug in Parcel, #1440
+//import dotenv from 'dotenv';
+//dotenv.config();
+
+// I can still simply read environment though.
+let password = process.env.SECRETPASSWORD;
+console.log("password: ", password);
 
 // ------------------------------------------------------------------------
 // What are the curly braces for on the import line, and when should I use them and when not?
