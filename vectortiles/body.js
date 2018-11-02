@@ -30,7 +30,7 @@ var selection = {}; // list of selected features
 const startingLocation = {
     center: Transform([-123.825, 46.181], 'EPSG:4326', 'EPSG:3857'), // astoria downtown
     zoom: 13, minZoom: 10, maxZoom: 19
-}; 
+};
 
 /*
 // Conventional raster tile streets layer, for testing.
@@ -54,7 +54,7 @@ let taxlots = taxlotsUrl + xyzTemplate;
 let esri = esriUrl + xyzTemplate;
 
 /*
-// ESRI vector tiles, I don't have a good style for them yet. 
+// ESRI vector tiles, I don't have a good style for them yet.
 // The data seems pretty sketchy anyway, like it's only for proof of concept.
 */
 let esriLayer = new VectorTile({
@@ -104,7 +104,11 @@ var taxlotsLayer = new VectorTile({
     }
 });
 
-import {mapbox_key} from "./keys.js";
+const mapbox_key = process.env.MAPBOX_KEY;
+if (typeof mapbox_key !== 'undefined') {
+    console.log("The mapbox key is defined, yay!");
+}
+
 var mapboxBasemap = new VectorTile({
     declutter: true,
     source: new VectorTileSource({
@@ -210,17 +214,17 @@ var pl_ctrl = new Permalink({
 });
 map.addControl(pl_ctrl);
 
-// Copies a string to the clipboard. Must be called from within an 
+// Copies a string to the clipboard. Must be called from within an
 // event handler such as click. May return false if it failed, but
-// this is not always possible. Browser support for Chrome 43+, 
+// this is not always possible. Browser support for Chrome 43+,
 // Firefox 42+, Safari 10+, Edge and IE 10+.
 // IE: The clipboard feature may be disabled by an administrator. By
-// default a prompt is shown the first time the clipboard is 
+// default a prompt is shown the first time the clipboard is
 // used (per session).
 function copyToClipboard(text) {
     if (window.clipboardData && window.clipboardData.setData) {
         // IE specific code path to prevent textarea being shown while dialog is visible.
-        return clipboardData.setData("Text", text); 
+        return clipboardData.setData("Text", text);
 
     } else if (document.queryCommandSupported && document.queryCommandSupported("copy")) {
         var textarea = document.createElement("textarea");

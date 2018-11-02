@@ -4,8 +4,8 @@
   "description": "OpenLayers vector tile test app",
   "author": "Brian Wilson",
   "scripts": {
-    "build": "parcel build index.html --no-minify",
-    "start": "parcel serve index.html --open"
+    "build": "env.bat && parcel build index.html --no-minify",
+    "start": "env.bat && parcel serve index.html --open"
   },
   "repository": {
     "type": "git",
@@ -24,6 +24,7 @@
   "dependencies": {
     "@mapbox/maki": "^4.0.0",
     "bootstrap": "^4.1.3",
+    "dotenv": "^6.1.0",
     "jquery": "^3.3.1",
     "ol": "^5.2.0",
     "ol-ext": "^3.0.2",
