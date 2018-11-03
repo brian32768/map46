@@ -19,60 +19,17 @@ import {transform as Transform, toLonLat} from 'ol/proj.js';
 
 // layerswitcher
 import LayerSwitcher from 'ol-layerswitcher/dist/ol-layerswitcher.js';
-import {control_scroll} from './scroll.js';
+import {control_scroll} from './src/scroll.js';
 
-import {Popup} from './popup.js';
-import {Geolocator} from './geolocation.js';
-import {GetGPX} from './garmin.js';
+import {Popup} from './src/popup.js';
+import {Geolocator} from './src/geolocation.js';
+import {GetGPX} from './src/garmin.js';
 
 import jquery from 'jquery/dist/jquery.min.js';
 import 'bootstrap/dist/js/bootstrap.min.js';
 
 var esri    = "https://services.arcgisonline.com/ArcGIS/rest/services/";
 var service = 'World_Street_Map';
-
-// DON'T FORGET THE TRAILING SLASH.
-var greensourceUrl   = 'https://maps.orbisinc.com/arcgis/rest/services/Huntlease/GWR_PERMITS_MAP/MapServer/';
-var greensourceLayer = '6'; // 6 = Clatsop Ownership
-var esrijsonFormat = new EsriJSON();
-
-var greensourceVectorSource = new VectorSource({
-    loader: function(extent, resolution, projection) {
-
-        var url = greensourceUrl + greensourceLayer + '/query/?f=json&' +
-            'returnGeometry=true&spatialRel=esriSpatialRelIntersects&geometry=' +
-            encodeURIComponent(  '{"xmin":' + extent[0] + ',"ymin":' + extent[1]
-				 + ',"xmax":' + extent[2] + ',"ymax":' + extent[3]
-				 + ',"spatialReference":{"wkid":3857}}')
-            + '&geometryType=esriGeometryEnvelope&inSR=2913&outFields=*'
-	    + '&outSR=3857';
-
-        jquery.ajax({url: url, dataType: 'jsonp', success: function(response) {
-            if (response.error) {
-		console.log(response.error.message + response.error.details + ' IS IT SHARED?');
-            } else {
-		// dataProjection will be read from document
-		var features = esrijsonFormat.readFeatures(response, {
-                    featureProjection: projection
-		});
-		if (features.length > 0) {
-                    greensourceVectorSource.addFeatures(features);
-		}
-            }
-        }});
-    },
-    strategy: tileStrategy(createXYZ({
-        tileSize: 512
-    }))
-});
-
-var greensource_layer = new VectorLayer({
-    source: greensourceVectorSource,
-    opacity: .70,
-    style: function(feature,resolution) {
-	return defaultStyle[feature.getGeometry().getType()];
-    }
-});
 
 // Styles for GPX data -------------------------------------------------
 
@@ -164,8 +121,7 @@ var popup = new Popup();
 var map = new Map({
     interactions: defaultInteractions().extend([dragAndDropInteraction]),
     layers: [
-	new TileLayer({ source: new OSM() }),
-	greensource_layer
+	new TileLayer({ source: new OSM() })
     ],
     overlays: [popup.overlay],
     target: 'map',
