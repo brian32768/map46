@@ -10,12 +10,12 @@
 
     <!-- FontAwesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-    
+
     <link rel="shortcut icon" href="../favicon.ico" type="image/x-icon">
     <link rel="icon" href="../favicon.ico" type="image/x-icon">
 
     <title>Webmaps 2018</title>
-    
+
     <script src="./head.js"></script>
 
     <link rel="stylesheet" href="/node_modules/ol/ol.css">
@@ -24,9 +24,8 @@
     <div class="container">
         <!-- row 1 -->
         <div class="row" id="top">
-            <div class="col-md-12">
-              <h1>Webmaps 2018</h1>
-               <p>Prototype mapping app.</p>
+            <div class="col-md-48">
+                <div class="banner"></div>
             </div>
         </div>
 
@@ -58,19 +57,19 @@
         <!-- row 4 -->
         <div class="row" id="bottom">
             <div class="col-md-4">
-              <a href="gis">County GIS</a> | 
-              <a href="help">Help</a> | 
-              <a href="faq">FAQ</a> 
-	    </div>
-
-            <div class="col-md-2">
-	      <a href="#demo" class="btn btn-info" data-toggle="collapse">About Map 46</a>
-	      <div id="demo" class="collapse">
-		<h3>Getting started! Just a logo so far.</h3> 
-	      </div>
+              <a href="gis">County GIS</a> |
+              <a href="help">Help</a> |
+              <a href="faq">FAQ</a>
             </div>
-            <div class="col-md-1">
-              <a href="about"><img src="../map46.svg" width="48" height="48" /></a>
+            <div class="col-md-4" id="location">
+                Lat: 46.1234 Lon: -123.12345 USNG: 10Rxxxxxxxxx  Zoom: 10
+            </div>
+            <div class="col-md-4" id="map46">
+                <a href="#demo" class="btn btn-info" data-toggle="collapse">About Map 46</a>
+	            <div id="demo" class="collapse">
+		             <h3>Getting started! Just a logo so far.</h3>
+	            </div>
+                <a href="about"><img src="../map46.svg" width="48" height="48" /></a>
             </div>
         </div>
     </div>

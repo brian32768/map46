@@ -30,5 +30,7 @@
     "ole-brian32768": "^1.0.2",
     "popper.js": "^1.14.4"
   },
-  "devDependencies": {}
+  "devDependencies": {
+    "node-sass": "^4.9.4"
+  }
 }

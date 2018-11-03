@@ -18,7 +18,12 @@ import {Vector as VectorLayer} from "ol/layer";
 import {tile as TileLoader} from 'ol/loadingstrategy';
 import {createXYZ as tileCreateXYZ} from 'ol/tilegrid';
 
+// ArcGIS REST vector styling importer
 import {VectorLayerModifier} from 'ole-brian32768';
+
+// Used to show position on status bar
+import {toStringHDMS} from 'ol/coordinate';
+import {transform as Transform, toLonLat} from 'ol/proj';
 
 // wrappers for ol-ext objects
 import {Search} from '/src/search.js';
@@ -190,6 +195,15 @@ search.mapControl.on('select', function(e) {
     }
 });
 
+map.on('pointermove', function(evt) {
+    // Handler for the map cursor
+    if (evt.dragging) {	return; }
+
+    let coordinate = evt.coordinate;
+    let latlon = toStringHDMS(toLonLat(coordinate));
+    let usng = " USNG: 10Z12346789";
+    document.getElementById('location').innerHTML = latlon + usng;
+});
 
 //var mycompass = new CompassRose();
 //map.addControl(mycompass.mapControl);

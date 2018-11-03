@@ -2,12 +2,9 @@
   "name": "geocaches",
   "version": "1.0.0",
   "description": "Geocache test app",
-  "author": "Brian Wilson",
+  "author": "Brian H Wilson",
   "scripts": {
-    "test": "parcel serve --open chrome index.html",
-    "testnc": "parcel serve index.html",
-    "build": "parcel build index.html",
-    "start": "node server.js"
+    "start": "parcel serve index.html --open"
   },
   "repository": {
     "type": "git",

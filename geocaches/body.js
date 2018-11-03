@@ -33,12 +33,12 @@ var service = 'World_Street_Map';
 
 // DON'T FORGET THE TRAILING SLASH.
 var greensourceUrl   = 'https://maps.orbisinc.com/arcgis/rest/services/Huntlease/GWR_PERMITS_MAP/MapServer/';
-var greensourceLayer = '6'; // 6 = Clatsop Ownership 
+var greensourceLayer = '6'; // 6 = Clatsop Ownership
 var esrijsonFormat = new EsriJSON();
 
 var greensourceVectorSource = new VectorSource({
     loader: function(extent, resolution, projection) {
-	
+
         var url = greensourceUrl + greensourceLayer + '/query/?f=json&' +
             'returnGeometry=true&spatialRel=esriSpatialRelIntersects&geometry=' +
             encodeURIComponent(  '{"xmin":' + extent[0] + ',"ymin":' + extent[1]
@@ -46,7 +46,7 @@ var greensourceVectorSource = new VectorSource({
 				 + ',"spatialReference":{"wkid":3857}}')
             + '&geometryType=esriGeometryEnvelope&inSR=2913&outFields=*'
 	    + '&outSR=3857';
-	
+
         jquery.ajax({url: url, dataType: 'jsonp', success: function(response) {
             if (response.error) {
 		console.log(response.error.message + response.error.details + ' IS IT SHARED?');
@@ -223,7 +223,7 @@ var featureInfo = function(pixel) {
 	var info = [];
 	var i, ii;
 	for (i = 0, ii = features.length; i < ii; ++i) {
-	    info.push('<em>' + features[i].get('name') + '</em> ' + 
+	    info.push('<em>' + features[i].get('name') + '</em> ' +
 		features[i].get('desc')
 	    );
 	}
@@ -250,22 +250,23 @@ map.on('pointermove', function(evt) {
     // Handler for the map cursor
     if (evt.dragging) {	return; }
 
-    var coordinate = evt.coordinate;
-    var latlon = toStringHDMS(toLonLat(coordinate));
-    document.getElementById('cursor_position').innerHTML = latlon;
+    let coordinate = evt.coordinate;
+    let latlon = toStringHDMS(toLonLat(coordinate));
+    let usng = " USNG 10X12341234";
+    document.getElementById('cursor_position').innerHTML = latlon + usng;
 });
 
 map.on('click', function(evt) {
     // Handler for click events on map.
 
     var mycontent = featureInfo(evt.pixel);
-    if (!mycontent) { return; } // nothing to see here 
-    
+    if (!mycontent) { return; } // nothing to see here
+
     // Set up where the popup will pop up.
     var coordinate = evt.coordinate;
     popup.overlay.setPosition(coordinate);
     popup.container.innerHTML = mycontent;
-    
+
     console.log('click ' + evt.coordinate);
 });
 
