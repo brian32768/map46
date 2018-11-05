@@ -1,29 +1,30 @@
 ﻿// geocaches body.js
 
-import Map from 'ol/Map.js';
-import View from 'ol/View.js';
-import {defaults as defaultControls, OverviewMap} from 'ol/control.js';
-import {Tile as TileLayer, Vector as VectorLayer} from 'ol/layer.js';
-import {defaults as defaultInteractions, DragAndDrop} from 'ol/interaction.js';
-import {GPX, KML, EsriJSON, GeoJSON} from 'ol/format.js';
-import {OSM, Vector as VectorSource} from 'ol/source.js';
-import {Circle as CircleStyle, Fill, Stroke, Style} from 'ol/style.js';
-import Feature from 'ol/Feature.js';
-import {tile as tileStrategy} from 'ol/loadingstrategy.js';
-import XYZ from 'ol/source/XYZ.js';
-import {createXYZ} from 'ol/tilegrid.js';
+import {Map, View} from 'ol';
+import {defaults as defaultControls, OverviewMap} from 'ol/control';
+import {Tile as TileLayer, Vector as VectorLayer} from 'ol/layer';
+import {defaults as defaultInteractions, DragAndDrop} from 'ol/interaction';
+import {GPX, KML, EsriJSON, GeoJSON} from 'ol/format';
+import {OSM, Vector as VectorSource} from 'ol/source';
+import {Circle as CircleStyle, Fill, Stroke, Style} from 'ol/style';
+import Feature from 'ol/Feature';
+import {tile as tileStrategy} from 'ol/loadingstrategy';
+import XYZ from 'ol/source/XYZ';
+import {createXYZ} from 'ol/tilegrid';
 
 // Used to show position on status bar
-import {toStringHDMS} from 'ol/coordinate.js';
-import {transform as Transform, toLonLat} from 'ol/proj.js';
+import {toStringHDMS} from 'ol/coordinate';
+import {transform as Transform, toLonLat} from 'ol/proj';
+import {Converter as USNGconverter} from "usng/dist/usng";
+
 
 // layerswitcher
-import LayerSwitcher from 'ol-layerswitcher/dist/ol-layerswitcher.js';
-import {control_scroll} from './src/scroll.js';
+import LayerSwitcher from 'ol-layerswitcher/dist/ol-layerswitcher';
+import {control_scroll} from './src/scroll';
 
-import {Popup} from './src/popup.js';
-import {Geolocator} from './src/geolocation.js';
-import {GetGPX} from './src/garmin.js';
+import {Popup} from './src/popup';
+import {Geolocator} from './src/geolocation';
+import {GetGPX} from './src/garmin';
 
 import jquery from 'jquery/dist/jquery.min.js';
 import 'bootstrap/dist/js/bootstrap.min.js';
@@ -207,8 +208,13 @@ map.on('pointermove', function(evt) {
     if (evt.dragging) {	return; }
 
     let coordinate = evt.coordinate;
-    let latlon = toStringHDMS(toLonLat(coordinate));
-    let usng = " USNG 10X12341234";
+    let lonlat = toLonLat(coordinate);
+
+    let latlon = toStringHDMS(lonlat);
+
+    let converter = new USNGconverter();
+    let usng = ' USNG ' + converter.LLtoUSNG(lonlat[1],lonlat[0], 5);
+
     document.getElementById('cursor_position').innerHTML = latlon + usng;
 });
 

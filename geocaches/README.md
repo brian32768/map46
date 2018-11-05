@@ -7,7 +7,16 @@ Currently the file can be in GPX, GeoJSON, IGC, KML or TopoJSON format.
 
 ## Other stuff
 
-It shows the mouse cursor position on the map in lat lon and usng format
+It shows the mouse cursor position on the map in lat lon and usng format.
+To get USNG working I had to clone the project and build it.
+
+```bash
+    cd node_modules
+    git clone git://github.com/codice/usng.js.git
+    cd usng
+    npm install
+    npm run build
+```
 
 # Install some packages
 
