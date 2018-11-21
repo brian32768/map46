@@ -1,9 +1,5 @@
-// body.js javascript_patterns
+// index.js javascript_patterns
 //
-// This does not work because there is a bug in Parcel, #1440
-//import dotenv from 'dotenv';
-//dotenv.config();
-
 // I can still simply read environment though.
 let password = process.env.SECRETPASSWORD;
 console.log("password: ", password);
@@ -87,4 +83,12 @@ var t = new TallThing('Terrapene Mundi', 1000);
 console.log(t); // Dump the entire object, toString() not called.
 console.log(t.volume());
 
-console.log('body loaded');
+import MyNamespace from './src/namespaces';
+let ns = new MyNamespace();
+console.log("Namespace testing", ns, ns.instance);
+console.log("Namespace totally", MyNamespace.totally);
+
+let kc = new MyNamespace.KidClass();
+console.log("Aha", kc);
+
+console.log('index.js loaded');
