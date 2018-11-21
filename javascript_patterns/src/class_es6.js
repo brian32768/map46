@@ -4,10 +4,15 @@
 
 export class Thing {
     constructor(n) {
-	this.length =
-	this.width  = 
-	this.height = 0; // Things always start off dimensionless.
-	this.name   = n;
+	    this.length =
+	    this.width  =
+	    this.height = 0; // Things always start off dimensionless.
+	    this.name   = n;
+        this._first = true;
+    }
+
+    get first() {
+        return this._first;
     }
 
     toString() {
@@ -36,5 +41,8 @@ export class TallThing extends Thing {
 	this.length = this.width  = 1; // tall things always have dimensions.
     }
 }
+
+let tt = new TallThing("abra", 10);
+console.log("tt first = ", tt.first);
 
 console.log('class_es6 loaded');
