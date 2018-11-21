@@ -1,9 +1,5 @@
 // body.js javascript_patterns
 //
-// This does not work because there is a bug in Parcel, #1440
-//import dotenv from 'dotenv';
-//dotenv.config();
-
 // I can still simply read environment though.
 let password = process.env.SECRETPASSWORD;
 console.log("password: ", password);
