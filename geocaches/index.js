@@ -1,4 +1,4 @@
-﻿// geocaches body.js
+﻿// index.js geocaches
 
 import {Map, View} from 'ol';
 import {defaults as defaultControls, OverviewMap} from 'ol/control';
@@ -15,7 +15,7 @@ import {createXYZ} from 'ol/tilegrid';
 // Used to show position on status bar
 import {toStringHDMS} from 'ol/coordinate';
 import {transform as Transform, toLonLat} from 'ol/proj';
-import {Converter as USNGconverter} from "usng/dist/usng";
+import {Converter as USNGconverter} from "usng";
 
 
 // layerswitcher
@@ -28,6 +28,9 @@ import {GetGPX} from './src/garmin';
 
 import jquery from 'jquery/dist/jquery.min.js';
 import 'bootstrap/dist/js/bootstrap.min.js';
+
+import 'bootstrap/dist/css/bootstrap.css';
+import 'ol/ol.css';
 
 var esri    = "https://services.arcgisonline.com/ArcGIS/rest/services/";
 var service = 'World_Street_Map';
@@ -238,5 +241,3 @@ document.getElementById('readgpx').addEventListener('click', function() {
     });
 
 */
-
-console.log('body.js loaded');
