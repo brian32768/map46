@@ -45,6 +45,13 @@ footer {
     display: block;
 }
 
+#map46logo {
+    content: url("../../map46.svg");
+    width: 40px;
+    height: 40px;
+    margin-left: 3px;
+}
+
 #sitelogo {
     content: url("/assets/Proud.jpg");
     width: 60px;

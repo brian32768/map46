@@ -1,7 +1,7 @@
 {
   "name": "webmaps",
   "version": "1.0.1",
-  "description": "Webmaps 2018 prototype",
+  "description": "Webmaps 2018 edition",
   "author": "Brian H Wilson",
   "scripts": {
     "build": "parcel build index.html --no-minify",
@@ -15,7 +15,7 @@
     "openlayers",
     "openlayers 5",
     "react",
-    "reactstrap"
+    "reactstrap", "bootstrap"
   ],
   "license": "MIT",
   "bugs": {
