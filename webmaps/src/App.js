@@ -21,11 +21,11 @@ import {
 
 // My own React components
 import Home from './home';
-/*
-import About from './about';
+import Help from './help';
+import FAQ from './faq';
 import Contact from './contact';
 import NotFound from './notfound';
-*/
+
 import './App.css';
 
 class PrimaryLayout extends Component {
@@ -33,13 +33,13 @@ class PrimaryLayout extends Component {
       super(props);
       this.toggle = this.toggle.bind(this);
       this.state = {
-        isOpen: false
+        collapse: false
       };
     }
 
     toggle() {
       this.setState({
-        isOpen: !this.state.isOpen
+        collapse: !this.state.collapse
       });
     }
 
@@ -48,18 +48,25 @@ class PrimaryLayout extends Component {
             <Container>
                 <Row>
                 <Col>
-{/* NAVBAR ====================================================== */}
-<div class="dropdown">
-    <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">
-        Layers
-        <span class="caret"></span>
-    </button>
-    <ul class="dropdown-menu">
-        <li><button id="restToggle">ArcGIS REST Service Group</button></li>
-        <li><button id="streetsToggle">Streets</button></li>
-        <li><button id="watercolorToggle">Watercolor</button></li>
-    </ul>
-</div>
+                    {/* NAVBAR ====================================================== */}
+                    <Navbar color="light" light expand="md">
+                        <NavbarBrand><span id="sitelogo"></span><span id="sitename"></span></NavbarBrand>
+                        <NavbarToggler onClick={this.toggle} />
+                        <Collapse isOpen={this.state.collapse} navbar>
+                        <Nav className="ml-auto" navbar>
+                            <NavItem>
+                                <NavLink href="/">Home</NavLink>
+                            </NavItem>
+                            <NavItem>
+                                <NavLink href="/help">Help</NavLink>
+                            </NavItem>
+                            <NavItem>
+                                <NavLink href="/faq">FAQ</NavLink>
+                            </NavItem>
+                        </Nav>
+                        </Collapse>
+                    </Navbar>
+
                 </Col>
                 </Row>
                 <Row>
@@ -68,6 +75,16 @@ class PrimaryLayout extends Component {
                     <Home />
                 </Col>
                 </Row>
+
+                <Switch>
+                    <Route exact path="/"        component={Home} />
+                    <Route       path="/help"    component={Help} />
+                    <Route       path="/faq"     component={FAQ} />
+                    <Route       path="/contact" component={Contact} />
+                    <Route       path="/404"     component={NotFound} />
+                    <Redirect to="/404" />
+                </Switch>
+
             </Container>
         );
     }
