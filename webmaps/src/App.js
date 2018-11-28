@@ -26,6 +26,7 @@ import FAQ from './faq';
 import Contact from './contact';
 import NotFound from './notfound';
 
+import "bootstrap/dist/css/bootstrap.min.css";
 import './App.css';
 
 class PrimaryLayout extends Component {
@@ -46,9 +47,8 @@ class PrimaryLayout extends Component {
     render(props) {
         return (
             <Container>
-                <Row>
-                <Col>
-                    {/* NAVBAR ====================================================== */}
+                <Row><Col>
+                {/* NAVBAR ====================================================== */}
                     <Navbar color="light" light expand="md">
                         <NavbarBrand><span id="sitelogo"></span><span id="sitename"></span></NavbarBrand>
                         <NavbarToggler onClick={this.toggle} />
@@ -66,25 +66,18 @@ class PrimaryLayout extends Component {
                         </Nav>
                         </Collapse>
                     </Navbar>
+                </Col></Row>
 
-                </Col>
-                </Row>
-                <Row>
-                <Col>
-{/* HOME ======================================================== */}
-                    <Home />
-                </Col>
-                </Row>
-
-                <Switch>
-                    <Route exact path="/"        component={Home} />
-                    <Route       path="/help"    component={Help} />
-                    <Route       path="/faq"     component={FAQ} />
-                    <Route       path="/contact" component={Contact} />
-                    <Route       path="/404"     component={NotFound} />
-                    <Redirect to="/404" />
-                </Switch>
-
+                <Row><Col>
+                    <Switch>
+                        <Route exact path="/"        component={Home} />
+                        <Route       path="/help"    component={Help} />
+                        <Route       path="/faq"     component={FAQ} />
+                        <Route       path="/contact" component={Contact} />
+                        <Route       path="/404"     component={NotFound} />
+                        <Redirect to="/404" />
+                    </Switch>
+                </Col></Row>
             </Container>
         );
     }
