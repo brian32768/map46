@@ -1,4 +1,4 @@
-﻿// body.js xyz
+﻿// index.js xyz
 
 import {Map, View} from "ol";
 import {Tile as TileLayer, Image as ImageLayer} from 'ol/layer';
@@ -190,4 +190,4 @@ function hhhsToggle(evt) {
     fix_opacity();
 }
 
-console.log('body.js loaded');
+console.log('index.js loaded');
