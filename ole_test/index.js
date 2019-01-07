@@ -1,4 +1,4 @@
-﻿// body.js ole-test
+﻿// index.js ole-test
 
 import 'bootstrap/dist/js/bootstrap.js';
 
@@ -19,6 +19,11 @@ import {createXYZ as tileCreateXYZ} from 'ol/tilegrid';
 import $ from 'jquery/dist/jquery.min.js';
 import {VectorLayerModifier} from 'ole-brian32768';
 
+import 'bootstrap/dist/css/bootstrap.css';
+import 'ol/ol.css';
+import 'ol-ext/dist/ol-ext.css';
+import 'ol-ext/control/Permalink.css';
+import './ole_test.css';
 
 // wrappers for ol-ext objects
 import {Search} from './search.js';
@@ -213,4 +218,4 @@ function watercolorToggle(evt) {
     fix_opacity();
 }
 
-console.log('body.js loaded');
+console.log('index.js loaded');

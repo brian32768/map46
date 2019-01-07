@@ -1,12 +1,12 @@
-﻿// body.js xyz
+﻿// index.js xyz
 
 import {Map, View} from "ol";
 import {Tile as TileLayer, Image as ImageLayer} from 'ol/layer';
 import {OSM, TileArcGISRest, ImageArcGISRest} from 'ol/source';
-import {tile as tileStrategy} from 'ol/loadingstrategy.js';
-import XYZ from 'ol/source/XYZ.js';
-import {createXYZ} from 'ol/tilegrid.js';
-import {ATTRIBUTION} from 'ol/source/OSM.js';
+import {tile as tileStrategy} from 'ol/loadingstrategy';
+import XYZ from 'ol/source/XYZ';
+import {createXYZ} from 'ol/tilegrid';
+import {ATTRIBUTION} from 'ol/source/OSM';
 import {transform as Transform} from 'ol/proj';
 
 import 'bootstrap/dist/js/bootstrap.js';
@@ -190,4 +190,4 @@ function hhhsToggle(evt) {
     fix_opacity();
 }
 
-console.log('body.js loaded');
+console.log('index.js loaded');
