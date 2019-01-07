@@ -1,0 +1,18 @@
+{
+  "name": "draw",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.html",
+  "scripts": {
+    "start": "parcel serve index.html --open",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Brian Wilson",
+  "license": "MIT",
+  "dependencies": {
+    "ol": "^5.3.0"
+  },
+  "devDependencies": {
+    "parcel-bundler": "^1.11.0"
+  }
+}
