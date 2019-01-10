@@ -13,7 +13,7 @@ var vector = new VectorLayer({
     source: source,
     style: new Style({
       fill: new Fill({
-        color: 'rgba(255, 255, 255, 0.2)'
+        color: 'rgba(255, 0, 255, 0.2)' // thin magenta
       }),
       stroke: new Stroke({
         color: '#ffcc33',
@@ -22,12 +22,11 @@ var vector = new VectorLayer({
       image: new CircleStyle({
         radius: 7,
         fill: new Fill({
-          color: '#ffcc33'
+          color: '#ff0033' // red dots
         })
       })
     })
 });
-
 
 var map = new Map({
     layers: [raster, vector],
@@ -38,24 +37,30 @@ var map = new Map({
     })
 });
 
+var draw, snap; // global so we can remove them later
+var typeSelect = document.getElementById('type');
+
+function handleDrawEnd(ev) {
+    console.log("DrawEvent", ev)
+    console.log("my draw", draw);
+}
+
+function handleAddFeature(ev) {
+    console.log("AddFeature", ev)
+}
+
+source.on("addfeature", handleAddFeature)
 console.log("Sauce=",source)
 
 var modify = new Modify({source: source});
 map.addInteraction(modify);
-
-var draw, snap; // global so we can remove them later
-var typeSelect = document.getElementById('type');
-
-function handleDrawEnd() {
-    console.log("DrawEvent")
-}
 
 function addInteractions() {
     draw = new Draw({
       source: source,
       type: typeSelect.value
     });
-    draw.on("change", handleDrawEnd);
+    draw.addEventListener("drawend", handleDrawEnd);
     map.addInteraction(draw);
     snap = new Snap({source: source});
     map.addInteraction(snap);
