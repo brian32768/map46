@@ -1,5 +1,7 @@
 # Webmaps, a subproject of Map46
 
+2019-01-09 WORKS!
+
 This will be a taxlots / zoning front dest app.
 
 All the other folders in Map46 are just R&D for this one.
@@ -26,7 +28,7 @@ Projection- web mercator ok? Is there really any other option?
   * Free text and advanced: account #, taxlot #, owner, mailing address, situs
   * Geocoded (possibly failover if free text search fails?)
   * Search results include links to taxmaps and (other).
-* Map layers: 
+* Map layers:
   * Taxlots - FeatureServer * local live database
   * Zoning - FeatureServer * local live database
   * SLIDO? * DOGAMI service

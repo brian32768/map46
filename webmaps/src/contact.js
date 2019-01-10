@@ -1,11 +1,11 @@
-import React from 'react';
+import React from 'react'
 import { Card, CardImg, CardText, CardBody,
-  CardTitle, CardSubtitle, Button } from 'reactstrap';
+  CardTitle, CardSubtitle, Button } from 'reactstrap'
 
 const img = require('/assets/Proud.jpg');
 const alt = 'This is a pigeon';
 
-const Contact = () => (
+export const Contact = () => (
     <div>
       <Card className="card">
         <CardImg className="card_image" src={img} alt={alt}></CardImg>
@@ -19,4 +19,3 @@ const Contact = () => (
       </Card>
     </div>
 )
-export default Contact

@@ -1,6 +1,6 @@
-import React from 'react';
-import {Card, CardTitle, CardText, CardImg, CardSubtitle} from 'reactstrap';
-const About = (props) => (
+import React from 'react'
+import {Card, CardTitle, CardText, CardImg, CardSubtitle} from 'reactstrap'
+export default const About = (props) => (
   <div>
   <Card>
   <CardTitle>
@@ -12,5 +12,3 @@ const About = (props) => (
   </Card>
   </div>
 );
-
-export default About;

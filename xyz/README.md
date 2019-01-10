@@ -1,5 +1,7 @@
 # xyz
 
+2019-01-09 NOT LOADING MAPS RIGHT NOW
+
 Make an OpenLayers map using an XYZ raster tile service.
 
 Today I added the ol-ext package so I could play with the permalink feature. 2018-10-11

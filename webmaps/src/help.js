@@ -1,10 +1,10 @@
-import React from 'react';
-import {Card, CardTitle, CardText, CardImg, CardSubtitle} from 'reactstrap';
+import React from 'react'
+import {Card, CardTitle, CardText, CardImg, CardSubtitle} from 'reactstrap'
 
 const img = require('/assets/lewis_and_clark.jpg');
 const alt = 'Lewis and Clark';
 
-const Help = (props) => (
+export const Help = (props) => (
     <div>
       <Card className="card">
         <CardImg className="card_image" width="100%" src={img} alt={alt}></CardImg>
@@ -17,4 +17,3 @@ const Help = (props) => (
       </Card>
     </div>
 )
-export default Help;

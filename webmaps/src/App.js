@@ -1,10 +1,5 @@
-// App.js webmaps
-// All this does is declare the basic user interface.
-// The real work is done in components included here.
-
-// React
-import React, { Component } from 'react';
-import {BrowserRouter, Link, Route, Redirect, Switch} from 'react-router-dom';
+import React, { Component } from 'react'
+import {BrowserRouter, Link, Route, Redirect, Switch} from 'react-router-dom'
 
 // Bootstrap (reactstrap in this case)
 import {
@@ -17,17 +12,22 @@ import {
     NavItem,
     NavLink,
     Button
-} from 'reactstrap';
+} from 'reactstrap'
 
 // My own React components
-import Home from './home';
-import Help from './help';
-import FAQ from './faq';
-import Contact from './contact';
-import NotFound from './notfound';
+import Home from './home'
+import { Help } from './help'
+import { FAQ } from './faq'
+import { Contact } from './contact'
+import { NotFound } from './notfound'
 
-import "bootstrap/dist/css/bootstrap.min.css";
-import './App.css';
+import "bootstrap/dist/css/bootstrap.min.css"
+import 'ol/ol.css'
+import 'ol-ext/dist/ol-ext.css'
+import 'ol-ext/control/Permalink.css'
+import '../config/config.scss'
+import '../webmaps.scss'
+import './App.css'
 
 class PrimaryLayout extends Component {
     constructor(props) {
@@ -78,6 +78,7 @@ class PrimaryLayout extends Component {
                         <Redirect to="/404" />
                     </Switch>
                 </Col></Row>
+
             </Container>
         );
     }

@@ -1,8 +1,8 @@
-import React from 'react';
+import React, { Component, Fragment } from 'react';
 import { Container, Row, Col, Button, Tooltip } from 'reactstrap';
-import Map46 from "./map";
+import Map46 from "./map"
 
-class Home extends React.Component {
+class Home extends Component {
     constructor(props) {
         super(props);
         this.toggle = this.toggle.bind(this);
@@ -19,13 +19,12 @@ class Home extends React.Component {
 
     render(props) {
         return (
-            <div>
+            <Fragment>
             <Container>
                 <Row>
                     <Col>
                     map header
-                    <div>
-                      <button data-toggle="collapse" data-target="leftsidebar">left</button>
+                        <button data-toggle="collapse" data-target="leftsidebar">left</button>
                         <button data-toggle="collapse" data-target="rightsidebar">right</button>
                         <button type="button" data-toggle="dropdown">
                             Layers
@@ -35,8 +34,6 @@ class Home extends React.Component {
                             <li><button id="streetsToggle">Streets</button></li>
                             <li><button id="highesthitToggle">Highest Hit Hillshade</button></li>
                         </ul>
-                    </div>
-
                     </Col>
                 </Row>
                 <Row>
@@ -55,7 +52,7 @@ class Home extends React.Component {
                     </Col>
                 </Row>
             </Container>
-            </div>
+            </Fragment>
         );
     }
 }

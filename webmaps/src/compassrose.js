@@ -1,6 +1,6 @@
 // Wrap the compass up as a class so it's easy to include.
 
-import olextCompass from 'ol-ext/control/Compass.js';
+import olextCompass from 'ol-ext/control/Compass.js'
 
 /*
   This is a way to get Parcel to include compass.png as an asset and
@@ -26,4 +26,3 @@ export class CompassRose {
 	return ('this is a compass');
     }
 }
-
