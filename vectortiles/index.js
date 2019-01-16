@@ -2,19 +2,22 @@
 //
 // For selection see http://openlayers.org/en/latest/examples/vector-tile-selection.html?q=vector+tile
 
-import {Map, View} from 'ol';
-import {transform as Transform} from 'ol/proj';
-//import OSM from 'ol/source/OSM.js';
-import {Tile as TileLayer} from 'ol/layer';
+import { Map, View } from 'ol'
+import { transform as Transform } from 'ol/proj'
+//import OSM from 'ol/source/OSM.js'
+import { Tile as TileLayer } from 'ol/layer'
 
-import MVT from 'ol/format/MVT.js';
-import VectorTile from 'ol/layer/VectorTile.js';
-import VectorTileSource from 'ol/source/VectorTile.js';
-import {Fill, Icon, Stroke, Style, Text} from 'ol/style.js';
-
-import createMapboxStreetsStyle from './mapboxstyles.js';
-
-import Permalink from 'ol-ext/control/Permalink.js';
+import MVT from 'ol/format/MVT.js'
+import VectorTile from 'ol/layer/VectorTile.js'
+import VectorTileSource from 'ol/source/VectorTile.js'
+import { Fill, Icon, Stroke, Style, Text } from 'ol/style.js'
+import createMapboxStreetsStyle from './mapboxstyles.js'
+import Permalink from 'ol-ext/control/Permalink.js'
+import 'bootstrap/dist/css/bootstrap'
+import 'ol/ol.css'
+import 'ol-ext/dist/ol-ext.css'
+import 'ol-ext/control/Permalink.css'
+//import './vectortiles.css'
 
 // Stored on ArcGIS.com
 //const taxlotsUrl = "https://tiles.arcgis.com/tiles/l89P2qlKPxgrFDLw/arcgis/rest/services/Clatsop_DBO_taxlots_wm/VectorTileServer";
