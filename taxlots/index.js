@@ -258,7 +258,7 @@ var featureInfo = function(pixel) {
     if (features.length > 0) {
     	// Show one or many features
     	let i, ii;
-        info.push(' ' + attributeKey);
+        info.push(attributeKey);
     	for (i = 0, ii = features.length; i < ii; ++i) {
     	    let attribute_names = Object.keys(features[i].values_);
     	    let f = features[i].get(attributeKey);
