@@ -1,5 +1,5 @@
-// Read contents of a Garmin GPS
-// 
+// Read contents of a Garmin GPS file
+
 function readTextFile(url)
 {
     console.log("read " + url);
@@ -25,10 +25,10 @@ function intoArray (lines) {
     // splitting all text data into array "\n" is splitting data from each new line
     //and saving each new line as each element*
 
-    var lineArr = lines.split('\n'); 
+    var lineArr = lines.split('\n');
 
     //just to check if it works output lineArr[index] as below
-    document.write(lineArr[2]);         
+    document.write(lineArr[2]);
     document.write(lineArr[3]);
 }
 

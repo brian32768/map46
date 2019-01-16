@@ -1,5 +1,3 @@
-﻿// index.js geocaches
-
 import {Map, View} from 'ol';
 import {defaults as defaultControls, OverviewMap} from 'ol/control';
 import {Tile as TileLayer, Vector as VectorLayer} from 'ol/layer';
