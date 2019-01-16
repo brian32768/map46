@@ -32,6 +32,7 @@ var service = 'World_Street_Map';
 // ==== Our Clatsop services ====
 
 const building_url            = 'https://cc-gis.clatsop.co.clatsop.or.us/arcgis/rest/services/web_mercator/buildings_microsoft/FeatureServer/0';
+const taxlots_label_url       = 'https://cc-gis.clatsop.co.clatsop.or.us/arcgis/rest/services/Assessment_and_Taxation/Taxlots_3857/FeatureServer/0';
 const taxlots_url             = 'https://cc-gis.clatsop.co.clatsop.or.us/arcgis/rest/services/Assessment_and_Taxation/Taxlots_3857/FeatureServer/1';
 const taxlots_mapserver       = 'https://cc-gis.clatsop.co.clatsop.or.us/arcgis/rest/services/Assessment_and_Taxation/Taxlots_3857/MapServer/1';
 
@@ -197,6 +198,11 @@ function zone_style(feature, resolution) {
 //var zones_residential_layer = new VectorLayer({source: makeVectorSource(zones_residential_url) });
 //let taxlots_map_layer = new VectorLayer({ source: makeVectorSource(taxlots_mapserver) });
 
+let taxlots_label_layer = new VectorLayer({
+    source: makeVectorSource(taxlots_label_url),
+//    style:  taxlot_style
+});
+
 let taxlots_layer = new VectorLayer({
     source: makeVectorSource(taxlots_url),
 //    style:  taxlot_style
@@ -221,9 +227,10 @@ let layers = [
     	//zones_residential_layer,
 
     	//building_layer,
-//        taxlots_map_layer,
-    	taxlots_layer
-    	// last layer is drawn at top
+    	taxlots_layer,
+        //taxlots_label_layer,
+
+        // last layer is drawn at top
     ];
 
 var map = new Map({
@@ -251,14 +258,12 @@ var featureInfo = function(pixel) {
     if (features.length > 0) {
     	// Show one or many features
     	let i, ii;
+        info.push(' ' + attributeKey);
     	for (i = 0, ii = features.length; i < ii; ++i) {
     	    let attribute_names = Object.keys(features[i].values_);
-            //console.log('feature[',i,']=', features[i]);
     	    let f = features[i].get(attributeKey);
     	    if (f) {
-    		    info.push('<em>Zone ' + f + '</em> <br />'
-    			  + attribute_names
-    			);
+    		    info.push(' ' + f);
     	    } else {
     		    console.log('key ', attributeKey, ' not found', attribute_names);
     	    }
