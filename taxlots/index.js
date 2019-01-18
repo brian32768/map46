@@ -65,8 +65,8 @@ function makeVectorSource(my_url) {
             		let features = esrijsonFormat.readFeatures(response, {
             		    featureProjection: projection
         		    });
+                    console.log("loader: ", features.length, extent);
             		if (features.length > 0) {
-                        //console.log("Adding " + features.length + " features.", features);
             		    source.addFeatures(features);
             		}
         	    }
