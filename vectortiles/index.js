@@ -1,5 +1,3 @@
-// body.js (vectortiles)
-//
 // For selection see http://openlayers.org/en/latest/examples/vector-tile-selection.html?q=vector+tile
 
 import { Map, View } from 'ol'
@@ -7,12 +5,13 @@ import { transform as Transform } from 'ol/proj'
 //import OSM from 'ol/source/OSM.js'
 import { Tile as TileLayer } from 'ol/layer'
 
-import MVT from 'ol/format/MVT.js'
-import VectorTile from 'ol/layer/VectorTile.js'
-import VectorTileSource from 'ol/source/VectorTile.js'
-import { Fill, Icon, Stroke, Style, Text } from 'ol/style.js'
-import createMapboxStreetsStyle from './mapboxstyles.js'
-import Permalink from 'ol-ext/control/Permalink.js'
+import MVT from 'ol/format/MVT'
+import VectorTile from 'ol/layer/VectorTile'
+import VectorTileSource from 'ol/source/VectorTile'
+import { Fill, Icon, Stroke, Style, Text } from 'ol/style'
+import createMapboxStreetsStyle from './mapboxstyles'
+import Permalink from 'ol-ext/control/Permalink'
+
 import 'bootstrap/dist/css/bootstrap'
 import 'ol/ol.css'
 import 'ol-ext/dist/ol-ext.css'
@@ -34,20 +33,6 @@ const startingLocation = {
     center: Transform([-123.825, 46.181], 'EPSG:4326', 'EPSG:3857'), // astoria downtown
     zoom: 13, minZoom: 10, maxZoom: 19
 };
-
-/*
-// Conventional raster tile streets layer, for testing.
-var osmStreetsLayer  = new TileLayer({
-    title: 'Streets',
-    type: 'base',
-    source: new OSM(),
-    crossOrigin: 'anonymous',
-    opacity: 1,
-    permalink: 'Streets',
-    visible: true,
-    zindex: 3
-});
-*/
 
 // Let's try reading the capabilities huh???
 let xyzTemplate = "/tile/{z}/{y}/{x}.pbf";
@@ -85,25 +70,26 @@ let esriLayer = new VectorTile({
 });
 
 var taxlotsLayer = new VectorTile({
-    title: 'Taxlots',
-    declutter: true,
-    source: new VectorTileSource({
-	format: new MVT(),
-	url: taxlots
+        title: 'Taxlots',
+        declutter: true,
+        source: new VectorTileSource({
+    	format: new MVT(),
+    	url: taxlots
     }),
     permalink: 'taxlots',
     visible: false,
     style: function(feature) {
-	var selected = !!selection[feature.get(id_property)];
-	return new Style({
-	    stroke: new Stroke({
-		color: selected? 'rgba(200,20,20, 0.8)' : 'rgba(20,20,20, 0.7)',
-		width: selected? 1 : 0.5
-	    }),
-	    fill: new Fill({
-		color: selected? 'rgba(100,20,20, 0.5)' : 'rgba(20,20,20,0.1)'
-	    })
-	});
+    	var selected = !!selection[feature.get(id_property)];
+        console.log("taxlots style feature");
+    	return new Style({
+    	    stroke: new Stroke({
+    		color: selected? 'rgba(200,20,20, 0.8)' : 'rgba(20,20,20, 0.7)',
+    		width: selected? 1 : 0.5
+    	    }),
+    	    fill: new Fill({
+    		color: selected? 'rgba(100,20,20, 0.5)' : 'rgba(20,20,20,0.1)'
+    	    })
+    	});
     }
 });
 
@@ -115,53 +101,49 @@ if (typeof mapbox_key !== 'undefined') {
 var mapboxBasemap = new VectorTile({
     declutter: true,
     source: new VectorTileSource({
-	attributions: '© <a href="https://www.mapbox.com/map-feedback/">Mapbox</a> ' +
-            '© <a href="https://www.openstreetmap.org/copyright">' +
-            'OpenStreetMap contributors</a>',
-	format: new MVT(),
-	url: 'https://{a-d}.tiles.mapbox.com/v4/mapbox.mapbox-streets-v6/' + '{z}/{x}/{y}.vector.pbf?access_token=' + mapbox_key
+    	attributions: '© <a href="https://www.mapbox.com/map-feedback/">Mapbox</a> ' +
+                '© <a href="https://www.openstreetmap.org/copyright">' +
+                'OpenStreetMap contributors</a>',
+    	format: new MVT(),
+    	url: 'https://{a-d}.tiles.mapbox.com/v4/mapbox.mapbox-streets-v6/' + '{z}/{x}/{y}.vector.pbf?access_token=' + mapbox_key
     }),
     style: createMapboxStreetsStyle(Style, Fill, Stroke, Icon, Text)
 });
 
 var maptilerContourLayer = new VectorTile({
     source: new VectorTileSource({
-	title: 'Contours',
-	type:  'base',
-	crossOrigin: 'anonymous',
-	format: new MVT(),
-	url: "https://maps.tilehosting.com/data/contours/{z}/{x}/{y}.pbf?key=oldTeLsOq24wfrAW6JQ5"
+    	title: 'Contours',
+    	type:  'base',
+    	crossOrigin: 'anonymous',
+    	format: new MVT(),
+    	url: "https://maps.tilehosting.com/data/contours/{z}/{x}/{y}.pbf?key=oldTeLsOq24wfrAW6JQ5"
     }),
     style: function(feature) {
-	return new Style({
-	    stroke: new Stroke({
-		color: 'rgba(194,144,27,50)',
-		width: 1
-	    })
-	});
+    	return new Style({
+    	    stroke: new Stroke({
+    		color: 'rgba(194,144,27,50)',
+    		width: 1
+    	    })
+    	});
     }
 });
 
-/*
 var maptilerBasemap = new VectorTile({
     source: new VectorTileSource({
-	title: 'Mapbox',
-	type:  'base',
-	crossOrigin: 'anonymous',
-	format: new MVT(),
-	url: "https://maps.tilehosting.com/data/v3/{z}/{x}/{y}.pbf?key=oldTeLsOq24wfrAW6JQ5"
+    	title: 'Mapbox',
+    	type:  'base',
+    	crossOrigin: 'anonymous',
+    	format: new MVT(),
+    	url: "https://maps.tilehosting.com/data/v3/{z}/{x}/{y}.pbf?key=oldTeLsOq24wfrAW6JQ5"
     }),
     style: createMapboxStreetsStyle(Style, Fill, Stroke, Icon, Text)
 });
-*/
 
 var layers = [
-    //osmStreetsLayer,
-    //maptilerBasemap,
-    //esriBasemap
-    mapboxBasemap,
-    //maptilerContourLayer,
-    //esriLayer,
+    mapboxBasemap,   // this works if you have a key in env.bat
+    //maptilerBasemap, // maptiler.com -- probably need a key for this
+    //maptilerContourLayer, // maptiler.com -- probably need a key for this
+    //esriLayer, // 2019/1/17 it's doing a CORS policy error today
     taxlotsLayer
 ];
 

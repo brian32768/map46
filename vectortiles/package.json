@@ -4,7 +4,6 @@
   "description": "OpenLayers vector tile test app",
   "author": "Brian Wilson",
   "scripts": {
-    "build": "env.bat && parcel build index.html --no-minify",
     "start": "env.bat && parcel serve index.html --open"
   },
   "repository": {
@@ -16,7 +15,7 @@
     "openlayers 5",
     "xyz"
   ],
-  "license": "ISC",
+  "license": "MIT",
   "bugs": {
     "url": "https://github.com/brian32768/map46/issues"
   },
