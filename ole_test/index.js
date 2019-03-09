@@ -1,5 +1,3 @@
-﻿// index.js ole-test
-
 import 'bootstrap/dist/js/bootstrap.js';
 
 import {Map, View} from "ol";
@@ -217,5 +215,3 @@ function watercolorToggle(evt) {
     console.log('watercolor',v);
     fix_opacity();
 }
-
-console.log('index.js loaded');

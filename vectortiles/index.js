@@ -10,6 +10,7 @@ import VectorTile from 'ol/layer/VectorTile'
 import VectorTileSource from 'ol/source/VectorTile'
 import { Fill, Icon, Stroke, Style, Text } from 'ol/style'
 import createMapboxStreetsStyle from './mapboxstyles'
+import { createXYZ } from 'ol/tilegrid'
 import Permalink from 'ol-ext/control/Permalink'
 
 import 'bootstrap/dist/css/bootstrap'
@@ -38,7 +39,7 @@ const startingLocation = {
 let xyzTemplate = "/tile/{z}/{y}/{x}.pbf";
 
 let id_property = '';
-let taxlots = taxlotsUrl + xyzTemplate;
+let taxlots = taxlotsUrl;
 let esri = esriUrl + xyzTemplate;
 
 /*
@@ -49,38 +50,14 @@ let esriLayer = new VectorTile({
     title: "ESRI Vector Tile Basemap",
     declutter: true,
     source: new VectorTileSource({
-	type:  'base',
-	crossOrigin: 'anonymous',
-	format: new MVT(),
-	url: esri
+    	type:  'base',
+    	crossOrigin: 'anonymous',
+    	format: new MVT(),
+    	url: esri
     }),
     visible: true,
     style: function(feature) {
-	var selected = !!selection[feature.get(id_property)];
-	return new Style({
-	    stroke: new Stroke({
-		color: selected? 'rgba(200,20,20, 0.8)' : 'rgba(20,20,20, 0.7)',
-		width: selected? 1 : 0.5
-	    }),
-	    fill: new Fill({
-		color: selected? 'rgba(100,20,20, 0.5)' : 'rgba(20,20,20,0.1)'
-	    })
-	});
-    }
-});
-
-var taxlotsLayer = new VectorTile({
-        title: 'Taxlots',
-        declutter: true,
-        source: new VectorTileSource({
-    	format: new MVT(),
-    	url: taxlots
-    }),
-    permalink: 'taxlots',
-    visible: false,
-    style: function(feature) {
     	var selected = !!selection[feature.get(id_property)];
-        console.log("taxlots style feature");
     	return new Style({
     	    stroke: new Stroke({
     		color: selected? 'rgba(200,20,20, 0.8)' : 'rgba(20,20,20, 0.7)',
@@ -93,9 +70,35 @@ var taxlotsLayer = new VectorTile({
     }
 });
 
+var taxlotsLayer = new VectorTile({
+        title: 'Taxlots',
+        declutter: true,
+        source: new VectorTileSource({
+            tilePixelRatio: 1,
+            tileGrid: createXYZ({maxZoom: 19}),
+        	format: new MVT(),
+        	url: taxlots
+    }),
+    permalink: 'taxlots',
+    visible: false,
+    style: function(feature) {
+    	var selected = !!selection[feature.get(id_property)];
+        console.log("taxlots style feature");
+    	return new Style({
+    	    stroke: new Stroke({
+        		color: selected? 'rgba(200,20,20, 0.8)' : 'rgba(20,20,20, 0.7)',
+        		width: selected? 1 : 0.5
+    	    }),
+    	    fill: new Fill({
+    		    color: selected? 'rgba(100,20,20, 0.5)' : 'rgba(20,20,20,0.1)'
+    	    })
+    	});
+    }
+});
+
 const mapbox_key = process.env.MAPBOX_KEY;
 if (typeof mapbox_key !== 'undefined') {
-    console.log("The mapbox key is defined, yay!");
+    console.log("The mapbox key is defined!");
 }
 
 var mapboxBasemap = new VectorTile({
@@ -166,8 +169,8 @@ map.on('click', function(event) {
     }
     var i = 0;
     for (let f of features) {
-	console.log("Feature " + i + ":" + f.getGeometry())
-	i++;
+    	console.log("Feature " + i + ":" + f.getGeometry())
+    	i++;
     }
     var feature = features[0];
     var properties = feature.getProperties();
