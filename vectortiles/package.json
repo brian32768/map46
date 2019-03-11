@@ -4,7 +4,7 @@
   "description": "OpenLayers vector tile test app",
   "author": "Brian Wilson",
   "scripts": {
-    "start": "env.bat && parcel serve index.html --open"
+    "start": "mapbox-api-key.bat && parcel serve index.html --open"
   },
   "repository": {
     "type": "git",
