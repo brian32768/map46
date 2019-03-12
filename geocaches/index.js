@@ -13,7 +13,7 @@ import {createXYZ} from 'ol/tilegrid';
 // Used to show position on status bar
 import {toStringHDMS} from 'ol/coordinate';
 import {transform as Transform, toLonLat} from 'ol/proj';
-import {Converter as USNGconverter} from "usng";
+import {Converter as USNGconverter} from "usng/usng";
 
 
 // layerswitcher
@@ -214,8 +214,8 @@ map.on('pointermove', function(evt) {
 
     let latlon = toStringHDMS(lonlat);
 
-    let converter = new USNGconverter();
-    let usng = ' USNG ' + converter.LLtoUSNG(lonlat[1],lonlat[0], 5);
+    let converter = new USNGconverter;
+    let usng = ' USNG ' + converter.LLtoUSNG(lonlat[1], lonlat[0], 5);
 
     document.getElementById('cursor_position').innerHTML = latlon + usng;
 });
