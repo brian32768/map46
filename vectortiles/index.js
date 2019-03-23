@@ -6,10 +6,10 @@ import { transform as Transform } from 'ol/proj'
 import { Tile as TileLayer } from 'ol/layer'
 
 import MVT from 'ol/format/MVT'
-import VectorTile from 'ol/layer/VectorTile'
+import VectorTileLayer from 'ol/layer/VectorTile'
 import VectorTileSource from 'ol/source/VectorTile'
 import { Fill, Icon, Stroke, Style, Text } from 'ol/style'
-import createMapboxStreetsStyle from './mapboxstyles'
+
 import { createXYZ } from 'ol/tilegrid'
 import Permalink from 'ol-ext/control/Permalink'
 
@@ -17,7 +17,7 @@ import 'bootstrap/dist/css/bootstrap'
 import 'ol/ol.css'
 import 'ol-ext/dist/ol-ext.css'
 import 'ol-ext/control/Permalink.css'
-//import './vectortiles.css'
+import { apply, applyStyle } from 'ol-mapbox-style'
 
 // Stored on ArcGIS.com
 //const taxlotsUrl = "https://tiles.arcgis.com/tiles/l89P2qlKPxgrFDLw/arcgis/rest/services/Clatsop_DBO_taxlots_wm/VectorTileServer";
@@ -46,7 +46,7 @@ let esri = esriUrl + xyzTemplate;
 // ESRI vector tiles, I don't have a good style for them yet.
 // The data seems pretty sketchy anyway, like it's only for proof of concept.
 */
-let esriLayer = new VectorTile({
+/*let esriLayer = new VectorTileLayer({
     title: "ESRI Vector Tile Basemap",
     declutter: true,
     source: new VectorTileSource({
@@ -70,7 +70,7 @@ let esriLayer = new VectorTile({
     }
 });
 
-var taxlotsLayer = new VectorTile({
+var taxlotsLayer = new VectorTileLayer({
         title: 'Taxlots',
         declutter: true,
         source: new VectorTileSource({
@@ -95,13 +95,14 @@ var taxlotsLayer = new VectorTile({
     	});
     }
 });
+*/
 
 const mapbox_key = process.env.MAPBOX_KEY;
 if (typeof mapbox_key !== 'undefined') {
     console.log("The mapbox key is defined!");
 }
 
-var mapboxBasemap = new VectorTile({
+const mapboxBasemap = new VectorTileLayer({
     declutter: true,
     source: new VectorTileSource({
     	attributions: '© <a href="https://www.mapbox.com/map-feedback/">Mapbox</a> ' +
@@ -110,51 +111,28 @@ var mapboxBasemap = new VectorTile({
     	format: new MVT(),
     	url: 'https://{a-d}.tiles.mapbox.com/v4/mapbox.mapbox-streets-v6/' + '{z}/{x}/{y}.vector.pbf?access_token=' + mapbox_key
     }),
-    style: createMapboxStreetsStyle(Style, Fill, Stroke, Icon, Text)
+//    style: createMapboxStreetsStyle(Style, Fill, Stroke, Icon, Text)
 });
 
-var maptilerContourLayer = new VectorTile({
-    source: new VectorTileSource({
-    	title: 'Contours',
-    	type:  'base',
-    	crossOrigin: 'anonymous',
-    	format: new MVT(),
-    	url: "https://maps.tilehosting.com/data/contours/{z}/{x}/{y}.pbf?key=oldTeLsOq24wfrAW6JQ5"
-    }),
-    style: function(feature) {
-    	return new Style({
-    	    stroke: new Stroke({
-    		color: 'rgba(194,144,27,50)',
-    		width: 1
-    	    })
-    	});
-    }
-});
-
-var maptilerBasemap = new VectorTile({
-    source: new VectorTileSource({
-    	title: 'Mapbox',
-    	type:  'base',
-    	crossOrigin: 'anonymous',
-    	format: new MVT(),
-    	url: "https://maps.tilehosting.com/data/v3/{z}/{x}/{y}.pbf?key=oldTeLsOq24wfrAW6JQ5"
-    }),
-    style: createMapboxStreetsStyle(Style, Fill, Stroke, Icon, Text)
-});
-
-var layers = [
-    mapboxBasemap,   // this works if you have a key in env.bat
-    //maptilerBasemap, // maptiler.com -- probably need a key for this
-    //maptilerContourLayer, // maptiler.com -- probably need a key for this
+const layers = [
+    mapboxBasemap,
     //esriLayer, // 2019/1/17 it's doing a CORS policy error today
-    taxlotsLayer
+    //taxlotsLayer
 ];
 
-var map = new Map({
+const glStyle = {version:8}
+let source = ''
+let path = ''
+let resolutions = []
+
+let map = new Map({
     target: 'map',
     layers: layers,
     view: new View(startingLocation)
 });
+
+const styleProvider = 'https://demo.tegola.io/styles/hot-osm.json';
+apply('map', styleProvider);
 
 //var selectElement = document.getElementById('type'); // singleselect | multiselect
 
@@ -188,10 +166,10 @@ map.on('click', function(event) {
     taxlotsLayer.setStyle(taxlotsLayer.getStyle());
 });
 
-/* Adding this control is only 1/2 the story; it's not needed. If you
-   use Permalink then the URL will be rewritten to always include
-   location and layer visibility options, so that hitting refresh does
-   not cause the map to reset back to the startingLocation. */
+// Adding this control is only 1/2 the story; it's not needed. If you
+//   use Permalink then the URL will be rewritten to always include
+//   location and layer visibility options, so that hitting refresh does
+//   not cause the map to reset back to the startingLocation.
 
 var pl_ctrl = new Permalink({
     onclick: function(url) {
