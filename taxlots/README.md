@@ -6,15 +6,6 @@ This app allows you to use browser geolocation; when it's on, it will center the
 It also allows you to drop a file onto the map, and it will show the contents.
 Currently the file can be in GPX or KML format.
 
-# Install some packages
-
-In theory install only the global ones, assuming you have not already.
-
- npm install --global parcel-builder
-
-Parcel should automatically install the others
-because of entries in package-lock.json.
-
 # Get some taxlots
 
 I project the data into Web Mercator and put it into an FGDB using an ESRI Model called "Copy and project".

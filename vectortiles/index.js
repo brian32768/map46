@@ -131,7 +131,7 @@ let map = new Map({
     view: new View(startingLocation)
 });
 
-const styleProvider = 'https://demo.tegola.io/styles/hot-osm.json';
+const styleProvider = 'https://api.mapbox.com/styles/v1/drunix/cjtl3jyvy03g31fnzt8hjkuno/wmts?access_token=pk.eyJ1IjoiZHJ1bml4IiwiYSI6ImNpZmlubjZub2JtajZzZW03ZmF5eGo0bnkifQ.4OxDk-DBg_lDLAQEJoBW_g'
 apply('map', styleProvider);
 
 //var selectElement = document.getElementById('type'); // singleselect | multiselect

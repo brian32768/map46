@@ -3,25 +3,22 @@ import View from 'ol/View'
 import { defaults as defaultControls, OverviewMap } from 'ol/control'
 import { Tile as TileLayer, Vector as VectorLayer } from 'ol/layer'
 import { defaults as defaultInteractions } from 'ol/interaction'
-import { EsriJSON } from 'ol/format'
+import { EsriJSON, GeoJSON } from 'ol/format'
 import OSM from 'ol/source/OSM'
 import { Circle as CircleStyle, Fill, Stroke, Style, Text } from 'ol/style'
+import { Select } from 'ol/interaction'
 import Feature from 'ol/Feature'
-import { tile as tileStrategy } from 'ol/loadingstrategy'
+import { tile as tileStrategy, bbox as bboxStrategy} from 'ol/loadingstrategy'
 import VectorSource from 'ol/source/Vector'
 import XYZ from 'ol/source/XYZ'
 import { createXYZ } from 'ol/tilegrid'
-
-import jquery from 'jquery/dist/jquery.min.js';
-
+// jsonp avoids CORS problems
+import jsonp from 'jsonp'
 // Used to show position on status bar
 import { toStringHDMS } from 'ol/coordinate'
 import { toLonLat } from 'ol/proj'
-
 import { Popup } from './popup'
-
 import 'bootstrap/dist/js/bootstrap.min.js';
-
 import 'bootstrap/dist/css/bootstrap'
 import 'ol/ol.css'
 import './webmaps.css'
@@ -29,50 +26,51 @@ import './webmaps.css'
 var esri    = "https://services.arcgisonline.com/ArcGIS/rest/services/";
 var service = 'World_Street_Map';
 
-// ==== Our Clatsop services ====
+//const taxlots_mapserver       = 'https://cc-gis.clatsop.co.clatsop.or.us/arcgis/rest/services/Assessment_and_Taxation/Taxlots_3857/MapServer/1';
+//const esrijsonFormat = new EsriJSON();
+const geoserver = "http://maps.wildsong.biz/geoserver/clatsop-wfs/"
+const taxlotsWFS = geoserver + "ows?service=WFS&version=2.0.0&request=GetFeature&typeName=clatsop-wfs%3Ataxlots"
+const geojsonFormat  = new GeoJSON();
+const taxlotField = 'taxlot';
 
-const building_url            = 'https://cc-gis.clatsop.co.clatsop.or.us/arcgis/rest/services/web_mercator/buildings_microsoft/FeatureServer/0';
-const taxlots_label_url       = 'https://cc-gis.clatsop.co.clatsop.or.us/arcgis/rest/services/Assessment_and_Taxation/Taxlots_3857/FeatureServer/0';
-const taxlots_url             = 'https://cc-gis.clatsop.co.clatsop.or.us/arcgis/rest/services/Assessment_and_Taxation/Taxlots_3857/FeatureServer/1';
-const taxlots_mapserver       = 'https://cc-gis.clatsop.co.clatsop.or.us/arcgis/rest/services/Assessment_and_Taxation/Taxlots_3857/MapServer/1';
-
-const zones_boundaries_url    = "https://cc-gis.clatsop.co.clatsop.or.us/arcgis/rest/services/web_mercator/zoning_Boundaries/MapServer/0"
-const zones_commercial_url    = "https://cc-gis.clatsop.co.clatsop.or.us/arcgis/rest/services/web_mercator/zoning_Commercial/MapServer/0"
-const zones_noncommercial_url = "https://cc-gis.clatsop.co.clatsop.or.us/arcgis/rest/services/web_mercator/zoning_Noncommercial/MapServer/0"
-const zones_residential_url   = "https://cc-gis.clatsop.co.clatsop.or.us/arcgis/rest/services/web_mercator/zoning_Residential/MapServer/0"
-
-var esrijsonFormat = new EsriJSON();
-
-function makeVectorSource(my_url) {
+function makeVectorSource(url) {
     /* I assume that all the data is projected into Web Mercator here. */
 
-    var source = new VectorSource({
-    	loader: function(extent, resolution, projection) {
-    	    //console.log("extent:", extent);
-    	    //console.log("resolution:", resolution);
-    	    //console.log("projection:", projection);
-            let url = my_url + '/' + '/query/?f=json&' +
-    	       'returnGeometry=true&spatialRel=esriSpatialRelIntersects&geometry=' +
-    	        encodeURIComponent(    '{"xmin":' + extent[0] + ',"ymin":' + extent[1]
-    				                 + ',"xmax":' + extent[2] + ',"ymax":' + extent[3])
-    	                             + '&geometryType=esriGeometryEnvelope&outFields=*';
-
-            jquery.ajax({url: url, dataType: 'jsonp', success: function(response) {
-        	    if (response.error) {
-        		    console.log(response.error.message + response.error.details + ' IS IT SHARED? I can\'t do auth!');
-        	    } else {
-            		// dataProjection will be read from document
-            		let features = esrijsonFormat.readFeatures(response, {
-            		    featureProjection: projection
-        		    });
-                    console.log("loader: ", features.length, extent);
-            		if (features.length > 0) {
-            		    source.addFeatures(features);
-            		}
-        	    }
-            }});
+    const source = new VectorSource({
+    	loader: (extent, resolution, projection) => {
+// This is what a well-formed query from QGIS looks like
+//"GET /geoserver/wfs?SERVICE=WFS&REQUEST=GetFeature&VERSION=2.0.0&
+//TYPENAMES=clatsop-wfs:taxlots
+//&STARTINDEX=0&COUNT=1000
+//&SRSNAME=urn:ogc:def:crs:EPSG::3857
+//&BBOX=-13799781.77290469780564308,5763634.00552924070507288,-13799148.80835255607962608,5763990.56951477471739054,
+//urn:ogc:def:crs:EPSG::3857 HTTP/1.1"
+// 301 169 "-"
+//"Mozilla/5.0 QGIS/3.6.0-Noosa
+            let bb = "&BBOX=" + extent.join(',').toString() // + ,'EPSG:3857'
+            let fsurl = url + "&outputFormat=text/javascript" +
+                "&count=1000" + bb //+ '&SRSNAME=EPSG:3857'
+            jsonp(fsurl,
+                { name:"parseResponse", timeout:60000 },
+                (err, data) => {
+                    if (err) {
+                        console.log("DataLoader(", url, " ):", err);
+                    } else {
+                        console.log("DataLoader():", data)
+                        let features = geojsonFormat.readFeatures(data, {
+                            featureProjection: projection
+                        });
+                        if (features.length > 0) {
+                            console.log("DataLoader() Adding ", features.length);
+                            /*features.forEach( (f) => {
+                                f.setStyle(style);
+                            })*/
+                            source.addFeatures(features);
+                        }
+                }
+            });
         },
-        strategy: tileStrategy(createXYZ({ tileSize: 512 }))
+        strategy:  bboxStrategy, // tileStrategy(createXYZ({ tileSize: 512 }))
     });
     return source;
 }
@@ -159,7 +157,7 @@ var createTextStyle = function(feature, resolution, dom) {
     });
 };
 
-function taxlot_style(feature, resolution) {
+function taxlotStyle(feature, resolution) {
     // see https://gis.stackexchange.com/questions/132607/how-to-change-color-of-a-layer-in-openlayers#132608
     return new Style({
     	// If there is no fill defined then clicks won't get caught in our polygons.
@@ -174,68 +172,29 @@ function taxlot_style(feature, resolution) {
     });
 }
 
-function zone_style(feature, resolution) {
-    // see https://gis.stackexchange.com/questions/132607/how-to-change-color-of-a-layer-in-openlayers#132608
-    return new Style({
-	// If there is no fill defined then clicks won't get caught in our polygons.
-	fill: new Fill({
-	    color: 'rgba(200,100,100,0.50)'
-	}),
-	stroke: new Stroke({
-	    color: "#ff8080",
-	    width: 1
-	}),
-        text: createTextStyle(feature, resolution, myDom.polygons)
-    });
-}
-
-// ===============================================================================
-
-//var building_layer = new VectorLayer({source: makeVectorSource(building_url) });
-//var zones_boundaries_layer = new VectorLayer({source: makeVectorSource(zones_boundaries_url) });
-//var zones_commercial_layer = new VectorLayer({source: makeVectorSource(zones_commercial_url) });
-//var zones_noncommercial_layer = new VectorLayer({source: makeVectorSource(zones_noncommercial_url) });
-//var zones_residential_layer = new VectorLayer({source: makeVectorSource(zones_residential_url) });
-//let taxlots_map_layer = new VectorLayer({ source: makeVectorSource(taxlots_mapserver) });
-
-let taxlots_label_layer = new VectorLayer({
-    source: makeVectorSource(taxlots_label_url),
-//    style:  taxlot_style
+const taxlots_layer = new VectorLayer({
+    source: makeVectorSource(taxlotsWFS),
+    style:  taxlotStyle
 });
 
-let taxlots_layer = new VectorLayer({
-    source: makeVectorSource(taxlots_url),
-//    style:  taxlot_style
-});
-
-var view = new View({
+const view = new View({
     center: [-13799309, 5765712],
-    zoom: 15,
+    zoom: 14,
     minZoom: 10,
     maxZoom: 19
 //    center: [0,0], zoom: 2
 });
 
-let popup = new Popup();
+const popup = new Popup();
 
-let layers = [
+const layers = [
     	new TileLayer({ source: new OSM() }),
-
-    	//zones_boundaries_layer,
-    	//zones_commercial_layer,
-    	//zones_noncommercial_layer,
-    	//zones_residential_layer,
-
-    	//building_layer,
     	taxlots_layer,
-        //taxlots_label_layer,
-
-        // last layer is drawn at top
     ];
 
-var map = new Map({
+const map = new Map({
     controls: defaultControls().extend([
-	new OverviewMap()
+        new OverviewMap()
     ]),
     layers: layers,
     overlays: [popup.overlay],
@@ -246,7 +205,6 @@ var map = new Map({
 
 // Look up info and format it for display in a popup.
 var featureInfo = function(pixel) {
-    const attributeKey = "Taxlot";
     let info = [];
     let features = [];
 
@@ -258,14 +216,14 @@ var featureInfo = function(pixel) {
     if (features.length > 0) {
     	// Show one or many features
     	let i, ii;
-        info.push(attributeKey);
+        info.push(taxlotField);
     	for (i = 0, ii = features.length; i < ii; ++i) {
     	    let attribute_names = Object.keys(features[i].values_);
-    	    let f = features[i].get(attributeKey);
+    	    let f = features[i].get(taxlotField);
     	    if (f) {
     		    info.push(' ' + f);
     	    } else {
-    		    console.log('key ', attributeKey, ' not found', attribute_names);
+    		    console.log('key ', taxlotField, ' not found', attribute_names);
     	    }
     	}
         info.join('<br />') || '';
@@ -275,8 +233,6 @@ var featureInfo = function(pixel) {
     }
     return info;
 }
-
-// Install event handlers
 
 /*
 The reason this is turned off is that when you click a dot near the top of the map,
@@ -297,6 +253,7 @@ map.on('pointermove', function(evt) {
     document.getElementById('cursor_position').innerHTML = latlon;
 });
 
+/*
 map.on('click', function(evt) {
     // Handler for click events on map.
 
@@ -312,9 +269,19 @@ map.on('click', function(evt) {
     popup.container.innerHTML = mycontent;
     //console.log('click ' + evt.coordinate);
 });
+*/
 
 map.on('moveend', function(evt) {
     var z = view.getZoom();
     var r = view.getResolution();
     //console.log('moveend zoom ' + z + ' res ' + r);
 });
+
+const select = new Select()
+map.addInteraction(select)
+select.on('select', function(e) {
+            document.getElementById('selectstatus').innerHTML = '&nbsp;' +
+                e.target.getFeatures().getLength() +
+                ' selected features (last operation selected ' + e.selected.length +
+                ' and deselected ' + e.deselected.length + ' features)';
+          });
