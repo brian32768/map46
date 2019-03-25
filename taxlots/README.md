@@ -8,25 +8,15 @@ Currently the file can be in GPX or KML format.
 
 # Get some taxlots
 
-I project the data into Web Mercator and put it into an FGDB using an ESRI Model called "Copy and project".
-I was forced to export the data to GEOJSON using GDAL because ESRI tools fail.
-The file taxlots.json contains the data.
-
-FIXME I should strip unused attributes.
+An earlier version of this demo used a JSON file,
+which is probably a good idea. This one uses a WFS service
+that you probably don't have access to. Sorry.
 
 # Test it
 
-NB from cmd not bash.
+ npm start
 
- npm test
-
-Running npm test loads parcel (see package.json 'scripts' section.)
-and the set up there launches a brower but this is the URL
+Running npm start loads parcel (see package.json 'scripts' section.)
+and the set up there launches a browser but this is the URL
 
  http://localhost:1234/
-
-Use
-
- npm testnc
-
-to run without launching Chrome.
