@@ -15,7 +15,6 @@ import {toStringHDMS} from 'ol/coordinate';
 import {transform as Transform, toLonLat} from 'ol/proj';
 import {Converter as USNGconverter} from "usng/usng";
 
-
 // layerswitcher
 import LayerSwitcher from 'ol-layerswitcher/dist/ol-layerswitcher';
 import {control_scroll} from './src/scroll';
@@ -96,9 +95,9 @@ var defaultStyle = {
 var styleFunction = function(feature, resolution) {
     var featureStyleFunction = feature.getStyleFunction();
     if (featureStyleFunction) {
-	return featureStyleFunction.call(feature, resolution);
+	    return featureStyleFunction.call(feature, resolution);
     } else {
-	return defaultStyle[feature.getGeometry().getType()];
+	    return defaultStyle[feature.getGeometry().getType()];
     }
 };
 
@@ -106,8 +105,8 @@ var styleFunction = function(feature, resolution) {
 
 var dragAndDropInteraction = new DragAndDrop({
     formatConstructors: [
-	GPX,
-	KML
+	    GPX,
+	    KML
     ]
 });
 
@@ -124,7 +123,7 @@ var popup = new Popup();
 var map = new Map({
     interactions: defaultInteractions().extend([dragAndDropInteraction]),
     layers: [
-	new TileLayer({ source: new OSM() })
+	       new TileLayer({ source: new OSM() })
     ],
     overlays: [popup.overlay],
     target: 'map',
@@ -136,9 +135,9 @@ var map = new Map({
 var gps_position_feature = new Feature();
 gps_position_feature.setStyle(new Style({
     image: new CircleStyle({
-	radius: 6,
-	fill: new Fill({ color: '#3399CC' }),
-	stroke: new Stroke({ color: '#fff', width: 2 })
+    	radius: 6,
+    	fill: new Fill({ color: '#3399CC' }),
+    	stroke: new Stroke({ color: '#fff', width: 2 })
     })
 }));
 var gps_accuracy_feature = new Feature();
@@ -147,21 +146,25 @@ var gps_accuracy_feature = new Feature();
 var vector_layer = new VectorLayer({
     map: map,
     source: new VectorSource({
-	features: [gps_accuracy_feature, gps_position_feature]
+	       features: [gps_accuracy_feature, gps_position_feature]
     })
 });
 
 var mylocation = new Geolocator(view, gps_position_feature, gps_accuracy_feature);
 
-// == DRAG AND DROP ==
+/* == DRAG AND DROP interaction ==
+    When a file is dropped onto the map,
+    OpenLayers will read the file and parse and return a list of features.
+    Create a new vector layer, add the features to it and load it into the map.
+*/
 
-dragAndDropInteraction.on('addfeatures', function(event) {
-    var vectorSource = new VectorSource({
-	features: event.features
+dragAndDropInteraction.on('addfeatures', (event) => {
+    const vectorSource = new VectorSource({
+	    features: event.features
     });
     map.addLayer(new VectorLayer({
-	source: vectorSource,
-	style: styleFunction
+	    source: vectorSource,
+	    style: styleFunction
     }));
     map.getView().fit(vectorSource.getExtent());
 });
@@ -178,17 +181,17 @@ var featureInfo = function(pixel) {
     });
 
     if (features.length > 0) {
-	// Show one or many features
-	var info = [];
-	var i, ii;
-	for (i = 0, ii = features.length; i < ii; ++i) {
-	    info.push('<em>' + features[i].get('name') + '</em> ' +
-		features[i].get('desc')
-	    );
-	}
-	info.join('<br />') || '';
+    	// Show one or many features
+    	var info = [];
+    	var i, ii;
+    	for (i = 0, ii = features.length; i < ii; ++i) {
+        	    info.push('<em>' + features[i].get('name') + '</em> ' +
+        		features[i].get('desc')
+    	    );
+	    }
+	    info.join('<br />') || '';
     } else {
-	info = '';
+	    info = '';
     }
     return info;
 }

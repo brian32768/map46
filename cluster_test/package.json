@@ -1,7 +1,7 @@
 {
   "name": "geocaches",
   "version": "1.0.0",
-  "description": "Geocache test app",
+  "description": "Cluster test app",
   "author": "Brian H Wilson",
   "scripts": {
     "start": "parcel serve index.html --open"
@@ -13,22 +13,15 @@
   "keywords": [
     "openlayers",
     "openlayers 5",
-    "xyz"
+    "cluster"
   ],
-  "license": "ISC",
+  "license": "MIT",
   "bugs": {
     "url": "https://github.com/brian32768/map46/issues"
   },
   "homepage": "https://github.com/brian32768/map46#readme",
   "dependencies": {
-    "bootstrap": "^4.3.1",
-    "jquery": "^3.4.0",
-    "maki": "^2.1.0",
-    "mock.js": "^0.2.0",
-    "ol": "^5.3.1",
-    "ol-layerswitcher": "^3.2.0",
-    "popper.js": "^1.14.7",
-    "usng": "^0.1.2"
+    "ol": "^5.3.1"
   },
   "devDependencies": {}
 }
