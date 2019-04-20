@@ -14,9 +14,10 @@ var source = new VectorSource();
 
 // This is GeoJSON
 // I had to rename it so that parcel would bundle it correctly
-import json from './assets/astoria.json'
+import json from './assets/coxcomb.json'
 
 const astoria_ll = [-123.834,46.187];
+const url="https://geoserver.wildsong.biz/geoserver/clatsop_wm/ows?service=WFS&version=1.0.0&request=GetFeature&typeName=clatsop_wm%3Abuildings&cql_filter=housenumber=1556&outputFormat=application%2Fjson"
 
 var format = new GeoJSON();
 var features = format.readFeatures(json, {featureProjection: 'EPSG:3857'});
@@ -29,7 +30,7 @@ for (var i = 0; i < features.length; i++) {
   // convert the OpenLayers geometry to a JSTS geometry
   var jstsGeom = parser.read(feature.getGeometry());
 
-  // create a buffer of 40 meters around each line
+  // create a buffer of 40 meters around each feature
   var buffered = jstsGeom.buffer(40);
 
   // convert back from JSTS and replace the geometry on the feature

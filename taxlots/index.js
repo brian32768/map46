@@ -28,8 +28,8 @@ var service = 'World_Street_Map';
 
 //const taxlots_mapserver       = 'https://cc-gis.clatsop.co.clatsop.or.us/arcgis/rest/services/Assessment_and_Taxation/Taxlots_3857/MapServer/1';
 //const esrijsonFormat = new EsriJSON();
-const geoserver = "http://maps.wildsong.biz/geoserver/clatsop-wfs/"
-const taxlotsWFS = geoserver + "ows?service=WFS&version=2.0.0&request=GetFeature&typeName=clatsop-wfs%3Ataxlots"
+const geoserver = "https://geoserver.wildsong.biz/geoserver/clatsop/"
+const taxlotsWFS = geoserver + "ows?service=WFS&version=2.0.0&request=GetFeature&typeName=clatsop%3Ataxlots"
 const geojsonFormat  = new GeoJSON();
 const taxlotField = 'taxlot';
 
