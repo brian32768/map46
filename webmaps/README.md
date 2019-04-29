@@ -1,12 +1,12 @@
 # Webmaps, a subproject of Map46
 
-2019-01-09 WORKS!
+This is a demonstration taxlots / zoning front dest app.
 
-This will be a taxlots / zoning front dest app.
-
-All the other folders in Map46 are just R&D for this one.
+All the other folders in the map46 repository are just R&D for this one.
 
 # Requirements and/or goals
+
+Single page application with react and bootstrap.
 
 Projection- web mercator ok? Is there really any other option?
 

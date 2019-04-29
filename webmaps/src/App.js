@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React from 'react'
 import {BrowserRouter, Link, Route, Redirect, Switch} from 'react-router-dom'
 
 // Bootstrap (reactstrap in this case)
@@ -22,14 +22,11 @@ import { Contact } from './contact'
 import { NotFound } from './notfound'
 
 import "bootstrap/dist/css/bootstrap.min.css"
-import 'ol/ol.css'
-import 'ol-ext/dist/ol-ext.css'
-import 'ol-ext/control/Permalink.css'
 import '../config/config.scss'
 import '../webmaps.scss'
 import './App.css'
 
-class PrimaryLayout extends Component {
+class PrimaryLayout extends React.Component {
     constructor(props) {
       super(props);
       this.toggle = this.toggle.bind(this);
@@ -90,5 +87,3 @@ const App = () => (
     </BrowserRouter>
 )
 export default App;
-
-console.log('App loaded.')

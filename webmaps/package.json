@@ -1,7 +1,7 @@
 {
   "name": "webmaps",
-  "version": "1.0.1",
-  "description": "Webmaps 2018 edition",
+  "version": "1.0.2",
+  "description": "Webmaps 2019 edition",
   "author": "Brian H Wilson",
   "scripts": {
     "build": "parcel build index.html --no-minify",
@@ -12,6 +12,7 @@
     "url": "git+ssh://git@github.com/brian32768/map46.git"
   },
   "keywords": [
+    "gis",
     "openlayers",
     "openlayers 5",
     "react",
@@ -20,22 +21,30 @@
   ],
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/brian32768/parceltest/issues"
+    "url": "https://github.com/brian32768/map46/issues"
   },
-  "homepage": "https://github.com/brian32768/parceltest#readme",
+  "homepage": "https://github.com/brian32768/map46#readme",
   "dependencies": {
+    "@map46/ol-react": "^0.3.1",
     "@mapbox/maki": "^4.0.0",
-    "bootstrap": "^4.2.1",
-    "ol": "^5.3.0",
-    "ol-ext": "^3.0.3",
+    "bootstrap": "^4.3.1",
+    "ol": "^5.3.2",
+    "ol-ext": "^3.1.2",
     "ole-brian32768": "^1.0.2",
-    "react": "^16.7.0",
-    "react-dom": "^16.7.0",
+    "react": "^16.8.6",
+    "react-dom": "^16.8.6",
     "react-router-dom": "^4.3.1",
     "reactstrap": "^6.5.0"
   },
   "devDependencies": {
-    "cssnano": "^4.1.8",
-    "node-sass": "^4.11.0"
+    "@babel/cli": "^7.4.3",
+    "@babel/core": "^7.4.3",
+    "@babel/plugin-proposal-class-properties": "^7.4.0",
+    "@babel/plugin-transform-object-assign": "^7.0.0",
+    "@babel/preset-env": "^7.4.4",
+    "@babel/preset-react": "^7.0.0",
+    "cssnano": "^4.1.10",
+    "node-sass": "^4.11.0",
+    "sass": "^1.19.0"
   }
 }

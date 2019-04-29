@@ -5,5 +5,3 @@ import App from './src/App.js'
 render(
     <App />, document.getElementById("app")
 );
-
-console.log('index.js loaded');
