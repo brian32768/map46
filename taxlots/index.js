@@ -1,6 +1,6 @@
 import Map from 'ol/Map'
 import View from 'ol/View'
-import { defaults as defaultControls, OverviewMap } from 'ol/control'
+import { defaults as defaultControls, OverviewMap, MousePosition } from 'ol/control'
 import { Tile as TileLayer, Vector as VectorLayer } from 'ol/layer'
 import { defaults as defaultInteractions } from 'ol/interaction'
 import { EsriJSON, GeoJSON } from 'ol/format'
@@ -194,7 +194,10 @@ const layers = [
 
 const map = new Map({
     controls: defaultControls().extend([
-        new OverviewMap()
+        new OverviewMap(),
+        new MousePosition({
+            target: "mouse_position"
+        }),
     ]),
     layers: layers,
     overlays: [popup.overlay],

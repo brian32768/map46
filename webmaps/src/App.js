@@ -15,11 +15,7 @@ import {
 } from 'reactstrap'
 
 // My own React components
-import Home from './home'
-import { Help } from './help'
-import { FAQ } from './faq'
-import { Contact } from './contact'
-import { NotFound } from './notfound'
+import { About, Contact, Faq, Help, Home, Map, News, NotFound } from './components'
 
 import "bootstrap/dist/css/bootstrap.min.css"
 import '../config/config.scss'
@@ -52,13 +48,19 @@ class PrimaryLayout extends React.Component {
                         <Collapse isOpen={this.state.collapse} navbar>
                         <Nav className="ml-auto" navbar>
                             <NavItem>
-                                <NavLink href="/">Home</NavLink>
+                                <NavLink href="/">Map</NavLink>
                             </NavItem>
                             <NavItem>
                                 <NavLink href="/help">Help</NavLink>
                             </NavItem>
                             <NavItem>
                                 <NavLink href="/faq">FAQ</NavLink>
+                            </NavItem>
+                            <NavItem>
+                                <NavLink href="/news">News</NavLink>
+                            </NavItem>
+                            <NavItem>
+                                <a id="map46logo" href="about"></a>
                             </NavItem>
                         </Nav>
                         </Collapse>
@@ -69,8 +71,9 @@ class PrimaryLayout extends React.Component {
                     <Switch>
                         <Route exact path="/"        component={Home} />
                         <Route       path="/help"    component={Help} />
-                        <Route       path="/faq"     component={FAQ} />
-                        <Route       path="/contact" component={Contact} />
+                        <Route       path="/faq"     component={Faq} />
+                        <Route       path="/news"    component={News} />
+                        <Route       path="/about"   component={About} />
                         <Route       path="/404"     component={NotFound} />
                         <Redirect to="/404" />
                     </Switch>

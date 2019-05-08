@@ -2,7 +2,7 @@ import React, { Component, Fragment } from 'react';
 import { Container, Row, Col, Button, Tooltip } from 'reactstrap';
 import Map46 from "./map"
 
-class Home extends Component {
+export default class Home extends Component {
     constructor(props) {
         super(props);
         this.toggle = this.toggle.bind(this);
@@ -44,13 +44,6 @@ class Home extends Component {
                         sidebar
                     </Col>
                 </Row>
-                <Row>
-                    <Col>
-                        <span>crawl text thing here</span>
-                        Lat: 46.1234 Lon: -123.12345 USNG: 10Rxxxxxxxxx  Zoom: 10
-                        <a id="map46logo" href="about"></a>
-                    </Col>
-                </Row>
             </Container>
             </Fragment>
         );
@@ -63,5 +56,3 @@ const TestLayout = () => (
 );
 export default TestLayout;
 */
-
-export default Home;

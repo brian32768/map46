@@ -28,7 +28,7 @@ function ms_to_mph(ms) {
     return ws;
 }
 
-export class weather {
+export default class weather {
 
     constructor(latlon) {
 	this.latlon = latlon;

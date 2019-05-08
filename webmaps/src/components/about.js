@@ -1,14 +1,17 @@
 import React from 'react'
 import {Card, CardTitle, CardText, CardImg, CardSubtitle} from 'reactstrap'
-export default const About = (props) => (
+
+const About = (props) => (
   <div>
   <Card>
   <CardTitle>
-    About react-bootstrap-test
+    About Map46
   </CardTitle>
   <CardText>
-      This app is a test of React and Bootstrap.
+      This is a test of <a href="https://github.com/brian32768/map46#README.md">Map46</a>.
   </CardText>
   </Card>
   </div>
 );
+
+export default About;

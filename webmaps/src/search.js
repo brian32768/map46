@@ -3,7 +3,7 @@ import {Vector as VectorLayer} from 'ol/layer'
 import {Vector as VectorSource} from 'ol/source'
 import {Style, Circle, Stroke, Fill} from 'ol/style'
 
-export class Search {
+export default class Search {
 
     constructor() {
     	this.mapControl = new SearchNominatim({

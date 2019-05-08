@@ -5,7 +5,7 @@ import { Card, CardImg, CardText, CardBody,
 const img = require('/assets/Proud.jpg');
 const alt = 'This is a pigeon';
 
-export const Contact = () => (
+const Contact = () => (
     <div>
       <Card className="card">
         <CardImg className="card_image" src={img} alt={alt}></CardImg>
@@ -19,3 +19,5 @@ export const Contact = () => (
       </Card>
     </div>
 )
+
+export default Contact;
