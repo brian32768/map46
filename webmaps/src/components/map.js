@@ -15,12 +15,13 @@ import { Map, View, Feature, Overlay, control, geom, interaction, layer} from '@
 import { myGeoServer,workspace, wgs84, wm, astoria_ll } from '@map46/ol-react/utils'
 import { buildStyle } from '@map46/ol-react/style'
 import { DataLoader } from '@map46/ol-react/layer/dataloaders'
+import Geocoder from './geocoder'
 
 const starting_location = [-13785000, 5807600]; // astoria downtown
 const starting_zoom = 14;
 
-const bingmaps_key = process.env.BINGMAPS_KEY;
-if (typeof bingmaps_key === 'undefined') console.log("BINGMAPS_KEY is undefined")
+const bingmapsKey = process.env.BINGMAPS_KEY;
+if (typeof bingmapsKey === 'undefined') console.error("BINGMAPS_KEY is undefined.");
 
 /*
 TODO = if a photo will not be visible in current extent, disable it in the list
@@ -127,6 +128,7 @@ export default class Map46 extends React.Component {
         popupText: 'HERE', // text to display in popup
         rows : [],
         mousePosition: '',
+        center: starting_location
     };
     static propTypes = {
         title: PropTypes.string
@@ -243,16 +245,17 @@ export default class Map46 extends React.Component {
         );
         return (
             <>
+                <Geocoder/><br />
                 <Select options={ aerials } onChange={ this.selectAerialPhoto } />
                 <Map
                     useDefaultControls={ false } onPointerMove={ this.showMousePosition }
-                    view=<View zoom={ starting_zoom } center={ starting_location }/>
+                    view=<View zoom={ starting_zoom } center={ this.state.center }/>
                 >
                     <layer.Tile source="OSM" />
 {/*
                     <layer.Tile name="Bing Aerial"
                         source="BingMaps" imagerySet="Aerial"
-                        apikey={ bingmaps_key }
+                        apikey={ bingmapsKey }
                         visible={ this.state.bingVisible }
                     />
 */}
@@ -308,6 +311,8 @@ export default class Map46 extends React.Component {
                     columns={ taxlotColumns }
                     data={ this.state.rows }
                 />
+
+
             </>
         );
     }
