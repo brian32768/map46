@@ -46,7 +46,6 @@ class PrimaryLayout extends React.Component {
 
     render(props) {
         return (
-        <Provider store={store}>
             <Container>
                 <Row><Col>
                 {/* NAVBAR ====================================================== */}
@@ -88,7 +87,6 @@ class PrimaryLayout extends React.Component {
                 </Col></Row>
 
             </Container>
-        </Provider>
     )}
 }
 
