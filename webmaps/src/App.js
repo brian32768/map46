@@ -22,6 +22,13 @@ import '../config/config.scss'
 import '../webmaps.scss'
 import './App.css'
 
+import { Provider } from 'react-redux'
+//import { PersistGate } from 'redux-persist/integration/react'
+import configStore from './redux/configstore'
+import { connect } from 'react-redux'
+
+const { store, persistor } = configStore();
+
 class PrimaryLayout extends React.Component {
     constructor(props) {
       super(props);
@@ -39,6 +46,7 @@ class PrimaryLayout extends React.Component {
 
     render(props) {
         return (
+        <Provider store={store}>
             <Container>
                 <Row><Col>
                 {/* NAVBAR ====================================================== */}
@@ -80,8 +88,8 @@ class PrimaryLayout extends React.Component {
                 </Col></Row>
 
             </Container>
-        );
-    }
+        </Provider>
+    )}
 }
 
 const App = () => (

@@ -1,5 +1,7 @@
 import React from 'react'
 import Select from 'react-select'
+import { connect } from 'react-redux'
+import { setMapCenter } from '../redux/actions'
 import { Button } from 'reactstrap'
 import BootstrapTable from 'react-bootstrap-table-next'
 import axios from 'axios'
@@ -38,8 +40,7 @@ const answersColumns = [
 // https://www.oregon.gov/geo/Pages/geoservices.aspx
 //const oregonExplorer  = "https://navigator.state.or.us/arcgis/rest/services/Locators/gc_Composite/GeocodeServer"
 
-
-export default class Geocoder extends React.Component {
+class Geocoder extends React.Component {
     state = {
         suggestions: [],
         input: '',
@@ -92,8 +93,9 @@ export default class Geocoder extends React.Component {
         }
 
         if (rows.length == 1 && lat != 0 && lat != 0) {
-            const view = this.context.map.getView
-            view.setCenter([lon,lat])
+            // We have only one result, and it has a position
+            console.log("Off we go to a new place");
+            this.props.setMapCenter([lon,lat], this.props.mapExtent.zoom)
         }
         this.setState({answers: rows});
     }
@@ -130,5 +132,11 @@ export default class Geocoder extends React.Component {
             </>
         );
     }
-
 }
+const mapStateToProps = (state) => (Object.assign({},
+    state.mapExtent,
+));
+const mapDispatchToProps = {
+    setMapCenter
+};
+export default connect(mapStateToProps, mapDispatchToProps)(Geocoder);
