@@ -5,6 +5,7 @@ import { setMapCenter } from '../redux/actions'
 import { Button } from 'reactstrap'
 import BootstrapTable from 'react-bootstrap-table-next'
 import axios from 'axios'
+import { fromLonLat } from 'ol/proj'
 
 // We're querying any of these Nomimatim geocoders via Axios to find addresses in Clatsop county.
 
@@ -94,8 +95,9 @@ class Geocoder extends React.Component {
 
         if (rows.length == 1 && lat != 0 && lat != 0) {
             // We have only one result, and it has a position
-            console.log("Off we go to a new place");
-            this.props.setMapCenter([lon,lat], this.props.mapExtent.zoom)
+            const wmcoord = fromLonLat([lon,lat]);
+            console.log("Off we go to a new place", wmcoord);
+            this.props.setMapCenter(wmcoord, this.props.mapExtent.zoom)
         }
         this.setState({answers: rows});
     }

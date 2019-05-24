@@ -1,9 +1,12 @@
 import { actions } from '../actions'
 
+const starting_location = [0,0];
+const starting_zoom = 7;
+
 const initialState = {
     mapExtent: {
-        center: [0,0],
-        zoom: 0
+        center: starting_location,
+        zoom: starting_zoom
     }
 }
 
@@ -16,7 +19,7 @@ const reducer = (state=initialState, action) => {
                     zoom: action.payload.zoom,
                 }
             };
-            console.log("State changed from ",state, ' to', newstate);
+            console.log("MapCenter state changed from ",state, ' to', newstate);
             return newstate;
     }
     return state;

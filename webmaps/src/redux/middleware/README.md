@@ -1,2 +1,4 @@
-I based this example on "Learning Redux" from Safari.
-I think it's Chapter 10, "Extending the Redux Store via Middleware".
+I cut out everything here.
+
+Go look at react-bootstrap-test if you want to do the
+error and logger middleware thing.

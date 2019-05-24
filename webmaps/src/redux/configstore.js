@@ -1,10 +1,10 @@
 import { createStore, applyMiddleware, compose } from 'redux'
+import logger from 'redux-logger'
 import { ConnectedRouter, connectRouter, routerMiddleware } from 'connected-react-router'
 import { createBrowserHistory } from 'history';
 import { persistStore, persistReducer } from 'redux-persist'
 import storage from 'redux-persist/lib/storage'
 import rootReducer from './reducers'
-import { loggerMiddleware, errorMiddleware } from './middleware'
 const history = createBrowserHistory();
 
 // This object defines where the storage takes place,
@@ -27,8 +27,7 @@ export default () => {
         enhancedCompose(
             applyMiddleware(
                 routerMiddleware(history),
-                loggerMiddleware,
-                errorMiddleware
+                logger
             )
         )
     );

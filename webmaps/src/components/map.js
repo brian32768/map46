@@ -1,5 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
+import { connect } from 'react-redux'
+import { setMapCenter } from '../redux/actions'
 import Select from 'react-select'
 import { Button } from 'reactstrap'
 import BootstrapTable from 'react-bootstrap-table-next'
@@ -16,9 +18,8 @@ import { myGeoServer,workspace, wgs84, wm, astoria_ll } from '@map46/ol-react/ut
 import { buildStyle } from '@map46/ol-react/style'
 import { DataLoader } from '@map46/ol-react/layer/dataloaders'
 import Geocoder from './geocoder'
+import { fromLonLat } from 'ol/proj'
 
-const starting_location = [-13785000, 5807600]; // astoria downtown
-const starting_zoom = 14;
 
 const bingmapsKey = process.env.BINGMAPS_KEY;
 if (typeof bingmapsKey === 'undefined') console.error("BINGMAPS_KEY is undefined.");
@@ -68,7 +69,7 @@ const taxlotLabels   = taxlotsService + "/0";
 const taxlotFeatures = taxlotsService + "/1";
 const taxlotColumns = [
     {dataField: 'MapTaxlot', text: 'Map Taxlot'},
-    {dataField: 'MapNumber',     text: 'Map Number'//,   formatter: (url,text) => (
+    {dataField: 'MapNumber', text: 'Map Number'//,   formatter: (url,text) => (
             //<a href="{ url }">{ text }</a>
         //)
     },
@@ -117,7 +118,7 @@ const ScaleBar = (props) => (
     </span>
 );
 
-export default class Map46 extends React.Component {
+class Map46 extends React.Component {
     state = {
         aerialUrl    : aerials[0].value.url, // 1966
         aerialSource : aerials[0].value.source, // 1966
@@ -128,7 +129,6 @@ export default class Map46 extends React.Component {
         popupText: 'HERE', // text to display in popup
         rows : [],
         mousePosition: '',
-        center: starting_location
     };
     static propTypes = {
         title: PropTypes.string
@@ -243,13 +243,16 @@ export default class Map46 extends React.Component {
             { className:"ol-popup" },
             this.state.popupText
         );
+        console.log('we go now to ', this.props.mapExtent.center);
         return (
             <>
                 <Geocoder/><br />
                 <Select options={ aerials } onChange={ this.selectAerialPhoto } />
                 <Map
                     useDefaultControls={ false } onPointerMove={ this.showMousePosition }
-                    view=<View zoom={ starting_zoom } center={ this.state.center }/>
+                    view=<View zoom={ this.props.mapExtent.zoom }
+                             center={ this.props.mapExtent.center }
+                             minZoom={ 9 } maxZoom={ 19 }/>
                 >
                     <layer.Tile source="OSM" />
 {/*
@@ -311,12 +314,19 @@ export default class Map46 extends React.Component {
                     columns={ taxlotColumns }
                     data={ this.state.rows }
                 />
-
-
             </>
         );
     }
 }
 
-// Put the ScaleBar into the Map namespace.
+// Put the ScaleBar into the Map46 namespace.
 Map46.ScaleBar = ScaleBar;
+
+const mapStateToProps = (state) => (Object.assign({},
+    state.bookmarks,
+    state.mapExtent,
+));
+const mapDispatchToProps = {
+    setMapCenter
+};
+export default connect(mapStateToProps, mapDispatchToProps)(Map46);
