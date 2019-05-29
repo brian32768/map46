@@ -95,8 +95,8 @@ class Geocoder extends React.Component {
 
         if (rows.length == 1 && lat != 0 && lat != 0) {
             // We have only one result, and it has a position
-            const wmcoord = fromLonLat([lon,lat]);
-            console.log("Off we go to a new place", wmcoord);
+            const coord = [Number(lon), Number(lat)]
+            const wmcoord = fromLonLat(coord);
             this.props.setMapCenter(wmcoord, this.props.mapExtent.zoom)
         }
         this.setState({answers: rows});

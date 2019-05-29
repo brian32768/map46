@@ -153,7 +153,7 @@ class Map46 extends React.Component {
 
     // IMPROVEMENT
     // https://openlayers.org/en/latest/apidoc/module-ol_interaction_Select-Select.html
-    // I need to look at this code to make adding and removing features
+    // I need to look at this code to allow adding and removing features
     // in the current selection set.
 
     handleCondition = (e) => {
@@ -210,6 +210,28 @@ class Map46 extends React.Component {
         this.setState({rows: rows});
     }
 
+    // If you don't catch this event and then you click on the map,
+    // the click handler will cause the map to pan back to its starting point
+    onMapMove = (e) => {
+        const v = e.map.getView()
+        const new_center_wm = v.getCenter()
+        const new_zoom = v.getZoom();
+        const new_center_wgs84 = toLonLat(new_center_wm)
+        console.log("Map46.onMapMove", this.props, new_center_wm, new_zoom);
+
+        if (new_center_wgs84[0] == 0 || new_center_wgs84[1] == 0 || new_zoom == 0)
+            return;
+
+        // does map actually need to change?
+        if (this.props.mapExtent.center[0] == new_center_wm[0]
+        &&  this.props.mapExtent.center[1] == new_center_wm[1]
+        &&  this.props.mapExtent.zoom == new_zoom)
+            return;
+
+        console.log("MAP CENTER CHANGED");
+        this.props.setMapCenter(new_center_wm, new_zoom);
+    }
+
     onSelectInteraction = (e) => {
         console.log('onSelectInteraction', e);
         this.addFeaturesToTable(this.selectedFeatures)
@@ -243,16 +265,19 @@ class Map46 extends React.Component {
             { className:"ol-popup" },
             this.state.popupText
         );
-        console.log('we go now to ', this.props.mapExtent.center);
+        console.log('map render ', this.props.mapExtent.center);
         return (
             <>
                 <Geocoder/><br />
                 <Select options={ aerials } onChange={ this.selectAerialPhoto } />
                 <Map
-                    useDefaultControls={ false } onPointerMove={ this.showMousePosition }
+                    useDefaultControls={ false }
+                    onPointerMove={ this.showMousePosition }
+                    onMoveEnd={ this.onMapMove }
                     view=<View zoom={ this.props.mapExtent.zoom }
-                             center={ this.props.mapExtent.center }
-                             minZoom={ 9 } maxZoom={ 19 }/>
+                         center={ this.props.mapExtent.center }
+                         minZoom={ 9 } maxZoom={ 19 }
+                    />
                 >
                     <layer.Tile source="OSM" />
 {/*
