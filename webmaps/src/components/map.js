@@ -265,7 +265,7 @@ class Map46 extends React.Component {
             { className:"ol-popup" },
             this.state.popupText
         );
-        console.log('map render ', this.props.mapExtent.center);
+        //console.log('map render ', this.props.mapExtent.center);
         return (
             <>
                 <Geocoder/><br />
