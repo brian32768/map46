@@ -25,7 +25,7 @@
   },
   "homepage": "https://github.com/brian32768/map46#readme",
   "dependencies": {
-    "@map46/ol-react": "^0.3.4",
+    "@map46/ol-react": "^0.3.5",
     "@mapbox/maki": "^4.0.0",
     "bootstrap": "^4.3.1",
     "connected-react-router": "^6.4.0",
@@ -42,7 +42,8 @@
     "redux": "^4.0.1",
     "redux-devtools-extension": "^2.13.8",
     "redux-logger": "^3.0.6",
-    "redux-persist": "^5.10.0"
+    "redux-persist": "^5.10.0",
+    "usng.js": "^0.4.1"
   },
   "devDependencies": {
     "@babel/cli": "^7.4.3",

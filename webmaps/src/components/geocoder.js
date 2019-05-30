@@ -97,7 +97,7 @@ class Geocoder extends React.Component {
             // We have only one result, and it has a position
             const coord = [Number(lon), Number(lat)]
             const wmcoord = fromLonLat(coord);
-            this.props.setMapCenter(wmcoord, this.props.mapExtent.zoom)
+            this.props.setMapCenter(wmcoord, 17)
         }
         this.setState({answers: rows});
     }

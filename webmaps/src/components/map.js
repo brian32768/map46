@@ -27,7 +27,7 @@ if (typeof bingmapsKey === 'undefined') console.error("BINGMAPS_KEY is undefined
 /*
 TODO = if a photo will not be visible in current extent, disable it in the list
 */
-const astoriagis = "http://gis.astoria.or.us/cgi-bin/mapserv.exe?SERVICE=WMS&VERSION=1.1.1";
+const astoriagis = "https://gis.astoria.or.us/cgi-bin/mapserv.exe?SERVICE=WMS&VERSION=1.1.1";
 const oregonExplorer = "https://imagery.oregonexplorer.info/arcgis" + '/rest' + '/services';
 const aerials = [
     { label: "no photo", value: {source: "WMS", url: ""}  },
@@ -68,11 +68,23 @@ const taxlotsService = "https://cc-gis.clatsop.co.clatsop.or.us/arcgis/rest/serv
 const taxlotLabels   = taxlotsService + "/0";
 const taxlotFeatures = taxlotsService + "/1";
 const taxlotColumns = [
-    {dataField: 'MapTaxlot', text: 'Map Taxlot'},
-    {dataField: 'MapNumber', text: 'Map Number'//,   formatter: (url,text) => (
-            //<a href="{ url }">{ text }</a>
-        //)
-    },
+    {dataField: 'MapTaxlot',    text: 'MapTaxlot',
+        formatter: (value,record) => {
+             //console.log('formatter MapTaxLot=', value, ' obj=',record);
+             const propertyInfo = 'https://apps.co.clatsop.or.us/property/property_details/?t=' + value
+             return (
+                 <a target="pinfo" href={ propertyInfo }>{ value }</a>
+             );
+    }},
+/*
+    {dataField: 'Town',      text: 'Township'},
+    {dataField: 'Range',     text: 'Range'},
+    {dataField: 'SecNumber', text: 'Section'},
+    {dataField: 'Qtr',       text: 'Qtr'},
+    {dataField: 'QtrQtr',    text: 'QtrQtr'},
+    {dataField: 'Taxlot',    text: 'Taxlot'},
+*/
+    {dataField: 'MapNumber', text: 'Map Number'},
 ]
 const taxlotTableKey   = 'MapTaxlot';
 const taxlotPopupField = 'MapTaxlot';
@@ -156,7 +168,7 @@ class Map46 extends React.Component {
     // I need to look at this code to allow adding and removing features
     // in the current selection set.
 
-    handleCondition = (e) => {
+    handleSelectCondition = (e) => {
         switch(e.type) {
             case 'click':
                 return true;
@@ -276,7 +288,7 @@ class Map46 extends React.Component {
                     onMoveEnd={ this.onMapMove }
                     view=<View zoom={ this.props.mapExtent.zoom }
                          center={ this.props.mapExtent.center }
-                         minZoom={ 9 } maxZoom={ 19 }
+                         minZoom={ 9 } maxZoom={ 21 }
                     />
                 >
                     <layer.Tile source="OSM" />
@@ -306,7 +318,7 @@ class Map46 extends React.Component {
                     */}
                         <interaction.Select
                             select={ this.onSelectInteraction }
-                            condition={ this.handleCondition }
+                            condition={ this.handleSelectCondition }
                             features={ this.selectedFeatures }
                             style={ selectedSt }
                             active={ true }
@@ -317,6 +329,9 @@ class Map46 extends React.Component {
                             boxend={ this.onBoxEnd }
                             active={ true }
                         />
+                    </layer.Vector>
+
+                    <layer.Vector name="Geolocation">
                     </layer.Vector>
 {/*
                     <layer.Vector name="Taxlot Labels"
