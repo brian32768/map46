@@ -1,3 +1,3 @@
 export { bookmarks } from './bookmarks'
-export { map }  from './map'
+export { map, getGeohash, setMapQuery }  from './map'
 export { page } from './page'

@@ -10,7 +10,6 @@ export class Geolocation {
 
     onGeolocation = (info) => {
         // The browser returns geoinfo including accuracy, speed, heading...
-        console.log("geolocation updated", info);
         this._coord[0] = info.coords.longitude;
         this._coord[1] = info.coords.latitude;
         this._valid = true;

@@ -5,10 +5,11 @@ import { PersistGate } from 'redux-persist/integration/react'
 import configStore, { history } from './configstore'
 import { TickTock } from './components'
 import App from './App'
-import 'bootstrap/dist/css/bootstrap.min.css'
 
-// Bug in parcel? This should allow async to work.
-//import 'babel-polyfill'
+import 'bootstrap/dist/css/bootstrap.min.css'
+import '../config/config.scss'
+import '../webmaps.scss'
+import './App.css'
 
 const { store, persistor } = configStore();
 

@@ -124,12 +124,6 @@ const selectedStyle = { // yellow
 const tlSt = buildStyle(taxlotStyle);
 const selectedSt = buildStyle(selectedStyle);
 
-const ScaleBar = (props) => (
-    <span id="scalebar">
-        Scale: { props.children }
-    </span>
-);
-
 const Map46 = ({title, center, zoom, setMapCenter}) => {
     const [aerialUrl, setAerialUrl] = useState(aerials[0].value.url) // 1966
     const [aerialSource, setAerialSource] = useState(aerials[0].value.source); // 1966
@@ -214,7 +208,7 @@ const Map46 = ({title, center, zoom, setMapCenter}) => {
 
     const onSelectInteraction = (e) => {
         console.log('onSelectInteraction', e);
-        addFeaturesToTable(this.selectedFeatures)
+        addFeaturesToTable(selectedFeatures)
     }
 
     const onBoxStart = (e) => {
@@ -223,8 +217,8 @@ const Map46 = ({title, center, zoom, setMapCenter}) => {
 
     const onBoxEnd = (e) => {
         const extent = e.target.getGeometry().getExtent();
-        selectedFeatures.extend(this.taxlotSource.getFeaturesInExtent(extent));
-        addFeaturesToTable(this.selectedFeatures);
+        selectedFeatures.extend(taxlotSource.getFeaturesInExtent(extent));
+        addFeaturesToTable(selectedFeatures);
     }
 
     const selectAerialPhoto = (e) => {
@@ -248,20 +242,8 @@ const Map46 = ({title, center, zoom, setMapCenter}) => {
     const onMapMove = (e) => {
         const v = e.map.getView()
         const new_center_wm = v.getCenter()
-        const new_zoom = v.getZoom();
         const new_center = toLonLat(new_center_wm)
-        console.log("Map46.onMapMove", new_zoom);
-
-        if (new_center[0] == 0 || new_center[1] == 0 || new_zoom == 0)
-        return;
-
-        // does map actually need to change?
-        if (center[0] == new_center[0]
-            &&  center[1] == new_center[1]
-            &&  zoom == new_zoom)
-            return;
-
-        console.log("MAP CENTER CHANGED");
+        const new_zoom = v.getZoom();
         setMapCenter(new_center, new_zoom);
     }
 
@@ -269,6 +251,8 @@ const Map46 = ({title, center, zoom, setMapCenter}) => {
         <>
             <Geocoder/><br />
             <Select options={ aerials } onChange={ selectAerialPhoto } />
+
+
             <Map
                 useDefaultControls={ false }
                 onPointerMove={ showMousePosition }
@@ -334,7 +318,6 @@ const Map46 = ({title, center, zoom, setMapCenter}) => {
                 />
             </Map>
 
-            <ScaleBar>1:1234</ScaleBar>&nbsp;
             <Position coord={mousePosition} zoom={zoom} />
 
             <BootstrapTable bootstrap4 striped condensed
@@ -351,9 +334,6 @@ Map46.propTypes = {
     zoom: PropTypes.number,
     setMapCenter: PropTypes.func
 }
-// Put the ScaleBar into the Map46 namespace.
-Map46.ScaleBar = ScaleBar;
-
 const mapStateToProps = (state) => ({
     bookmarks: state.bookmarks,
     center: state.map.center,

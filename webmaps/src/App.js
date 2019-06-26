@@ -1,61 +1,20 @@
 import React, { useState } from 'react'
-import {
-    Container, Row, Col,
-    Collapse,
-    Navbar,
-    NavbarToggler,
-    NavbarBrand,
-    Nav,
-    NavItem,
-    NavLink,
-    Button
-} from 'reactstrap'
+import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
+import { Container, Row, Col } from 'reactstrap'
+import MainNavbar from './components/navbar'
 
 // Import everything as an object so that we can look up a component using its name.
 import * as components from './components'
 
-import "bootstrap/dist/css/bootstrap.min.css"
-import '../config/config.scss'
-import '../webmaps.scss'
-import './App.css'
-
-const App = ({ page }) => {
+const App = ({ page, center, zoom }) => {
     const Component = components[page]
-    const [collapse, setCollapse] = useState(false);
-    const toggle = () => {
-        setCollapse(!collapse);
-    }
     return (
         <>
             <Container>
                 <Row><Col>
-                {/* NAVBAR ====================================================== */}
-                    <Navbar color="light" light expand="md">
-                        <NavbarBrand><span id="sitelogo"></span><span id="sitename"></span></NavbarBrand>
-                        <NavbarToggler onClick={toggle} />
-                        <Collapse isOpen={collapse} navbar>
-                        <Nav className="ml-auto" navbar>
-                            <NavItem>
-                                <NavLink href="/">Map</NavLink>
-                            </NavItem>
-                            <NavItem>
-                                <NavLink href="/help">Help</NavLink>
-                            </NavItem>
-                            <NavItem>
-                                <NavLink href="/faq">FAQ</NavLink>
-                            </NavItem>
-                            <NavItem>
-                                <NavLink href="/news">News</NavLink>
-                            </NavItem>
-                            <NavItem>
-                                <a id="map46logo" href="about"></a>
-                            </NavItem>
-                        </Nav>
-                        </Collapse>
-                    </Navbar>
+                    <MainNavbar/>
                 </Col></Row>
-
                 <Row><Col>
                 <Component />
                 </Col></Row>
@@ -65,9 +24,12 @@ const App = ({ page }) => {
     )
 }
 App.propTypes = {
+    page: PropTypes.string,
 }
 const mapStateToProps = (state) => ({
     page: state.page,
+    center: state.map.center,
+    zoom:   state.map.zoom,
 });
 
 export default connect(mapStateToProps)(App);

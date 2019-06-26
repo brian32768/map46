@@ -2,11 +2,12 @@ import { connectRoutes } from 'redux-first-router'
 import queryString from 'query-string'
 
 const routesMap = {
+    HOME:    '/',
+    MAP:     '/map',
     ABOUT:   '/about',
     CONTACT: '/contact',
     FAQ:     '/faq',
     HELP:    '/help',
-    HOME:    '/',
     NEWS:    '/news',
 }
 export default connectRoutes(routesMap, {

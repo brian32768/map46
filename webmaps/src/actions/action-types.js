@@ -1,10 +1,12 @@
 export const actions = {
+    MAP:             'MAP',
+
     // Bookmarks
-    ADD_BOOKMARK: 'ADD_BOOKMARK',
+    ADD_BOOKMARK:    'ADD_BOOKMARK',
     DELETE_BOOKMARK: 'DELETE_BOOKMARK',
 
     // Map extent
-    SETMAPCENTER: 'SETMAPCENTER',
+    SETMAPCENTER:    'SETMAPCENTER',
 };
 
 // FIXME this key is not going to be unique after reload

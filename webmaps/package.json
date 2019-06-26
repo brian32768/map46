@@ -25,9 +25,13 @@
   },
   "homepage": "https://github.com/brian32768/map46#readme",
   "dependencies": {
+    "@fortawesome/fontawesome-svg-core": "^1.2.19",
+    "@fortawesome/free-solid-svg-icons": "^5.9.0",
+    "@fortawesome/react-fontawesome": "^0.1.4",
     "@geonet/geohash": "^1.0.10",
-    "@map46/ol-react": "^0.3.5",
+    "@map46/ol-react": "^0.3.6",
     "@mapbox/maki": "^4.0.0",
+    "axios": "^0.19.0",
     "bootstrap": "^4.3.1",
     "connected-react-router": "^6.4.0",
     "deepmerge": "^3.3.0",
@@ -44,9 +48,9 @@
     "redux": "^4.0.1",
     "redux-devtools-extension": "^2.13.8",
     "redux-first-router": "^2.1.2",
+    "redux-first-router-link": "^2.1.1",
     "redux-logger": "^3.0.6",
-    "redux-persist": "^5.10.0",
-    "usng.js": "^0.4.2"
+    "redux-persist": "^5.10.0"
   },
   "devDependencies": {
     "@babel/cli": "^7.4.3",
