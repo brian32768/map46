@@ -27,8 +27,7 @@ const App = ({ page }) => {
         setCollapse(!collapse);
     }
     return (
-        <Provider store={ store }>
-            <PersistGate persistor={ persistor }>
+        <>
             <Container>
                 <Row><Col>
                 {/* NAVBAR ====================================================== */}
@@ -62,8 +61,7 @@ const App = ({ page }) => {
                 </Col></Row>
 
             </Container>
-            </PersistGate>
-        </Provider>
+        </>
     )
 }
 App.propTypes = {

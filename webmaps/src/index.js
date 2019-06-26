@@ -20,7 +20,7 @@ console.log("index.js=", process.env.SAMPLE_PASSWORD);
 
 ReactDOM.render(
     <Provider store={store}>
-            <App />
+        <App />
     </Provider>,
     document.getElementById("app")
 );

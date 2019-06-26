@@ -4,7 +4,7 @@ import { connect } from 'react-redux'
 import { setMapCenter } from '../actions'
 import { Container, Row, Col, Button, Tooltip } from 'reactstrap'
 import { fromLonLat } from 'ol/proj'
-import Map46 from './map'
+import Map46 from './map46'
 import { Geolocation } from '../geolocation'
 
 const DEFAULT_ZOOM = 17;

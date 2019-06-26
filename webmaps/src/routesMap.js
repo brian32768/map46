@@ -2,11 +2,12 @@ import { connectRoutes } from 'redux-first-router'
 import queryString from 'query-string'
 
 const routesMap = {
-    MAP:    '/',
-    HELP:   '/help',
-    FAQ:    '/faq',
-    NEWS:   '/news',
-    ABOUT:  '/about',
+    ABOUT:   '/about',
+    CONTACT: '/contact',
+    FAQ:     '/faq',
+    HELP:    '/help',
+    HOME:    '/',
+    NEWS:    '/news',
 }
 export default connectRoutes(routesMap, {
     querySerializer: queryString // This is what puts your queries into the address bar.

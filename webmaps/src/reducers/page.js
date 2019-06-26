@@ -3,7 +3,7 @@ import { NOT_FOUND } from 'redux-first-router'
 const components = {
     MAP:   'Map',
     HELP:  'Help',
-    FAQ:   'FAQ',
+    FAQ:   'Faq',
     NEWS:  'News',
     ABOUT: 'About',
     [NOT_FOUND]: 'NotFound'
