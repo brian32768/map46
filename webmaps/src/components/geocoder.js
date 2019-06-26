@@ -1,14 +1,13 @@
-import React from 'react'
+import React, { useState } from 'react'
 import Select from 'react-select'
 import { connect } from 'react-redux'
-import { setMapCenter } from '../redux/actions'
+import { setMapCenter } from '../actions'
 import { Button } from 'reactstrap'
 import BootstrapTable from 'react-bootstrap-table-next'
 import axios from 'axios'
 import { fromLonLat } from 'ol/proj'
 
 // We're querying any of these Nomimatim geocoders via Axios to find addresses in Clatsop county.
-
 const nominatim = "https://nominatim.openstreetmap.org/search?format=json"
 
 const locationiqKey = process.env.LOCATIONIQ_KEY;
@@ -22,6 +21,10 @@ if (typeof opencageKey === 'undefined') console.error("OPENCAGE_KEY is undefined
 const opencage = "https://api.opencagedata.com/geocode/v1/json?key=" + opencageKey
     + '&proximity=[46,-123]'
     + '&pretty=1'
+
+// There is a state provided service but it uses Esri geocoder so it's clumsy
+// https://www.oregon.gov/geo/Pages/geoservices.aspx
+//const oregonExplorer  = "https://navigator.state.or.us/arcgis/rest/services/Locators/gc_Composite/GeocodeServer"
 
 const geocodeServer = nominatim
         + '&viewbox=' + encodeURIComponent('-123.35,45.7,-124.17,46.3') + '&bounded=1'
@@ -37,35 +40,25 @@ const answersColumns = [
         {dataField:'lon', text: 'Longitude'}
     ];
 
-// There is a state provided service but it uses Esri geocoder so it's clumsy
-// https://www.oregon.gov/geo/Pages/geoservices.aspx
-//const oregonExplorer  = "https://navigator.state.or.us/arcgis/rest/services/Locators/gc_Composite/GeocodeServer"
+const requestGeocode = (query, addToTable) => {
+    const url = geocodeServer
+    + '&q=' + encodeURIComponent(query);
 
-class Geocoder extends React.Component {
-    state = {
-        suggestions: [],
-        input: '',
-        answers: []
-    }
+    axios.get(url)
+    .then( (response) => {
+        addToTable(response.data)
+    })
+    .catch( (error) => {
+        console.log("Search failed", error);
+    });
+}
 
-// Refer to https://react-select.com/async for tips.
+const Geocoder = ({ setMapCenter }) => {
+    const [query, setQuery] = useState("");
+    const [suggestions, setSuggestions] = useState([]);
+    const [answers, setAnswers ] = useState([]);
 
-    onInputChange = (e) => {
-        this.setState({ input: e });
-        // rebuild the selection list
-        this.setState({
-            suggestions: [
-                { label: e, value: e }
-            ]
-        });
-    }
-
-    onChange = (e) => {
-        console.log('onChange', e, e.value);
-        this.requestGeocode(e.value);
-    }
-
-    addToTable(features) {
+    const addToTable = (features) => {
         const rows = [];
         let lat = 0;
         let lon = 0;
@@ -96,44 +89,42 @@ class Geocoder extends React.Component {
         if (rows.length == 1 && lat != 0 && lat != 0) {
             // We have only one result, and it has a position
             const coord = [Number(lon), Number(lat)]
-            const wmcoord = fromLonLat(coord);
-            this.props.setMapCenter(wmcoord, 17)
+            setMapCenter(coord, 17)
         }
-        this.setState({answers: rows});
+        setAnswers(rows);
     }
 
-    requestGeocode = (query) => {
-        const url = geocodeServer
-            + '&q=' + encodeURIComponent(query);
+    // Refer to https://react-select.com/async for tips.
+    const handleQuery = (e) => {
+        setQuery(e);
+        requestGeocode(e, addToTable);
+        setSuggestions([
+            { label: e, value: e }
+        ]);
+    }
 
-        axios.get(url)
-            .then( (response) => {
-                this.addToTable(response.data)
-            })
-            .catch( (error) => {
-                console.log("Search failed", error);
-            });
-        }
+    const handleChange = (e) => {
+        console.log('handleChange', e, e.value);
+        requestGeocode(e.value, addToTable);
+    }
 
-    render() {
-        return (
-            <>
-            input: {this.state.input }
+    return (
+        <>
+            input: { query }
                 <Select
                     autoFocus
                     placeholder="search for something"
-                    options={ this.state.suggestions }
-                    onChange={ this.onChange }
-                    onInputChange={ this.onInputChange }
+                    onInputChange={ handleQuery }
+                    onChange={ handleChange }
+                    options={ suggestions }
                 />
                 <BootstrapTable bootstrap4 condensed
                     keyField={ answersKey }
                     columns={ answersColumns }
-                    data={ this.state.answers }
+                    data={ answers }
                 />
-            </>
-        );
-    }
+        </>
+    );
 }
 const mapStateToProps = (state) => (Object.assign({},
     state.mapExtent,

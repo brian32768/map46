@@ -1,7 +1,7 @@
-import React from 'react'
+import React, {useState} from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
-import { setMapCenter } from '../redux/actions'
+import { setMapCenter } from '../actions'
 import Select from 'react-select'
 import { Button } from 'reactstrap'
 import BootstrapTable from 'react-bootstrap-table-next'
@@ -19,7 +19,7 @@ import { buildStyle } from '@map46/ol-react/style'
 import { DataLoader } from '@map46/ol-react/layer/dataloaders'
 import Geocoder from './geocoder'
 import { fromLonLat } from 'ol/proj'
-
+import Position from './position'
 
 const bingmapsKey = process.env.BINGMAPS_KEY;
 if (typeof bingmapsKey === 'undefined') console.error("BINGMAPS_KEY is undefined.");
@@ -130,37 +130,27 @@ const ScaleBar = (props) => (
     </span>
 );
 
-class Map46 extends React.Component {
-    state = {
-        aerialUrl    : aerials[0].value.url, // 1966
-        aerialSource : aerials[0].value.source, // 1966
-        aerialVisible: false,
-        bingVisible:   false,
-        enableModify: true, // can't change this in the app yet
-        popupPosition: undefined, // where it will show up on screen
-        popupText: 'HERE', // text to display in popup
-        rows : [],
-        mousePosition: '',
-    };
-    static propTypes = {
-        title: PropTypes.string
-    };
+const Map46 = ({title, center, zoom, setMapCenter}) => {
+    const [aerialUrl, setAerialUrl] = useState(aerials[0].value.url) // 1966
+    const [aerialSource, setAerialSource] = useState(aerials[0].value.source); // 1966
+    const [aerialVisible, setAerialVisible] = useState(false);
+    const [bingVisible, setBingVisible] = useState(false);
+    const [enableModify, setModify] = useState(true);     // can't change this in the app yet
+    const [mousePosition, setMousePosition] = useState([0,0]);
+    const [popupPosition, setPopupPosition] = useState(); // where it will show up on screen
+    const [popupText, setPopupText] = useState('HERE');   // text to display in popup
+    const [rows, setRows] = useState([]);
 
-    constructor(props) {
-        super(props);
-        // I create the source here so I don't have to go searching around
-        // for it later when I need to access its features.
-        this.taxlotSource = new VectorSource({ strategy: bboxStrategy });
-        //this.taxlotSource.setLoader(DataLoader('geojson', taxlotsWFS, this.taxlotSource));
-        this.taxlotSource.setLoader(DataLoader('esrijson', taxlotFeatures, this.taxlotSource));
-        this.selectedFeatures = new Collection();
-    }
+    // I create the source here so I don't have to go searching around
+    // for it later when I need to access its features.
+    const taxlotSource = new VectorSource({ strategy: bboxStrategy });
+    //this.taxlotSource.setLoader(DataLoader('geojson', taxlotsWFS, this.taxlotSource));
+    taxlotSource.setLoader(DataLoader('esrijson', taxlotFeatures, taxlotSource));
+    const selectedFeatures = new Collection();
 
-    showMousePosition = (e) => {
+    const showMousePosition = (e) => {
         const lonlat = toLonLat(e.coordinate)
-        this.setState({
-            mousePosition: toStringHDMS(lonlat)
-        });
+        setMousePosition(lonlat)
     }
 
     // IMPROVEMENT
@@ -168,7 +158,7 @@ class Map46 extends React.Component {
     // I need to look at this code to allow adding and removing features
     // in the current selection set.
 
-    handleSelectCondition = (e) => {
+    const handleSelectCondition = (e) => {
         switch(e.type) {
             case 'click':
                 return true;
@@ -198,7 +188,7 @@ class Map46 extends React.Component {
         return false; // pass event along
     }
 
-    addFeaturesToTable(features) {
+    const addFeaturesToTable = (features) => {
         const rows = [];
         if (features.getLength()) {
             features.forEach( (feature) => {
@@ -219,153 +209,156 @@ class Map46 extends React.Component {
                 rows.push(attributes)
             });
         }
-        this.setState({rows: rows});
+        setRows(rows);
     }
 
-    // If you don't catch this event and then you click on the map,
-    // the click handler will cause the map to pan back to its starting point
-    onMapMove = (e) => {
-        const v = e.map.getView()
-        const new_center_wm = v.getCenter()
-        const new_zoom = v.getZoom();
-        const new_center_wgs84 = toLonLat(new_center_wm)
-        console.log("Map46.onMapMove", this.props, new_center_wm, new_zoom);
-
-        if (new_center_wgs84[0] == 0 || new_center_wgs84[1] == 0 || new_zoom == 0)
-            return;
-
-        // does map actually need to change?
-        if (this.props.mapExtent.center[0] == new_center_wm[0]
-        &&  this.props.mapExtent.center[1] == new_center_wm[1]
-        &&  this.props.mapExtent.zoom == new_zoom)
-            return;
-
-        console.log("MAP CENTER CHANGED");
-        this.props.setMapCenter(new_center_wm, new_zoom);
-    }
-
-    onSelectInteraction = (e) => {
+    const onSelectInteraction = (e) => {
         console.log('onSelectInteraction', e);
         this.addFeaturesToTable(this.selectedFeatures)
     }
 
-    onBoxStart = (e) => {
+    const onBoxStart = (e) => {
         this.selectedFeatures.clear();
     }
 
-    onBoxEnd = (e) => {
+    const onBoxEnd = (e) => {
         const extent = e.target.getGeometry().getExtent();
         this.selectedFeatures.extend(this.taxlotSource.getFeaturesInExtent(extent));
         this.addFeaturesToTable(this.selectedFeatures);
     }
 
-    selectAerialPhoto = (e) => {
+    const selectAerialPhoto = (e) => {
         if (e.value.url.length>0) {
             console.log('selectAerialPhoto', e);
-            this.setState({
-                "aerialUrl": e.value.url,
-                "aerialSource": e.value.source,
-                "aerialVisible": true
-            });
+            setAerialUrl(e.value.url);
+            setAerialSource(e.value.source);
+            setAerialVisible(true);
         } else {
-            this.setState({"aerialVisible": false});
+            setAerialVisible(false);
         }
     }
 
-    render() {
-        const popup = React.createElement('div',
-            { className:"ol-popup" },
-            this.state.popupText
-        );
-        //console.log('map render ', this.props.mapExtent.center);
-        return (
-            <>
-                <Geocoder/><br />
-                <Select options={ aerials } onChange={ this.selectAerialPhoto } />
-                <Map
-                    useDefaultControls={ false }
-                    onPointerMove={ this.showMousePosition }
-                    onMoveEnd={ this.onMapMove }
-                    view=<View zoom={ this.props.mapExtent.zoom }
-                         center={ this.props.mapExtent.center }
-                         minZoom={ 9 } maxZoom={ 21 }
-                    />
-                >
-                    <layer.Tile source="OSM" />
-{/*
-                    <layer.Tile name="Bing Aerial"
-                        source="BingMaps" imagerySet="Aerial"
-                        apikey={ bingmapsKey }
-                        visible={ this.state.bingVisible }
-                    />
-*/}
-                    <layer.Image
-                        source={ this.state.aerialSource }
-                        url={ this.state.aerialUrl }
-                        visible={ this.state.aerialVisible }
-                    />
+    const popup = React.createElement('div',
+        { className:"ol-popup" },
+        popupText
+    );
 
-                    <layer.Vector name="Taxlots"
-                        source={ this.taxlotSource }
-                        style={ taxlotStyle }
-                        editStyle={ selectedStyle }
-                    >
-                    {/*
-                    <layer.Vector name="Taxlots"
-                        source={ this.taxlotSource }
-                        style={ taxlotStyle }
-                    >
-                    */}
-                        <interaction.Select
-                            select={ this.onSelectInteraction }
-                            condition={ this.handleSelectCondition }
-                            features={ this.selectedFeatures }
-                            style={ selectedSt }
-                            active={ true }
-                        />
+    // If you don't catch this event and then you click on the map,
+    // the click handler will cause the map to pan back to its starting point
+    const onMapMove = (e) => {
+        const v = e.map.getView()
+        const new_center_wm = v.getCenter()
+        const new_zoom = v.getZoom();
+        const new_center = toLonLat(new_center_wm)
+        console.log("Map46.onMapMove", new_zoom);
 
-                        <interaction.DragBox
-                            boxstart={ this.onBoxStart }
-                            boxend={ this.onBoxEnd }
-                            active={ true }
-                        />
-                    </layer.Vector>
+        if (new_center[0] == 0 || new_center[1] == 0 || new_zoom == 0)
+        return;
 
-                    <layer.Vector name="Geolocation">
-                    </layer.Vector>
-{/*
-                    <layer.Vector name="Taxlot Labels"
-                        source="esrijson"
-                        url={ taxlotFeatures }
-                        style={ taxlotTextStyle }
-                    />
-*/}
-                    <Overlay id="popups"
-                        element={ popup }
-                        position={ this.state.popupPosition }
-                        positioning="center-center"
-                    />
-                </Map>
+        // does map actually need to change?
+        if (center[0] == new_center[0]
+            &&  center[1] == new_center[1]
+            &&  zoom == new_zoom)
+            return;
 
-                <ScaleBar>1:1234</ScaleBar>&nbsp; { this.state.mousePosition.toString() }
-
-                <BootstrapTable bootstrap4 striped condensed
-                    keyField={ taxlotTableKey }
-                    columns={ taxlotColumns }
-                    data={ this.state.rows }
-                />
-            </>
-        );
+        console.log("MAP CENTER CHANGED");
+        setMapCenter(new_center, new_zoom);
     }
-}
 
+    return (
+        <>
+            <Geocoder/><br />
+            <Select options={ aerials } onChange={ selectAerialPhoto } />
+            <Map
+                useDefaultControls={ false }
+                onPointerMove={ showMousePosition }
+                onMoveEnd={ onMapMove }
+                view=<View zoom={ zoom }
+                     center={ fromLonLat(center) }
+                     minZoom={ 9 } maxZoom={ 21 }
+                />
+            >
+                <layer.Tile source="OSM" />
+{/*
+                <layer.Tile name="Bing Aerial"
+                    source="BingMaps" imagerySet="Aerial"
+                    apikey={ bingmapsKey }
+                    visible={ bingVisible }
+                />
+*/}
+                <layer.Image
+                    source={ aerialSource }
+                    url={ aerialUrl }
+                    visible={ aerialVisible }
+                />
+
+                <layer.Vector name="Taxlots"
+                    source={ taxlotSource }
+                    style={ taxlotStyle }
+                    editStyle={ selectedStyle }
+                >
+                {/*
+                <layer.Vector name="Taxlots"
+                    source={ taxlotSource }
+                    style={ taxlotStyle }
+                >
+                */}
+                    <interaction.Select
+                        select={ onSelectInteraction }
+                        condition={ handleSelectCondition }
+                        features={ selectedFeatures }
+                        style={ selectedSt }
+                        active={ true }
+                    />
+
+                    <interaction.DragBox
+                        boxstart={ onBoxStart }
+                        boxend={ onBoxEnd }
+                        active={ true }
+                    />
+                </layer.Vector>
+
+                <layer.Vector name="Geolocation">
+                </layer.Vector>
+{/*
+                <layer.Vector name="Taxlot Labels"
+                    source="esrijson"
+                    url={ taxlotFeatures }
+                    style={ taxlotTextStyle }
+                />
+*/}
+                <Overlay id="popups"
+                    element={ popup }
+                    position={ popupPosition }
+                    positioning="center-center"
+                />
+            </Map>
+
+            <ScaleBar>1:1234</ScaleBar>&nbsp;
+            <Position coord={mousePosition} zoom={zoom} />
+
+            <BootstrapTable bootstrap4 striped condensed
+                keyField={ taxlotTableKey }
+                columns={ taxlotColumns }
+                data={ rows }
+            />
+        </>
+    );
+}
+Map46.propTypes = {
+    title: PropTypes.string,
+    center: PropTypes.arrayOf(PropTypes.number),
+    zoom: PropTypes.number,
+    setMapCenter: PropTypes.func
+}
 // Put the ScaleBar into the Map46 namespace.
 Map46.ScaleBar = ScaleBar;
 
-const mapStateToProps = (state) => (Object.assign({},
-    state.bookmarks,
-    state.mapExtent,
-));
+const mapStateToProps = (state) => ({
+    bookmarks: state.bookmarks,
+    center: state.mapExtent.center,
+    zoom: state.mapExtent.zoom,
+});
 const mapDispatchToProps = {
     setMapCenter
 };

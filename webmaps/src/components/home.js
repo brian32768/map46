@@ -1,52 +1,31 @@
-
-import React, { Component, Fragment } from 'react'
+import React, { useState } from 'react'
+import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
-import { setMapCenter } from '../redux/actions'
+import { setMapCenter } from '../actions'
 import { Container, Row, Col, Button, Tooltip } from 'reactstrap'
 import { fromLonLat } from 'ol/proj'
 import Map46 from './map'
 import { Geolocation } from '../geolocation'
 
-class Home extends Component {
-    static state = {
-        tooltipOpen: false
-    };
+const DEFAULT_ZOOM = 17;
 
-    constructor(props) {
-        super(props);
-//        this.toggle = this.toggle.bind(this);
-        this.geolocation = new Geolocation();
+const Home = ({ center, setMapCenter }) => {
+    const geolocation = new Geolocation();
+
+    const gotoXY = (coord, zoom) => {
+        if (coord[0]==0 || coord[1]==0 || zoom==0) return;
+        console.log('home.gotoXY', coord, zoom);
+        setMapCenter(coord, zoom);
     }
 
-    toggle() {
-       this.setState({
-         tooltipOpen: !this.state.tooltipOpen
-       });
-     }
+    const gotoGeolocation = (e) => {
+        if (!geolocation.valid)
+            return;
+        gotoXY(geolocation.coord, DEFAULT_ZOOM);
+    }
 
-     gotoXY = (coord,zoom) => {
-         if (coord[0]==0 || coord[1]==0 || zoom==0) return;
-         console.log('home.gotoXY', coord, zoom);
-         this.props.setMapCenter(coord, zoom);
-     }
-
-     gotoGeolocation = (e) => {
-         const defaultZoom = 17;
-         if (!this.geolocation.valid)
-             return;
-/*
-         this.setState({
-             displayPoint: this.geolocation.coord,
-             displayZoom: defaultZoom
-         });
-         */
-         let coord_wm = fromLonLat(this.geolocation.coord);
-         this.gotoXY(coord_wm, defaultZoom);
-     }
-
-    render(props) {
-        return (
-            <Fragment>
+    return (
+        <>
             <Container>
                 <Row>
                     <Col>
@@ -60,7 +39,7 @@ class Home extends Component {
                             <li><button id="streetsToggle">Streets</button></li>
                             <li><button id="highesthitToggle">Highest Hit Hillshade</button></li>
                         </ul>
-                        <Button tag="button" onClick={ this.gotoGeolocation }>Geolocate</Button>
+                        <Button tag="button" onClick={ gotoGeolocation }>Geolocate</Button>
                     </Col>
                 </Row>
                 <Row>
@@ -72,21 +51,13 @@ class Home extends Component {
                     </Col>
                 </Row>
             </Container>
-            </Fragment>
-        );
-    }
+        </>
+    );
 }
-
-/*
-const TestLayout = () => (
-    <h1>test return code exceptional 123</h1>
-);
-export default TestLayout;
-*/
-
-const mapStateToProps = (state) => (Object.assign({},
-    state.mapExtent,
-));
+//Home.propTypes = {
+//}
+const mapStateToProps = (state) => ({
+});
 const mapDispatchToProps = {
     setMapCenter
 };

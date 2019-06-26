@@ -1,7 +1,7 @@
 import React from 'react'
 import {Card, CardTitle, CardText, CardImg, CardSubtitle} from 'reactstrap'
 
-const About = (props) => (
+const About = () => (
   <div>
   <Card>
   <CardTitle>
