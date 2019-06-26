@@ -3,6 +3,7 @@ import { createStore, applyMiddleware, combineReducers, compose } from 'redux'
 import { persistStore, persistReducer } from 'redux-persist'
 import storage from 'redux-persist/lib/storage'
 import routes from './routesMap'
+import { mapMiddleware, errorReporter } from './middleware'
 import { bookmarks, map, page } from './reducers'
 
 // This object defines where the storage takes place,
@@ -23,7 +24,7 @@ export default function configStore(preloadedState) {
             location: reducer
         })
 //    )
-    const middlewares = applyMiddleware(middleware, logger)
+    const middlewares = applyMiddleware(middleware, mapMiddleware, errorReporter, logger)
     const composeEnhancers =
         typeof window === 'object' && window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__?
             window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__({}) : compose
