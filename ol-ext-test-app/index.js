@@ -1,29 +1,33 @@
-﻿// body.js (layers)
-//
+import 'bootstrap/dist/css/bootstrap'
+import "ol/ol.css"
+import "ol-ext/dist/ol-ext.css"
+//import "ol-ext/control/GeoBookmark.css"
+//import "ol-ext/control/LayerSwitcher.css"
+//import "ol-ext/control/Permalink.css"
 
-import {Map, View} from "ol";
-import {transform as Transform} from 'ol/proj';
-import {Tile as TileLayer, Image as ImageLayer, Vector as VectorLayer} from "ol/layer";
-import {OSM, TileArcGISRest, ImageArcGISRest, Vector as VectorSource} from 'ol/source';
-import {tile as tileStrategy} from 'ol/loadingstrategy.js';
-import XYZ from 'ol/source/XYZ.js';
-import {createXYZ} from 'ol/tilegrid.js';
-import {Group as LayerGroup} from 'ol/layer';
+import {Map, View} from "ol"
+import {transform as Transform} from 'ol/proj'
+import {Tile as TileLayer, Image as ImageLayer, Vector as VectorLayer} from "ol/layer"
+import {OSM, TileArcGISRest, ImageArcGISRest, Vector as VectorSource} from 'ol/source'
+import {tile as tileStrategy} from 'ol/loadingstrategy'
+import XYZ from 'ol/source/XYZ'
+import {createXYZ} from 'ol/tilegrid'
+import {Group as LayerGroup} from 'ol/layer'
 
-import {Circle as CircleStyle, Fill, Stroke, Style, Text} from 'ol/style.js';
-import Feature from 'ol/Feature.js';
-import {EsriJSON} from 'ol/format.js';
-import GeoJSON from 'ol/format/GeoJSON.js';
+import {Circle as CircleStyle, Fill, Stroke, Style, Text} from 'ol/style'
+import Feature from 'ol/Feature'
+import {EsriJSON} from 'ol/format'
+import GeoJSON from 'ol/format/GeoJSON'
 
-import "bootstrap/dist/js/bootstrap.js";
-import jquery from 'jquery/dist/jquery.min.js';
+import "bootstrap/dist/js/bootstrap"
+import jquery from 'jquery/dist/jquery'
 
-import {defaults as defaultControls, ScaleLine} from 'ol/control.js';
+import {defaults as defaultControls, ScaleLine} from 'ol/control'
 
 // ol-ext stuff
-import LayerSwitcher from 'ol-ext/control/LayerSwitcher.js';
-import Permalink from 'ol-ext/control/Permalink.js';
-import {Bookmarks} from "./bookmarks.js";
+import LayerSwitcher from 'ol-ext/control/LayerSwitcher'
+import Permalink from 'ol-ext/control/Permalink'
+import {Bookmarks} from "./bookmarks"
 
 var esrijsonFormat = new EsriJSON();
 
@@ -50,19 +54,19 @@ var hillshade     = "https://gis.dogami.oregon.gov/arcgis/rest/services/Public/B
 
 function makeVectorSource(my_url) {
     /* I assume that all the data is projected into Web Mercator here. */
-    
+
     var source = new VectorSource({
 	loader: function(extent, resolution, projection) {
 //	    console.log("extent:", extent);
 //	    console.log("resolution:", resolution);
-//	    console.log("projection:", projection); 
+//	    console.log("projection:", projection);
 
             var url = my_url + '/' + '/query/?f=json&' +
 		'returnGeometry=true&spatialRel=esriSpatialRelIntersects&geometry=' +
 		encodeURIComponent(    '{"xmin":' + extent[0] + ',"ymin":' + extent[1]
 				     + ',"xmax":' + extent[2] + ',"ymax":' + extent[3])
 		+ '&geometryType=esriGeometryEnvelope&outFields=*';
-	    
+
             jquery.ajax({url: url, dataType: 'jsonp', success: function(response) {
 		if (response.error) {
 		    console.log(response.error.message + response.error.details + ' IS IT SHARED? I can\'t do auth!');
@@ -89,15 +93,15 @@ var zoning_feature_layers = new LayerGroup({
 	new VectorLayer({
 	    title: 'Boundaries',
 	    source: makeVectorSource(zoning_boundaries)
-	}), 
+	}),
 	new VectorLayer({
 	    title: 'Commercial',
 	    source: makeVectorSource(zoning_commercial)
-	}), 
+	}),
 	new VectorLayer({
 	    title: 'Noncommercial',
 	    source: makeVectorSource(zoning_noncommercial)
-	}), 
+	}),
 	new VectorLayer({
 	    title: 'Residential',
 	    source: makeVectorSource(zoning_residential)
@@ -120,7 +124,7 @@ var hillshade_layer = new ImageLayer({
     maxResolution: 200,
     visible: true
 });
-    
+
 var world_imagery_layer = new ImageLayer({
     title: 'World Imagery',
     type: 'base',
@@ -182,7 +186,7 @@ var taxlots_mapserver_layer = new TileLayer({
 });
 */
 
-    
+
 var layers = [
     hillshade_layer,
     world_imagery_layer,
@@ -274,7 +278,7 @@ map.on('click', function(event) {
     }
     */
 
-   
+
     var feature = features[0];
     var properties = feature.getProperties();
 
@@ -282,7 +286,7 @@ map.on('click', function(event) {
 
     var oid = feature.get(oid_name);
     console.log('OID: ', oid);
-    
+
 //    if (selectElement.value === 'singleselect') {
         selection = {};
 //    }

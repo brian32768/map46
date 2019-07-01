@@ -1,14 +1,10 @@
 {
-  "name": "xyz",
-  "version": "1.0.0",
-  "description": "OpenLayers 5 XYZ test app",
+  "name": "layers",
+  "version": "1.0.1",
+  "description": "OpenLayers 5 test app for ol-ext package",
   "author": "Brian Wilson",
   "scripts": {
-    "test": "parcel serve --open chrome index.html",
-    "ls": "parcel serve --open chrome layerswitcher.html",
-    "scroll": "parcel serve --open chrome scroll.html",
-    "build": "parcel build index.html --no-minify",
-    "start": "node server.js"
+    "start": "parcel serve index.html --open"
   },
   "repository": {
     "type": "git",
@@ -17,7 +13,7 @@
   "keywords": [
     "openlayers",
     "openlayers 5",
-    "xyz"
+    "ol-ext"
   ],
   "license": "ISC",
   "bugs": {
@@ -29,8 +25,8 @@
     "bootstrap": "^4.3.1",
     "express": "^4.16.4",
     "jquery": "^3.4.1",
-    "ol": "^5.3.1",
-    "ol-ext": "^3.1.2",
+    "ol": "^5.3.3",
+    "ol-ext": "^3.1.3",
     "popper.js": "^1.14.7"
   },
   "devDependencies": {}
