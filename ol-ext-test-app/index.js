@@ -1,35 +1,37 @@
 import 'bootstrap/dist/css/bootstrap'
-import "ol/ol.css"
-import "ol-ext/dist/ol-ext.css"
-//import "ol-ext/control/GeoBookmark.css"
-//import "ol-ext/control/LayerSwitcher.css"
-//import "ol-ext/control/Permalink.css"
+import 'ol/ol.css'
+import 'ol-ext/dist/ol-ext.css'
+import './index.css'
+//import 'ol-ext/control/GeoBookmark.css'
+//import 'ol-ext/control/LayerSwitcher.css'
+//import 'ol-ext/control/Permalink.css'
 
-import {Map, View} from "ol"
+import {Map, View} from 'ol'
 import {transform as Transform} from 'ol/proj'
-import {Tile as TileLayer, Image as ImageLayer, Vector as VectorLayer} from "ol/layer"
+import {Tile as TileLayer, Image as ImageLayer, Vector as VectorLayer} from 'ol/layer'
 import {OSM, Stamen, TileArcGISRest, ImageArcGISRest, Vector as VectorSource} from 'ol/source'
 import {tile as tileStrategy} from 'ol/loadingstrategy'
 import XYZ from 'ol/source/XYZ'
 import {createXYZ} from 'ol/tilegrid'
 import {Group as LayerGroup} from 'ol/layer'
 
-import {Circle as CircleStyle, Fill, Stroke, Style, Text} from 'ol/style'
+import {Circle, Fill, Stroke, Style, Text} from 'ol/style'
 import Feature from 'ol/Feature'
 import {EsriJSON} from 'ol/format'
 import GeoJSON from 'ol/format/GeoJSON'
+import { getCenter } from 'ol/extent'
 
-import "bootstrap/dist/js/bootstrap"
+import 'bootstrap/dist/js/bootstrap'
 import jquery from 'jquery/dist/jquery'
 
 import {defaults as defaultControls, ScaleLine} from 'ol/control'
 
 // ol-ext stuff
 import LayerSwitcher from 'ol-ext/control/LayerSwitcher'
-import Permalink from 'ol-ext/control/Permalink'
-import {Bookmarks} from "./bookmarks"
-
-import {OverviewMap as Overview} from 'ol/control'
+import Permalink from 'ol-ext/control/PermaLink'
+import SearchNominatim from 'ol-ext/control/SearchNominatim'
+import { OverviewMap as Overview } from 'ol/control' // Openlayers control; there's an ol-ext one too
+import { Bookmarks } from './bookmarks'
 
 var esrijsonFormat = new EsriJSON();
 
@@ -43,27 +45,22 @@ var taxlotsLabels   = taxlots + '0';
 var taxlotsFeatures = taxlots + '1';
 //var taxlotsMapServer = 'https://cc-gis.clatsop.co.clatsop.or.us/arcgis/rest/services/web_mercator/CC_Taxlots/MapServer';
 
-var zoning          = 'https://cc-gis.clatsop.co.clatsop.or.us/arcgis/rest/services/Zoning/FeatureServer/';
-var zoning_boundaries    = zoning + '3';
-var zoning_commercial    = zoning + '4';
-var zoning_noncommercial = zoning + '5';
-var zoning_residential   = zoning + '6';
+const zoning = 'https://cc-gis.clatsop.co.clatsop.or.us/arcgis/rest/services/Zoning/FeatureServer/';
+const zoning_boundaries    = zoning + '3';
+const zoning_commercial    = zoning + '4';
+const zoning_noncommercial = zoning + '5';
+const zoning_residential   = zoning + '6';
 
-var world_imagery = "https://services.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer"
-var hillshade     = "https://gis.dogami.oregon.gov/arcgis/rest/services/Public/BareEarthHS/ImageServer";
+const world_imagery = "https://services.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer"
+const hillshade     = "https://gis.dogami.oregon.gov/arcgis/rest/services/Public/BareEarthHS/ImageServer";
 
 // ========================================================================
 
 function makeVectorSource(my_url) {
-    /* I assume that all the data is projected into Web Mercator here. */
 
     var source = new VectorSource({
 	loader: function(extent, resolution, projection) {
-//	    console.log("extent:", extent);
-//	    console.log("resolution:", resolution);
-//	    console.log("projection:", projection);
-
-            var url = my_url + '/' + '/query/?f=json&' +
+	    const url = my_url + '/' + '/query/?f=json&' +
 		'returnGeometry=true&spatialRel=esriSpatialRelIntersects&geometry=' +
 		encodeURIComponent(    '{"xmin":' + extent[0] + ',"ymin":' + extent[1]
 				     + ',"xmax":' + extent[2] + ',"ymax":' + extent[3])
@@ -89,7 +86,7 @@ function makeVectorSource(my_url) {
 }
 
 
-var zoning_feature_layers = new LayerGroup({
+const zoningFeatureLayers = new LayerGroup({
     'title': 'Zoning',
     layers: [
 	new VectorLayer({
@@ -115,7 +112,7 @@ var zoning_feature_layers = new LayerGroup({
     zindex: 1
 });
 
-var hillshade_layer = new ImageLayer({
+const hillshadeLayer = new ImageLayer({
     title: 'Hillshade',
     type: 'base',
     source: new ImageArcGISRest({ url: hillshade,
@@ -127,7 +124,7 @@ var hillshade_layer = new ImageLayer({
     visible: true
 });
 
-var world_imagery_layer = new ImageLayer({
+var worldImageryLayer = new ImageLayer({
     title: 'World Imagery',
     type: 'base',
     source: new ImageArcGISRest({ url: world_imagery,
@@ -192,20 +189,44 @@ const taxlotsFeatureLayer = new VectorLayer({
 });
 
 /*
-var taxlots_mapserver_layer = new TileLayer({
+const taxlots_mapserver_layer = new TileLayer({
  	title: 'Taxlots',
 	source: new TileArcGISRest({ url: taxlots    })
 });
 */
 
+// Current selection
+const selectLayer = new VectorLayer({
+    source: new VectorSource(),
+    style: new Style({
+	image: new Circle({
+	    radius: 5,
+	    stroke: new Stroke ({
+		color: 'rgb(255,165,0)',
+		width: 3
+	    }),
+	    fill: new Fill({
+		color: 'rgba(255,165,0,.3)'
+	    })
+	}),
+	stroke: new Stroke ({
+	    color: 'rgb(255,165,0)',
+	    width: 3
+	}),
+	fill: new Fill({
+	    color: 'rgba(255,165,0,.3)'
+	})
+    })
+});
 
 const layers = [
-    hillshade_layer,
-    world_imagery_layer,
+    hillshadeLayer,
+    worldImageryLayer,
     streetsLayer,
-    zoning_feature_layers,
+    zoningFeatureLayers,
     taxlotsFeatureLayer,
-    taxlotsLabelLayer
+    taxlotsLabelLayer,
+    selectLayer
 ];
 const overviewLayers = [
     tonerLayer,
@@ -270,20 +291,51 @@ function toggleImagery(evt) {
     const streetsVisible = streetsLayer.getVisible();
     if (streetsVisible) {
         streetsLayer.setVisible(false);
-        world_imagery_layer.setVisible(true);
-        hillshade_layer.setVisible(false);
+        worldImageryLayer.setVisible(true);
+        hillshadeLayer.setVisible(false);
         imgbtn.innerText = "streets";
     } else {
         streetsLayer.setVisible(true);
-	    world_imagery_layer.setVisible(false);
+	    worldImageryLayer.setVisible(false);
 	    imgbtn.innerText = "aerial";
     }
 }
 
-//var selectElement = document.getElementById('type'); // singleselect | multiselect
+const search = new SearchNominatim({
+	position: true
+    });
+map.addControl(search);
+
+// Select feature when click on the reference index
+search.on('select', function(e) {
+    console.log(e);
+    selectLayer.getSource().clear();
+    // Check if we get a geojson to describe the search
+    if (e.search.geojson) {
+	var format = new GeoJSON();
+	var f = format.readFeature(e.search.geojson, { dataProjection: "EPSG:4326", featureProjection: map.getView().getProjection() });
+	selectLayer.getSource().addFeature(f);
+	var view = map.getView();
+	var resolution = view.getResolutionForExtent(f.getGeometry().getExtent(), map.getSize());
+	var zoom = view.getZoomForResolution(resolution);
+	var center = getCenter(f.getGeometry().getExtent());
+	// redraw before zoom
+	setTimeout(function(){
+	    view.animate({
+		center: center,
+		zoom: Math.min (zoom, 16)
+	    });
+	}, 100);
+    } else {
+	map.getView().animate({
+	    center:e.coordinate,
+	    zoom: Math.max (map.getView().getZoom(),16)
+	});
+    }
+});
 
 map.on('click', function(event) {
-    var features = map.getFeaturesAtPixel(event.pixel);
+    const features = map.getFeaturesAtPixel(event.pixel);
     if (!features) {
         selection = {}; // clear selection
         // force redraw of layer style
@@ -300,8 +352,8 @@ map.on('click', function(event) {
     }
     */
 
-    var feature = features[0];
-    var properties = feature.getProperties();
+    const feature = features[0];
+    const properties = feature.getProperties();
 
     console.log('properties: ', properties);
 
@@ -316,5 +368,4 @@ map.on('click', function(event) {
 
     // force redraw of layer style
     taxlotsFeatureLayer.setStyle(taxlotsFeatureLayer.getStyle());
-
 });

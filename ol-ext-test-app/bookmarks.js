@@ -1,11 +1,9 @@
-// bookmarks.js
-
 // This object uses localStorage to persist the bookmarks.
-import GeoBookmark from 'ol-ext/control/GeoBookmark.js';
-import {transform as Transform} from 'ol/proj';
+import GeoBookmark from 'ol-ext/control/GeoBookmark'
+import { transform as Transform } from 'ol/proj'
 
-var bookmark_list = {
-    editable: false,
+let bookmark_list = {
+    editable: true,
     marks: {
 	'Arch Cape': {
 	    pos:Transform([-123.96, 45.81], 'EPSG:4326', 'EPSG:3857'),
@@ -49,6 +47,5 @@ export function Bookmarks() {
     return new GeoBookmark(bookmark_list);
 }
 
-console.log("bookmarks loaded.");
 
 // that's all!
