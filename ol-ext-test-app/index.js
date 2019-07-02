@@ -8,7 +8,7 @@ import "ol-ext/dist/ol-ext.css"
 import {Map, View} from "ol"
 import {transform as Transform} from 'ol/proj'
 import {Tile as TileLayer, Image as ImageLayer, Vector as VectorLayer} from "ol/layer"
-import {OSM, TileArcGISRest, ImageArcGISRest, Vector as VectorSource} from 'ol/source'
+import {OSM, Stamen, TileArcGISRest, ImageArcGISRest, Vector as VectorSource} from 'ol/source'
 import {tile as tileStrategy} from 'ol/loadingstrategy'
 import XYZ from 'ol/source/XYZ'
 import {createXYZ} from 'ol/tilegrid'
@@ -29,6 +29,8 @@ import LayerSwitcher from 'ol-ext/control/LayerSwitcher'
 import Permalink from 'ol-ext/control/Permalink'
 import {Bookmarks} from "./bookmarks"
 
+import {OverviewMap as Overview} from 'ol/control'
+
 var esrijsonFormat = new EsriJSON();
 
 // ========================================================================
@@ -36,12 +38,12 @@ var esrijsonFormat = new EsriJSON();
 const oid_name = 'OBJECTID';
 var selection = {}; // list of selected features
 
-var taxlots         = 'https://cc-gis.clatsop.co.clatsop.or.us/arcgis/rest/services/Assessment_and_Taxation/Taxlots_3857/FeatureServer/';
-var taxlots_labels   = taxlots + '0';
-var taxlots_features = taxlots + '1';
+var taxlots         = 'https://cc-gis.clatsop.co.clatsop.or.us/arcgis/rest/services/Taxlots/FeatureServer/';
+var taxlotsLabels   = taxlots + '0';
+var taxlotsFeatures = taxlots + '1';
 //var taxlotsMapServer = 'https://cc-gis.clatsop.co.clatsop.or.us/arcgis/rest/services/web_mercator/CC_Taxlots/MapServer';
 
-var zoning          = 'https://cc-gis.clatsop.co.clatsop.or.us/arcgis/rest/services/Zoning_3857/FeatureServer/';
+var zoning          = 'https://cc-gis.clatsop.co.clatsop.or.us/arcgis/rest/services/Zoning/FeatureServer/';
 var zoning_boundaries    = zoning + '3';
 var zoning_commercial    = zoning + '4';
 var zoning_noncommercial = zoning + '5';
@@ -137,7 +139,7 @@ var world_imagery_layer = new ImageLayer({
     visible: false
 });
 
-var streets_layer = new TileLayer({
+const streetsLayer = new TileLayer({
 	title: 'Streets',
 	type: 'base',
  	source: new OSM(),
@@ -145,13 +147,23 @@ var streets_layer = new TileLayer({
 	opacity: 0.7,
 	visible: true
 });
+const tonerLayer = new TileLayer({
+	title: 'Toner',
+	type: 'base',
+ 	source: new Stamen({
+        layer: 'toner',
+    }),
+	crossOrigin: 'anonymous',
+    opacity: 0.5,
+	visible: true
+});
 
-var taxlots_label_layer = new VectorLayer({
+var taxlotsLabelLayer = new VectorLayer({
     title: "Taxlot numbers",
     declutter: true,
     source: new VectorSource({
 	format: new GeoJSON(),
-	url:    taxlots_labels
+	url:    taxlotsLabels
     }),
     style: function(feature) {
 	style.getText().setText(feature.get('Taxlot'));
@@ -172,9 +184,9 @@ var taxlots_polygon_style = function(feature) {
     });
 }
 
-var taxlots_feature_layer = new VectorLayer({
+const taxlotsFeatureLayer = new VectorLayer({
     title: "Taxlot polygons",
-    source: makeVectorSource(taxlots_features),
+    source: makeVectorSource(taxlotsFeatures),
     maxResolution: 25, zindex:0,
     style: taxlots_polygon_style
 });
@@ -187,13 +199,16 @@ var taxlots_mapserver_layer = new TileLayer({
 */
 
 
-var layers = [
+const layers = [
     hillshade_layer,
     world_imagery_layer,
-    streets_layer,
+    streetsLayer,
     zoning_feature_layers,
-    taxlots_feature_layer,
-//    taxlots_label_layer
+    taxlotsFeatureLayer,
+    taxlotsLabelLayer
+];
+const overviewLayers = [
+    tonerLayer,
 ];
 
 var layercount = layers.length;
@@ -202,8 +217,7 @@ for (var i = 0; i < layercount; i++) {
     console.log("Layer ", layer.getMinResolution(), layer.getMaxResolution());
 }
 
-export { map };
-var map = new Map({
+const map = new Map({
     target: 'map',
     layers: layers,
     attributions: ['DOGAMI'],
@@ -212,51 +226,59 @@ var map = new Map({
         zoom: 12
     }),
     controls: defaultControls({
-	attributionOptions: {
-	    collapsible: false // show them all the time vs show [i].
-	}
+    	attributionOptions: {
+    	    collapsible: false // show them all the time vs show [i].
+    	}
     })
 });
 
-var layerswitcher = new LayerSwitcher({
+// ==================== ADD CONTROLS ====================
+
+const overview = new Overview({
+    collapsed: false,
+    collapsible: false,
+    layers: overviewLayers,
+    //view: new View({    }),
+});
+overview.setTarget("overview"); // settings as an attribute does not work
+map.addControl(overview);
+
+const layerswitcher = new LayerSwitcher({
     tipLabel: 'Legend' //optional label for button
 });
 map.addControl(layerswitcher);
 
-var scaleline = new ScaleLine();
+const scaleline = new ScaleLine();
 scaleline.setUnits("us");
 map.addControl(scaleline);
 
 map.addControl(Bookmarks());
 
-var pl_ctrl = new Permalink({
-    onclick: function(url)
-    {
-	console.log("Permalink url = ", url);
-	document.location = "mailto:?subject=subject&body=" + encodeURIComponent(url); // causes an email app to open with this URL in body.
+const pl_ctrl = new Permalink({
+    onclick: function(url) {
+        console.log("Permalink url = ", url);
+	    document.location = "mailto:?subject=subject&body=" + encodeURIComponent(url); // causes an email app to open with this URL in body.
     },
     urlReplace: true // Default is true; causes the URL to continuously update with the position in latlon and zoom level.
 });
 map.addControl(pl_ctrl);
 
-var imgbtn = document.getElementById("imagery_button");
+const imgbtn = document.getElementById("imagery_button");
 imgbtn.addEventListener("click", toggleImagery);
 
 function toggleImagery(evt) {
-    var streets_visible = streets_layer.getVisible();
-    if (streets_visible) {
-	streets_layer.setVisible(false);
-	world_imagery_layer.setVisible(true);
-	hillshade_layer.setVisible(false);
-	imgbtn.innerText = "streets";
+    const streetsVisible = streetsLayer.getVisible();
+    if (streetsVisible) {
+        streetsLayer.setVisible(false);
+        world_imagery_layer.setVisible(true);
+        hillshade_layer.setVisible(false);
+        imgbtn.innerText = "streets";
     } else {
-	streets_layer.setVisible(true);
-	world_imagery_layer.setVisible(false);
-	imgbtn.innerText = "aerial";
+        streetsLayer.setVisible(true);
+	    world_imagery_layer.setVisible(false);
+	    imgbtn.innerText = "aerial";
     }
 }
-
-
 
 //var selectElement = document.getElementById('type'); // singleselect | multiselect
 
@@ -265,8 +287,8 @@ map.on('click', function(event) {
     if (!features) {
         selection = {}; // clear selection
         // force redraw of layer style
-        taxlots_feature_layer.setStyle(taxlots_feature_layer.getStyle());
-	console.log("Nothing here, feature(s) deselected!");
+        taxlotsFeatureLayer.setStyle(taxlotsFeatureLayer.getStyle());
+	    console.log("Nothing here, feature(s) deselected!");
         return;
     }
 
@@ -277,7 +299,6 @@ map.on('click', function(event) {
 	i++;
     }
     */
-
 
     var feature = features[0];
     var properties = feature.getProperties();
@@ -294,8 +315,6 @@ map.on('click', function(event) {
     selection[oid] = feature;
 
     // force redraw of layer style
-    taxlots_feature_layer.setStyle(taxlots_feature_layer.getStyle());
+    taxlotsFeatureLayer.setStyle(taxlotsFeatureLayer.getStyle());
 
 });
-
-console.log('body.js loaded');
