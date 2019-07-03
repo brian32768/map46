@@ -43,13 +43,12 @@ var taxlotsLabels   = taxlots + '0';
 var taxlotsFeatures = taxlots + '1';
 //var taxlotsMapServer = 'https://cc-gis.clatsop.co.clatsop.or.us/arcgis/rest/services/web_mercator/CC_Taxlots/MapServer';
 
-var zoning          = 'https://cc-gis.clatsop.co.clatsop.or.us/arcgis/rest/services/Zoning/FeatureServer/';
-var zoning_boundaries    = zoning + '3';
-var zoning_commercial    = zoning + '4';
-var zoning_noncommercial = zoning + '5';
-var zoning_residential   = zoning + '6';
+var zoning           = 'https://cc-gis.clatsop.co.clatsop.or.us/arcgis/rest/services/Zoning/FeatureServer/';
+var zoningLabels     = zoning + '0';
+var zoningBoundaries = zoning + '1';
+var zoningTiles = "https://cc-gis.clatsop.co.clatsop.or.us/arcgis/rest/services/Zoning/MapServer"
 
-var world_imagery = "https://services.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer"
+var worldImagery = "https://services.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer"
 var hillshade     = "https://gis.dogami.oregon.gov/arcgis/rest/services/Public/BareEarthHS/ImageServer";
 
 // ========================================================================
@@ -88,26 +87,17 @@ function makeVectorSource(my_url) {
     return source;
 }
 
-
-var zoning_feature_layers = new LayerGroup({
+const zoningLayers = new LayerGroup({
     'title': 'Zoning',
     layers: [
-	new VectorLayer({
-	    title: 'Boundaries',
-	    source: makeVectorSource(zoning_boundaries)
-	}),
-	new VectorLayer({
-	    title: 'Commercial',
-	    source: makeVectorSource(zoning_commercial)
-	}),
-	new VectorLayer({
-	    title: 'Noncommercial',
-	    source: makeVectorSource(zoning_noncommercial)
-	}),
-	new VectorLayer({
-	    title: 'Residential',
-	    source: makeVectorSource(zoning_residential)
-	})
+        new VectorLayer({
+            title: 'Labels',
+            source: makeVectorSource(zoningLabels)
+        }),
+    	new VectorLayer({
+    	    title: 'Boundaries',
+    	    source: makeVectorSource(zoningBoundaries)
+    	}),
     ],
     visible: true,
     opacity: 0.5,
@@ -115,7 +105,19 @@ var zoning_feature_layers = new LayerGroup({
     zindex: 1
 });
 
-var hillshade_layer = new ImageLayer({
+const zoningTileLayer = new ImageLayer({
+    title: 'Zoning Map Service',
+    type: 'base',
+    source: new ImageArcGISRest({ url: zoningTiles,
+				  params: {},
+				  crossOrigin: 'anonymous',
+				  ratio: 1
+				}),
+    maxResolution: 70,
+    visible: true
+});
+
+const hillshadeLayer = new ImageLayer({
     title: 'Hillshade',
     type: 'base',
     source: new ImageArcGISRest({ url: hillshade,
@@ -127,10 +129,10 @@ var hillshade_layer = new ImageLayer({
     visible: true
 });
 
-var world_imagery_layer = new ImageLayer({
+const imageryLayer = new ImageLayer({
     title: 'World Imagery',
     type: 'base',
-    source: new ImageArcGISRest({ url: world_imagery,
+    source: new ImageArcGISRest({ url: worldImagery,
 				  params: {},
 				  crossOrigin: 'anonymous',
 				  ratio: 1
@@ -145,6 +147,16 @@ const streetsLayer = new TileLayer({
  	source: new OSM(),
 	crossOrigin: 'anonymous',
 	opacity: 0.7,
+	visible: true
+});
+const watercolorLayer = new TileLayer({
+	title: 'Watercolor',
+	type: 'base',
+ 	source: new Stamen({
+        layer: 'watercolor',
+    }),
+	crossOrigin: 'anonymous',
+    opacity: 1,
 	visible: true
 });
 const tonerLayer = new TileLayer({
@@ -200,14 +212,16 @@ var taxlots_mapserver_layer = new TileLayer({
 
 
 const layers = [
-    hillshade_layer,
-    world_imagery_layer,
+    hillshadeLayer,
+    imageryLayer,
     streetsLayer,
-    zoning_feature_layers,
+//    zoningLayers,
+    zoningTileLayer,
     taxlotsFeatureLayer,
     taxlotsLabelLayer
 ];
 const overviewLayers = [
+    watercolorLayer,
     tonerLayer,
 ];
 
@@ -270,12 +284,12 @@ function toggleImagery(evt) {
     const streetsVisible = streetsLayer.getVisible();
     if (streetsVisible) {
         streetsLayer.setVisible(false);
-        world_imagery_layer.setVisible(true);
-        hillshade_layer.setVisible(false);
+        imageryLayer.setVisible(true);
+        //hillshadeLayer.setVisible(false);
         imgbtn.innerText = "streets";
     } else {
         streetsLayer.setVisible(true);
-	    world_imagery_layer.setVisible(false);
+	    imageryLayer.setVisible(false);
 	    imgbtn.innerText = "aerial";
     }
 }
