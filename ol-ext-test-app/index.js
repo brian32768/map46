@@ -103,16 +103,12 @@ const zoningLayers = new LayerGroup({
 });
 
 const zoningTileLayer = new TileLayer({
-    title: 'Zoning Map Service',
+    title: 'Clatsop County Zoning',
     type: 'base',
     source: new TileArcGISRest({
         url: zoningTiles,
         attributions: "Clatsop County GIS, Oregon",
-	    params: {},
-		crossOrigin: 'anonymous',
-		ratio: 1
 	}),
-    maxResolution: 70,
     visible: true
 });
 
