@@ -21,13 +21,12 @@ const hhhsLayer   = new ImageLayer({ source: new ImageArcGISRest({ ratio: 1, par
 const zoningUrl = "https://cc-gis.clatsop.co.clatsop.or.us/arcgis/rest/services/Zoning/MapServer";
 const zoningSource = new TileArcGISRest({
     url: zoningUrl,
+    crossOrigin: 'anonymous',
 });
 const zoningTileLayer = new TileLayer({
     title: 'Clatsop County Zoning',
-    type: 'base',
     source: zoningSource,
-    crossOrigin: 'anonymous',
-    opacity: 0.5,
+    opacity: 0.9,
     permalink: 'Streets',
     visible: true,
     zindex: 3,
@@ -35,7 +34,7 @@ const zoningTileLayer = new TileLayer({
         FORMAT: "PNG32"
     }
 });
-
+console.log('zoning', zoningUrl, zoningSource, zoningTileLayer);
 const streetsLayer  = new TileLayer({
     title: 'Streets',
     type: 'base',
@@ -54,7 +53,7 @@ const streetsLayer  = new TileLayer({
 // Whitney's Map of Astoria And Environs. https://davidrumsey.georeferencer.com/maps/731856088227/
 //const zoom = 13;
 //const whitneys_astoria_url  = "https://maps.georeferencer.com/georeferences/731856088227/2017-02-20T14:25:19.132722Z/map";
-//const starting_location = {center: Transform([-123.825, 46.181], 'EPSG:4326', 'EPSG:3857'), zoom: zoom}; // astoria downtown
+const starting_location = {center: Transform([-123.825, 46.181], 'EPSG:4326', 'EPSG:3857'), zoom: zoom}; // astoria downtown
 
 // "3-10" Aerial 1938 Berkeley showing Key System.
 const sunderlandAerialUrl="https://maps.georeferencer.com/georeferences/920948447332/2017-02-20T14:25:19.132722Z/map"
@@ -62,7 +61,7 @@ const sunderlandAerialUrl="https://maps.georeferencer.com/georeferences/92094844
 // Patterson, Smith 1910 map of Berkeley
 const zoom=10;
 const pattersonSmithUrl = "https://maps.georeferencer.com/georeferences/268519810791/2017-02-20T14:25:19.132722Z/map";
-const starting_location = {center: Transform([-123.25, 37.87], 'EPSG:4326', 'EPSG:3857'), zoom: zoom}; // berkeley
+//const starting_location = {center: Transform([-123.25, 37.87], 'EPSG:4326', 'EPSG:3857'), zoom: zoom}; // berkeley
 
 // Thompson&West Map Of Benicia, California
 //const zoom=15;
@@ -81,11 +80,11 @@ const davidrumseyLayer  = new TileLayer({
 const maxres = 100;
 
 const layers = [
-    naip2009Layer,
-    naip2011Layer,
-    hhhsLayer,
+//    naip2009Layer,
+//    naip2011Layer,
+//    hhhsLayer,
     streetsLayer,
-    davidrumseyLayer,
+    //davidrumseyLayer,
     zoningTileLayer,
 ];
 
