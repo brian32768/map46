@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState } from 'react'; // eslint-disable-line no-unused-vars
 import Select from 'react-select'
 import { connect } from 'react-redux'
 import { setMapCenter } from '../actions'

@@ -1,6 +1,5 @@
 import { actions } from '../actions'
 import Geohash from '@geonet/geohash'
-import { toLonLat, fromLonLat } from 'ol/proj'
 import { DEFAULT_CENTER,MINZOOM } from '../constants'
 
 const initialState = {

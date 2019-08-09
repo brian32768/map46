@@ -1,13 +1,13 @@
-import React, { useState } from 'react'
+import React, { useState } from 'react'; // eslint-disable-line no-unused-vars
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import { actions } from '../actions'
 import { setMapQuery } from '../reducers'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'; // eslint-disable-line no-unused-vars
 // Font gallery: https://fontawesome.com/icons?d=gallery&s=solid
-import { faGlobe, faCoffee, faCamera, faHome, faInfoCircle, faListOl, faSearch } from '@fortawesome/free-solid-svg-icons'
-import { NavLink } from 'redux-first-router-link'
-import { Collapse, Navbar, NavbarBrand, NavbarToggler, Nav, NavItem } from 'reactstrap'
+import { faGlobe, faCoffee, faCamera, faHome, faInfoCircle, faListOl, faSearch } from '@fortawesome/free-solid-svg-icons'; // eslint-disable-line no-unused-vars
+import { NavLink } from 'redux-first-router-link'; // eslint-disable-line no-unused-vars
+import { Collapse, Navbar, NavbarBrand, NavbarToggler, Nav, NavItem } from 'reactstrap'; // eslint-disable-line no-unused-vars
 
 const MainNavbar = ({ center, zoom }) => {
     const [collapse, setCollapse] = useState(false);

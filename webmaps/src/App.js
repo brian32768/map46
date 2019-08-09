@@ -1,14 +1,14 @@
-import React, { useState } from 'react'
+import React, { useState } from 'react'; // eslint-disable-line no-unused-vars
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
-import { Container, Row, Col } from 'reactstrap'
-import MainNavbar from './components/navbar'
+import { Container, Row, Col } from 'reactstrap'; // eslint-disable-line no-unused-vars
+import MainNavbar from './components/navbar'; // eslint-disable-line no-unused-vars
 
 // Import everything as an object so that we can look up a component using its name.
 import * as components from './components'
 
 const App = ({ page, center, zoom }) => {
-    const Component = components[page]
+    const Component = components[page]; // eslint-disable-line no-unused-vars
     return (
         <>
             <Container>

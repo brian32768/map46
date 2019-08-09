@@ -1,4 +1,4 @@
-import React, {useState} from 'react'
+import React, {useState} from 'react'; // eslint-disable-line no-unused-vars
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import { setMapCenter } from '../actions'
@@ -263,13 +263,13 @@ const Map46 = ({title, center, zoom, setMapCenter}) => {
                 />
             >
                 <layer.Tile source="OSM" />
-{/*
+
+                {/*
                 <layer.Tile name="Bing Aerial"
                     source="BingMaps" imagerySet="Aerial"
                     apikey={ bingmapsKey }
                     visible={ bingVisible }
                 />
-*/}
                 <layer.Image
                     source={ aerialSource }
                     url={ aerialUrl }
@@ -304,19 +304,19 @@ const Map46 = ({title, center, zoom, setMapCenter}) => {
 
                 <layer.Vector name="Geolocation">
                 </layer.Vector>
-{/*
                 <layer.Vector name="Taxlot Labels"
                     source="esrijson"
                     url={ taxlotFeatures }
                     style={ taxlotTextStyle }
                 />
-*/}
                 <Overlay id="popups"
                     element={ popup }
                     position={ popupPosition }
                     positioning="center-center"
                 />
+                */}
             </Map>
+            </MapProvider>
 
             <Position coord={mousePosition} zoom={zoom} />
 

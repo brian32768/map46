@@ -1,5 +1,5 @@
-import React from 'react'
-import {Card, CardTitle, CardText, CardImg, CardSubtitle} from 'reactstrap'
+import React from 'react'; // eslint-disable-line no-unused-vars
+import {Card, CardTitle, CardText, CardImg, CardSubtitle} from 'reactstrap'; // eslint-disable-line no-unused-vars
 
 const Faq = () => (
     <>

@@ -1,5 +1,4 @@
 export class Geolocation {
-
     get valid() {
         return this._valid;
     }
@@ -7,6 +6,7 @@ export class Geolocation {
     get coord() {
         return this._coord;
     }
+
 
     onGeolocation = (info) => {
         // The browser returns geoinfo including accuracy, speed, heading...

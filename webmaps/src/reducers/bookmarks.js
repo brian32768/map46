@@ -1,5 +1,4 @@
-import deepmerge from 'deepmerge'
-import { actions, uniqueId } from '../actions'
+import { actions } from '../actions'
 
 const initialState = {
     bookmarks: {
