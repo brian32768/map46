@@ -1,7 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { Converter } from 'usng/usng'
-import { llPrecision, usngPrecision } from '../constants'
+import {Converter} from 'usng.js'
+import {llPrecision, usngPrecision} from '../constants'
 
 // This component only displays a position passed in as props.
 // It does not care about any position stored in redux state.
