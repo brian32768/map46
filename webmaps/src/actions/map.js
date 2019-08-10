@@ -19,17 +19,3 @@ export function setMapCenter(center, zoom) {
         }
     };
 }
-
-export function setDisplayPoint(lonlat, zoom) {
-    if (lonlat[0] < XMIN || lonlat[0] > XMAX
-     || lonlat[1] < YMIN || lonlat[1] > YMAX) {
-        console.log("Point outside area of interest (warning)")
-    }
-    return {
-        type: actions.SETDISPLAYPOINT,
-        payload: {
-            displayPoint: lonlat,
-            displayZoom: zoom
-        }
-    }
-}

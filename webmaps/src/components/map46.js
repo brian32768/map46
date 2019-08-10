@@ -1,28 +1,26 @@
 import React, {useState} from 'react'; // eslint-disable-line no-unused-vars
 import PropTypes from 'prop-types'
-import { connect } from 'react-redux'
-import { setMapCenter } from '../actions'
-import Select from 'react-select'
-import { Button } from 'reactstrap'
-import BootstrapTable from 'react-bootstrap-table-next'
-import { transform } from 'ol/proj'
-import { toStringXY } from 'ol/coordinate'
-import { Collection } from 'ol'
-import { platformModifierKeyOnly } from 'ol/events/condition'
-import { toLonLat } from 'ol/proj'
-import { toStringHDMS } from 'ol/coordinate'
-import { Vector as VectorSource } from 'ol/source'
-import { bbox as bboxStrategy } from 'ol/loadingstrategy'
-import { Map, View, Feature, Overlay, control, geom, interaction, layer} from '@map46/ol-react'
-import { myGeoServer,workspace, wgs84, wm, astoria_ll } from '@map46/ol-react/utils'
-import { buildStyle } from '@map46/ol-react/style'
-import { DataLoader } from '@map46/ol-react/layer/dataloaders'
+import {connect} from 'react-redux'
+import {setMapCenter} from '../actions'
+import Select from 'react-select' // eslint-disable-line no-unused-vars
+import {Button} from 'reactstrap' // eslint-disable-line no-unused-vars
+import BootstrapTable from 'react-bootstrap-table-next' // eslint-disable-line no-unused-vars
+import {Map, View, Feature, Overlay, control, geom, interaction, layer, source} from '@map46/ol-react';  // eslint-disable-line no-unused-vars
 import Geocoder from './geocoder'
-import { fromLonLat } from 'ol/proj'
 import Position from './position'
 
-const bingmapsKey = process.env.BINGMAPS_KEY;
-if (typeof bingmapsKey === 'undefined') console.error("BINGMAPS_KEY is undefined.");
+import {toStringXY} from 'ol/coordinate'
+import {toLonLat} from 'ol/proj'
+
+import {myGeoServer, workspace} from '../constants'
+
+import {Style, Circle, Fill, Icon, Stroke, Text} from 'ol/style'
+import Collection from 'ol/Collection'
+import {click, platformModifierKeyOnly} from 'ol/events/condition'
+
+// Base layers
+const esriClarityUrl = 'https://clarity.maptiles.arcgis.com/arcgis/rest/services/' +
+                    'World_Imagery/MapServer/tile/{z}/{y}/{x}'
 
 /*
 TODO = if a photo will not be visible in current extent, disable it in the list
@@ -56,149 +54,139 @@ const waterbodies = oregonExplorerHydro + "/2"
 const rivers      = oregonExplorerHydro + "/3"
 
 // DOGAMI "https://gis.dogami.oregon.gov/arcgis/rest/services/Public"
-const DOGAMI_Landslide = "https://gis.dogami.oregon.gov/arcgis/rest/services/Public/Landslide_Susceptibility/ImageServer"
+const dogamiServer = "https://gis.dogami.oregon.gov/arcgis/rest/services/Public/"
+const dogamiLandslideUrl = dogamiServer + "Landslide_Susceptibility/ImageServer"
+const dogamiSlidoUrl = dogamiServer + "/SLIDO3_4/MapServer"
 
 // FEMA https://hazards.fema.gov/femaportal/wps/portal/NFHLWMS
 const FEMA_NFHL_arcgisREST = "https://hazards.fema.gov/gis/nfhl/rest/services/public/NFHL/MapServer"
 
-// Where the PDFs live
+const taxlotService = "https://cc-gis.clatsop.co.clatsop.or.us/arcgis/rest/services/Taxlots/FeatureServer"
+const taxlotLabels   = taxlotService + "/0";
+const taxlotFeatures = taxlotService + "/1";
+
+// Where the taxmap PDFs live
 const taxmapsBaseUrl = "http://maps.co.clatsop.or.us/applications/taxreports/taxmap"
 
-const taxlotsService = "https://cc-gis.clatsop.co.clatsop.or.us/arcgis/rest/services/Taxlots/FeatureServer"
-const taxlotLabels   = taxlotsService + "/0";
-const taxlotFeatures = taxlotsService + "/1";
+const taxlotKey      = 'taxlotkey';
 const taxlotColumns = [
+// These fields are in the "accounts" database built by KH
+    {dataField: taxlotKey,  text: 'Taxlot Key'},
+    {dataField: 'account_id', text: 'Account'},
+    {dataField: 'taxlot',     text: 'Taxlot'},
+    {dataField: 'owner_line', text: 'Owner'},
+    {dataField: 'situs_addr', text: 'Situs Address'},
+    /*
     {dataField: 'MapTaxlot',    text: 'MapTaxlot',
-        formatter: (value,record) => {
+        formatter: (value, record) => {
              //console.log('formatter MapTaxLot=', value, ' obj=',record);
              const propertyInfo = 'https://apps.co.clatsop.or.us/property/property_details/?t=' + value
              return (
                  <a target="pinfo" href={ propertyInfo }>{ value }</a>
              );
     }},
-/*
+    */
+
+/* I think these fields correspond to the Official data
     {dataField: 'Town',      text: 'Township'},
     {dataField: 'Range',     text: 'Range'},
     {dataField: 'SecNumber', text: 'Section'},
     {dataField: 'Qtr',       text: 'Qtr'},
     {dataField: 'QtrQtr',    text: 'QtrQtr'},
     {dataField: 'Taxlot',    text: 'Taxlot'},
-*/
     {dataField: 'MapNumber', text: 'Map Number'},
+*/
 ]
-const taxlotTableKey   = 'MapTaxlot';
 const taxlotPopupField = 'MapTaxlot';
 
-/*
-const taxlotsWFS = myGeoServer
-    + "/ows?service=WFS&version=2.0.0&request=GetFeature"
-    + "&typeName=" + workspace + "%3Ataxlots"
-const taxlotColumns = [
-    {dataField: 'account_id', text: 'Account'},
-    {dataField: 'owner_line', text: 'Owner'},
-    {dataField: 'situs_addr', text: 'Situs'},
-    {dataField: 'situs_city', text: 'Situs City'},
-    {dataField: 'mapnum',     text: 'Map Number'//,   formatter: (url,text) => (
-            //<a href="{ url }">{ text }</a>
-        //)
-    },
-]
-const taxlotTableKey   = 'account_id';
-const taxlotPopupField = 'situs_addr';
+/* WFS
+ To generate this WFS service URL, go into GeoServer Layer Preview,
+ and in All Formats, select "WFS GeoJSON(JSONP)" then paste here and
+ clip off the outputFormat and maxFeatures attributes (maxFeatures=50&outputFormat=text%2Fjavascript
 */
+const taxlotUrl = myGeoServer + '/ows?service=WFS&version=1.0.0&request=GetFeature'
+    + '&typeName=' + workspace + '%3Ataxlots'
+const taxlotFormat = 'geojson'
 
-const taxlotStyle = { // pink w black outline
-    stroke: {color: [180, 50, 50, 1], width:1},
-    fill:   {color: [255, 0, 0, .000]}, // no fill = not selectable
-};
+/* VECTOR TILES
+const taxlotLayer = 'clatsop_wm%3Ataxlots'
+const taxlotUrl = myGeoServer + '/gwc/service/tms/1.0.0/'
+        + taxlotLayer
+        + '@EPSG%3A900913@pbf/{z}/{x}/{-y}.pbf';
+*/
+const taxlotStyle = new Style({
+    fill: new Fill({color:"rgba(128,0,0,0.1)"}),
+    stroke: new Stroke({color:"rgba(0,0,0,1.0)", width:1}),
+})
+// yellow outline, clear center lets you see what you have selected!
+const selectedStyle = new Style({ // yellow
+    stroke: new Stroke({color: 'rgba(255, 255, 0, 1.0)', width:2}),
+    fill:   new Fill({color: 'rgba(255, 255, 0, .001)'}),
+});
 
-//const taxlotTextStyle = {
-//    text: "TEXT",
-//    offsetY: -10
-//};
-
-const selectedStyle = { // yellow
-    stroke: {color: [255, 255, 0, 1.00], width:.15},
-    fill:   {color: [255, 255, 0,  .05]},
-};
-const tlSt = buildStyle(taxlotStyle);
-const selectedSt = buildStyle(selectedStyle);
+/* ========================================================================== */
 
 const Map46 = ({title, center, zoom, setMapCenter}) => {
     const [aerialUrl, setAerialUrl] = useState(aerials[0].value.url) // 1966
     const [aerialSource, setAerialSource] = useState(aerials[0].value.source); // 1966
     const [aerialVisible, setAerialVisible] = useState(false);
-    const [bingVisible, setBingVisible] = useState(false);
-    const [enableModify, setModify] = useState(true);     // can't change this in the app yet
     const [mousePosition, setMousePosition] = useState([0,0]);
     const [popupPosition, setPopupPosition] = useState(); // where it will show up on screen
     const [popupText, setPopupText] = useState('HERE');   // text to display in popup
+    const [selectCount, setSelectCount] = useState(0);
     const [rows, setRows] = useState([]);
-
-    // I create the source here so I don't have to go searching around
-    // for it later when I need to access its features.
-    const taxlotSource = new VectorSource({ strategy: bboxStrategy });
-    //this.taxlotSource.setLoader(DataLoader('geojson', taxlotsWFS, this.taxlotSource));
-    taxlotSource.setLoader(DataLoader('esrijson', taxlotFeatures, taxlotSource));
-    const selectedFeatures = new Collection();
 
     const showMousePosition = (e) => {
         const lonlat = toLonLat(e.coordinate)
         setMousePosition(lonlat)
+        return false;
     }
 
-    // IMPROVEMENT
-    // https://openlayers.org/en/latest/apidoc/module-ol_interaction_Select-Select.html
-    // I need to look at this code to allow adding and removing features
-    // in the current selection set.
-
-    const handleSelectCondition = (e) => {
+    // Returns true if the event should trigger a taxlot selection
+    const myCondition = (e) => {
         switch(e.type) {
             case 'click':
+                console.log('CLICK!');
                 return true;
-/*
-            case 'pointermove':
-            const lonlat = toLonLat(e.coordinate)
-            const features = this.taxlotSource.getFeaturesAtCoordinate(e.coordinate)
-            if (features.length>0) {
-                const text = features[0].get(taxlotPopupField)
-                if (text!=null && text.length>0) {
-                    this.setState({
-                        popupPosition: e.coordinate,
-                        popupText: text
-                    });
-                    return false;
-                }
-            }
-            this.setState({popupPosition: undefined}); // hide popup
-            return false; // don't do a selection!
-*/
-/*
-            case 'platformModifierKeyOnly':
-                console.log("CTL", e);
+            case 'pointerdown':
+            case 'pointerup':
+            case 'singleclick':
+            case 'wheel':
+            case 'pointerdrag':
+                console.log('condition:', e.type);
                 return false;
+
+            case 'pointermove':
+/*
+                // roll over - just show taxlot popup
+                const lonlat = toLonLat(e.coordinate)
+                const features = taxlotLayer.getSource().getFeaturesAtCoordinate(e.coordinate)
+                if (features.length > 0) {
+                    const text = features[0].get(taxlotPopupField)
+                    if (text != null && text.length > 0) {
+                        popup.show(e.coordinate, text);
+                        return false;
+                    }
+                }
+                popup.hide();
 */
+                return false; // don't do a selection!
+
+    //            case 'platformModifierKeyOnly':
+    //                return false;
         }
-        return false; // pass event along
+        console.log("?? condition", e.type);
+        return false; // pass event along I guess
     }
 
-    const addFeaturesToTable = (features) => {
+    const copyFeaturesToTable = (features) => {
         const rows = [];
         if (features.getLength()) {
             features.forEach( (feature) => {
                 const attributes = {};
                 // Copy the data from each feature into a list
-                //const allprops = feature.getProperties();
                 taxlotColumns.forEach ( (column) => {
-                    try {
-                        const text = feature.get(column.dataField);
-                        //const url = taxmapsBaseUrl + '/tp_' + text + '.pdf';
-                        attributes[column.dataField] = text;
-                        //(typeof column.formatter !== 'undefined')?
-                        //    column.formatter(url,text) : text;
-                    } catch {
-                        console.log("No column:", column)
-                    };
+                    attributes[column.dataField] = feature.get(column.dataField);
                 });
                 rows.push(attributes)
             });
@@ -206,19 +194,20 @@ const Map46 = ({title, center, zoom, setMapCenter}) => {
         setRows(rows);
     }
 
-    const onSelectInteraction = (e) => {
-        console.log('onSelectInteraction', e);
-        addFeaturesToTable(selectedFeatures)
-    }
-
-    const onBoxStart = (e) => {
-        selectedFeatures.clear();
-    }
-
-    const onBoxEnd = (e) => {
-        const extent = e.target.getGeometry().getExtent();
-        selectedFeatures.extend(taxlotSource.getFeaturesInExtent(extent));
-        addFeaturesToTable(selectedFeatures);
+    const selectedFeatures = new Collection();
+    const onSelectEvent = (e) => {
+        console.log("onSelectEvent", e)
+        const s = selectedFeatures.getLength();
+        setSelectCount(s);
+/*
+        if (s) {
+            popup.show(e.mapBrowserEvent.coordinate, selectedFeatures.item(0).get("taxlot").trim());
+        } else {
+            popup.hide()
+        }
+*/
+        copyFeaturesToTable(selectedFeatures)
+        e.stopPropagation(); // this stops draw interaction
     }
 
     const selectAerialPhoto = (e) => {
@@ -245,6 +234,7 @@ const Map46 = ({title, center, zoom, setMapCenter}) => {
         const new_center = toLonLat(new_center_wm)
         const new_zoom = v.getZoom();
         setMapCenter(new_center, new_zoom);
+        return false;
     }
 
     return (
@@ -252,56 +242,41 @@ const Map46 = ({title, center, zoom, setMapCenter}) => {
             <Geocoder/><br />
             <Select options={ aerials } onChange={ selectAerialPhoto } />
 
+            <Map onPointerMove={showMousePosition} onMoveEnd={onMapMove}>
+                <layer.Tile title="ESRI Clarity" baseLayer={true} visible={false}>
+                    <source.XYZ url={esriClarityUrl}/>
+                </layer.Tile>
 
-            <Map
-                useDefaultControls={ false }
-                onPointerMove={ showMousePosition }
-                onMoveEnd={ onMapMove }
-                view=<View zoom={ zoom }
-                     center={ fromLonLat(center) }
-                     minZoom={ 9 } maxZoom={ 21 }
-                />
-            >
-                <layer.Tile source="OSM" />
+                {/* Alternatives for streets: conventional or MVT */}
+                <layer.Tile title="OpenStreetMap" baseLayer={true} visible={true}>
+                    <source.OSM/>
+                </layer.Tile>
+                {/* MVT
+                <layer.VectorTile title="Mapbox Streets" baseLayer={true} visible={true} style={mapboxStyle} declutter={true}>
+                    <source.VectorTile url={mapboxStreetsUrl}/>
+                </layer.VectorTile>
 
-                {/*
-                <layer.Tile name="Bing Aerial"
-                    source="BingMaps" imagerySet="Aerial"
-                    apikey={ bingmapsKey }
-                    visible={ bingVisible }
-                />
-                <layer.Image
-                    source={ aerialSource }
-                    url={ aerialUrl }
-                    visible={ aerialVisible }
-                />
-
-                <layer.Vector name="Taxlots"
-                    source={ taxlotSource }
-                    style={ taxlotStyle }
-                    editStyle={ selectedStyle }
-                >
-                {/*
-                <layer.Vector name="Taxlots"
-                    source={ taxlotSource }
-                    style={ taxlotStyle }
-                >
+                <layer.VectorTile title="Taxlots" declutter={true} crossOrigin="anonymous" style={taxlotStyle}>
+                    <source.VectorTile url={taxlotUrl}>
+                        <interaction.Select features={selectedFeatures} style={selectedStyle} condition={click} selected={onSelectEvent}/>
+                        <interaction.SelectDragBox condition={platformModifierKeyOnly} selected={onSelectEvent}/>
+                    </source.VectorTile>
+                </layer.VectorTile>
                 */}
-                    <interaction.Select
-                        select={ onSelectInteraction }
-                        condition={ handleSelectCondition }
-                        features={ selectedFeatures }
-                        style={ selectedSt }
-                        active={ true }
-                    />
 
-                    <interaction.DragBox
-                        boxstart={ onBoxStart }
-                        boxend={ onBoxEnd }
-                        active={ true }
-                    />
+                {/* WFS */}
+                <layer.Vector title="Taxlots" style={taxlotStyle} maxResolution={10}>
+                    <source.JSON url={taxlotUrl} loader={taxlotFormat}>
+                        <interaction.Select features={selectedFeatures} style={selectedStyle} condition={myCondition} selected={onSelectEvent}/>
+                        <interaction.SelectDragBox features={selectedFeatures} style={selectedStyle} condition={platformModifierKeyOnly} selected={onSelectEvent}/>
+                    </source.JSON>
                 </layer.Vector>
 
+                <layer.Image title="DOGAMI Slides" opacity={.90} visible={true}>
+                    <source.ImageArcGISRest url={dogamiSlidoUrl}/>
+                </layer.Image>
+
+                {/*
                 <layer.Vector name="Geolocation">
                 </layer.Vector>
                 <layer.Vector name="Taxlot Labels"
@@ -316,12 +291,11 @@ const Map46 = ({title, center, zoom, setMapCenter}) => {
                 />
                 */}
             </Map>
-            </MapProvider>
 
             <Position coord={mousePosition} zoom={zoom} />
 
             <BootstrapTable bootstrap4 striped condensed
-                keyField={ taxlotTableKey }
+                keyField={ taxlotKey }
                 columns={ taxlotColumns }
                 data={ rows }
             />

@@ -4,9 +4,7 @@ import { DEFAULT_CENTER,MINZOOM } from '../constants'
 
 const initialState = {
     center: DEFAULT_CENTER,
-    zoom: MINZOOM,
-    displayPoint: DEFAULT_CENTER,
-    displayZoom:  MINZOOM
+    zoom: MINZOOM
 }
 
 // Queries that I can understand include
@@ -21,7 +19,8 @@ function getMapQuery(query) {
     // In real life, I'd convert the geohash from query to center coord here.
     const ll = Geohash.decode(query.g)
     return {
-        center: [ll.lng, ll.lat], zoom:   Number(query.z),
+        center: [ll.lng, ll.lat],
+        zoom:   Number(query.z),
     }
 }
 export function getGeohash(ll) {
@@ -33,8 +32,8 @@ export function setMapQuery(lonlat, zoom) {
     console.log("setMapQuery", lonlat);
     if (lonlat[0] && lonlat[1])
         query["g"] = getGeohash(lonlat);
-    if (typeof zoom !== 'undefined' && zoom)
-        query["z"] = zoom.toString();
+    if (zoom !== undefined && zoom)
+        query["z"] = (Math.round(zoom)).toString();
     return query
 }
 
@@ -44,28 +43,15 @@ export const map = (state=initialState, action={}) => {
         case actions.MAP:
             try {
                 console.log("map reducer: Loading state from query: ", action.meta.query);
-                newState = {
-                    ...getMapQuery(action.meta.query),
-                    displayPoint: state.displayPoint
-                }
+                newState = getMapQuery(action.meta.query)
             } catch(err) {
-                console.log("map reducer: No values to update right now.", state);
+                console.log("map reducer: Could not decode query.", state, err);
                 return state;
             }
             break;
 
         case actions.SETMAPCENTER:
-            newState = {
-                ...state,
-                ...action.payload,
-            }
-            break;
-
-        case actions.SETDISPLAYPOINT:
-            newState = {
-                ...state,
-                ...action.payload,
-            }
+            newState = action.payload
             break;
 
         default:

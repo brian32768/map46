@@ -7,7 +7,6 @@ export class Geolocation {
         return this._coord;
     }
 
-
     onGeolocation = (info) => {
         // The browser returns geoinfo including accuracy, speed, heading...
         this._coord[0] = info.coords.longitude;

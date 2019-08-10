@@ -1,7 +1,7 @@
 import React from 'react'; // eslint-disable-line no-unused-vars
 import ReactDOM from 'react-dom'
-import { Provider } from 'react-redux'; // eslint-disable-line no-unused-vars
-import { PersistGate } from 'redux-persist/integration/react'
+import {Provider} from 'react-redux'; // eslint-disable-line no-unused-vars
+import {PersistGate} from 'redux-persist/integration/react'
 import configStore from './configstore'
 import App from './App'; // eslint-disable-line no-unused-vars
 
