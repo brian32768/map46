@@ -4,10 +4,9 @@
   "description": "arcgisapi test app",
   "author": "Brian Wilson",
   "scripts": {
-    "test": "parcel serve --open chrome index.html",
     "testnc": "parcel serve index.html",
     "build": "parcel build index.html",
-    "start": "node server.js"
+    "start": "parcel serve --open chrome index.html"
   },
   "repository": {
     "type": "git",
@@ -21,6 +20,13 @@
     "url": "https://github.com/brian32768/map46/issues"
   },
   "homepage": "https://github.com/brian32768/map46#readme",
-  "dependencies": {},
+  "dependencies": {
+    "@esri/react-arcgis": "^4.0.0",
+    "arcgis-js-api": "^4.12.1",
+    "esri-loader": "^2.10.1",
+    "prop-types": "^15.7.2",
+    "react": "^16.10.2",
+    "react-dom": "^16.10.2"
+  },
   "devDependencies": {}
 }

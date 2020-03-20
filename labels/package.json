@@ -4,9 +4,7 @@
     "description": "Labels test app",
     "author": "Brian Wilson",
     "scripts": {
-	"test": "parcel serve --open chrome index.html",
-	"build": "parcel build index.html",
-	"start": "node server.js"
+	       "start": "parcel server index.html --open"
     },
     "repository": {
 	"type": "git",
